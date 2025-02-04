@@ -71,7 +71,7 @@ nc <- detectCores() - 1
 
 # Validation phase
 cat("\nPhase 1: Validation Phase\n")
-n_validations <- 2
+n_validations <- 20
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 validation_j_stats <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
