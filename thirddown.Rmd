@@ -3,3 +3,61 @@ title: "Third Down Analysis"
 output: html_document
 ---
 
+```{r}
+library(data.table)             
+ctd1 <- fread("predict_ctd1.csv.gz")                        
+
+```
+
+```{r}
+#kill my_id
+ctd1$my_id <- NULL
+```
+
+
+
+```{r}
+# Then run OLS with GIMR correction
+ols_model <- lm(conversion ~  ., data = ctd1)
+```
+
+```{r}
+library(sandwich)
+library(lmtest)
+
+# Get HC0-adjusted t-values and p-values
+robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
+t_stats <- robust_test[, "t value"]
+p_values <- robust_test[, "Pr(>|t|)"]
+
+# Function to add significance stars
+get_stars <- function(p) {
+    if (p <= 0.01) return("***")
+    if (p <= 0.05) return("**")
+    if (p <= 0.1) return("*")
+    if (p <= 0.15) return(".")
+    return("")
+}
+
+# Maximum width for variable names
+name_width <- 20
+
+# Print header with alignment
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
+
+# Loop through and print values
+for (i in 1:length(t_stats)) {
+    var_name <- rownames(robust_test)[i]
+    # Truncate name if too long
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                t_stats[i], p_values[i],
+                get_stars(p_values[i])))
+}
+
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+```

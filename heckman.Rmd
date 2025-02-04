@@ -228,8 +228,6 @@ GIMR_dt <- data.table(my_id = select_data$my_id, GIMR = GIMR)
 outcome_data[GIMR_dt, GIMR := i.GIMR, on = "my_id"]
 ```
 
-# step 2 outcome_data
-
 ```{r}
 #kill - my_id
 outcome_data <- outcome_data[, my_id := NULL]
