@@ -1,0 +1,23 @@
+name: "4th-downs-nfl"
+output_dir: docs
+navbar:
+  title: "4th Downs in the NFL"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Heckman Selection"
+      href: heckman.html
+    - text: "XGBoost Prediction"
+      href: xgboost.html
+    - text: "Attendance Impact"
+      href: attendance.html
+    - text: "Third Down Analysis"
+      href: thirddown.html
+output:
+  html_document:
+    css: styles.css
+    toc: true
+    toc_float: true
+    code_folding: hide
+    code_download: true
+    df_print: paged

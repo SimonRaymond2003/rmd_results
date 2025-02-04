@@ -1,0 +1,38 @@
+---
+title: "Attendance Impact Analysis"
+output: html_document
+---
+
+```{r options, include=FALSE}
+options(max.print=10000)
+```
+
+```{r}
+library(data.table)
+attendance_data <- fread("predict_attendance.csv.gz")
+```
+
+```{r}
+# interact home_attendance and posteam_type_home
+attendance_data$interact_HxA <- attendance_data$home_attendance * attendance_data$posteam_type_home
+```
+
+```{r}
+# kill my_id                      
+attendance_data$my_id <- NULL
+```
+
+```{r} 
+# ols                     
+ols <- lm(attempt ~., data = attendance_data)
+summary(ols)
+```
+
+```{r}              
+# probit
+probit <- glm(attempt ~ ., data = attendance_data, family = binomial(link = "probit"))
+summary(probit)
+```
+
+
+

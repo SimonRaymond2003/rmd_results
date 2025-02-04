@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Heckman Selection Model Analysis</title>
+
+<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">4th Downs in the NFL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="heckman.html">Heckman Selection</a>
+</li>
+<li>
+  <a href="xgboost.html">XGBoost Prediction</a>
+</li>
+<li>
+  <a href="attendance.html">Attendance Impact</a>
+</li>
+<li>
+  <a href="thirddown.html">Third Down Analysis</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Heckman Selection Model Analysis</h1>
+
+</div>
+
+
+<pre class="r"><code>library(data.table)
+outcome_data &lt;- fread(&quot;predict_outcome.csv.gz&quot;)
+select_data &lt;- fread(&quot;predict_select.csv.gz&quot;)</code></pre>
+<pre class="r"><code>select_data[, attempt := as.numeric(as.character(attempt))]</code></pre>
+<pre class="r"><code># Load required libraries
+library(data.table)
+library(xgboost)
+library(ROCR)
+library(parallel)
+
+# Prepare the XGBoost matrices
+xs &lt;- model.matrix(~ . - 1 - attempt - my_id, data = select_data)
+y &lt;- as.numeric(as.character(select_data$attempt))
+
+# Create parameter grid
+grid &lt;- expand.grid(
+  eta = seq(0.001, 0.1, by = 0.05),
+  max_depth = seq(5, 9, by = 4),
+  min_child_weight = seq(1, 1, by = 1),        
+  subsample = seq(0.8, 0.8, by = 0.2),
+  colsample_bytree = seq(0.8, 0.8, by = 0.2),
+  lambda = seq(1, 1, by = 1),                
+  alpha = seq(0, 0, by = 1),                  
+  gamma = seq(0, 0.1, by = 0.1),               
+  nrounds = seq(100, 500, by = 400)
+)
+
+# Sample grid points
+conf_lev &lt;- .95
+num_max &lt;- 5
+n &lt;- ceiling(log(1-conf_lev)/log(1-num_max/nrow(grid)))
+ind &lt;- sample(nrow(grid), n, replace = FALSE)
+rgrid &lt;- grid[ind, ]
+
+# Set up parallel processing
+nc &lt;- detectCores() - 1
+
+# Validation phase
+cat(&quot;\nPhase 1: Validation Phase\n&quot;)</code></pre>
+<pre><code>## 
+## Phase 1: Validation Phase</code></pre>
+<pre class="r"><code>n_validations &lt;- 2
+validation_results &lt;- matrix(nrow = nrow(rgrid), ncol = n_validations)
+
+for (j in 1:nrow(rgrid)) {
+  #cat(&quot;\nTesting parameter set&quot;, j, &quot;of&quot;, nrow(rgrid), &quot;\n&quot;)
+  
+  for (i in 1:n_validations) {
+    # Create validation split
+    idx &lt;- unique(sample(nrow(xs), nrow(xs), T))
+    train_x &lt;- xs[idx, ]
+    train_y &lt;- y[idx]
+    val_x &lt;- xs[-idx, ]
+    val_y &lt;- y[-idx]
+    
+    # Undersample majority class in training data
+    train_idx_0 &lt;- which(train_y == 0)
+    train_idx_1 &lt;- which(train_y == 1)
+    
+    # Get number of minority class samples
+    n_minority &lt;- length(train_idx_1)
+    
+    # Randomly sample from majority class
+    train_idx_0_sampled &lt;- sample(train_idx_0, n_minority)
+    
+    # Combine indices for balanced dataset
+    balanced_idx &lt;- c(train_idx_0_sampled, train_idx_1)
+    
+    # Create balanced training dataset
+    train_x_balanced &lt;- train_x[balanced_idx, ]
+    train_y_balanced &lt;- train_y[balanced_idx]
+    
+    prm &lt;- list(
+      booster = &quot;gbtree&quot;,
+      objective = &quot;binary:logistic&quot;,
+      max_depth = rgrid[j, &quot;max_depth&quot;],
+      eta = rgrid[j, &quot;eta&quot;],
+      subsample = rgrid[j, &quot;subsample&quot;],
+      colsample_bytree = rgrid[j, &quot;colsample_bytree&quot;],
+      gamma = rgrid[j, &quot;gamma&quot;],
+      min_child_weight = rgrid[j, &quot;min_child_weight&quot;],
+      alpha = rgrid[j, &quot;alpha&quot;],
+      lambda = rgrid[j, &quot;lambda&quot;],
+      nthread = nc
+    )
+    
+    dm_train &lt;- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+    mdl &lt;- xgb.train(
+      params = prm,
+      data = dm_train,
+      nrounds = rgrid[j, &quot;nrounds&quot;],
+      verbose = FALSE
+    )
+    
+    p &lt;- predict(mdl, xgb.DMatrix(data = val_x))
+    pred &lt;- prediction(p, val_y)
+    validation_results[j, i] &lt;- performance(pred, &quot;auc&quot;)@y.values[[1]]
+  }
+  
+  #cat(&quot;Mean AUC:&quot;, mean(validation_results[j,]), &quot;\n&quot;)
+  #cat(&quot;SD AUC:&quot;, sd(validation_results[j,]), &quot;\n&quot;)
+}
+
+# Run 100 tests with best parameters
+cat(&quot;\nRunning X test iterations with best parameters...\n&quot;)</code></pre>
+<pre><code>## 
+## Running X test iterations with best parameters...</code></pre>
+<pre class="r"><code>test_aucs &lt;- c()
+
+best_params_idx &lt;- which.max(rowMeans(validation_results))
+best_params &lt;- rgrid[best_params_idx,]
+
+# Train final model with best parameters
+best_params_list &lt;- as.list(best_params[-which(names(best_params) == &quot;nrounds&quot;)])
+best_params_list$booster &lt;- &quot;gbtree&quot;
+best_params_list$objective &lt;- &quot;binary:logistic&quot;
+best_params_list$nthread &lt;- nc
+
+for(i in 1:10) {
+  #cat(&quot;\nIteration&quot;, i, &quot;of 100\n&quot;)       
+  # Create test split
+  idx &lt;- unique(sample(nrow(xs), nrow(xs), T))
+  train_x &lt;- xs[idx, ]
+  train_y &lt;- y[idx]
+  test_x &lt;- xs[-idx, ]
+  test_y &lt;- y[-idx]
+  
+  # Undersample training data
+  train_idx_0 &lt;- which(train_y == 0)
+  train_idx_1 &lt;- which(train_y == 1)
+  n_minority &lt;- length(train_idx_1)
+  train_idx_0_sampled &lt;- sample(train_idx_0, n_minority)
+  balanced_idx &lt;- c(train_idx_0_sampled, train_idx_1)
+  
+  # Create balanced training dataset
+  train_x_balanced &lt;- train_x[balanced_idx, ]
+  train_y_balanced &lt;- train_y[balanced_idx]
+  
+  # Train model
+  dm_train &lt;- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+  mdl &lt;- xgb.train(
+    params = best_params_list,
+    data = dm_train,
+    nrounds = best_params[[&quot;nrounds&quot;]],
+    verbose = FALSE
+  )
+  
+  # Test on unbalanced test set
+  p &lt;- predict(mdl, xgb.DMatrix(data = test_x))
+  pred &lt;- prediction(p, test_y)
+  test_aucs[i] &lt;- performance(pred, &quot;auc&quot;)@y.values[[1]]
+}
+
+# Print results
+cat(&quot;\nTest Results over 100 iterations:\n&quot;)</code></pre>
+<pre><code>## 
+## Test Results over 100 iterations:</code></pre>
+<pre class="r"><code>cat(&quot;Mean AUC:&quot;, mean(test_aucs), &quot;\n&quot;)</code></pre>
+<pre><code>## Mean AUC: 0.8942419</code></pre>
+<pre class="r"><code>cat(&quot;SD AUC:&quot;, sd(test_aucs), &quot;\n&quot;)</code></pre>
+<pre><code>## SD AUC: 0.003302526</code></pre>
+<pre class="r"><code>cat(&quot;95% CI:&quot;, mean(test_aucs) - 1.96 * sd(test_aucs), 
+    &quot;to&quot;, mean(test_aucs) + 1.96 * sd(test_aucs), &quot;\n&quot;)</code></pre>
+<pre><code>## 95% CI: 0.887769 to 0.9007149</code></pre>
+<pre class="r"><code># Now train final model on full data for z scores
+final_idx_0 &lt;- which(y == 0)
+final_idx_1 &lt;- which(y == 1)
+n_minority_final &lt;- length(final_idx_1)
+final_idx_0_sampled &lt;- sample(final_idx_0, n_minority_final)
+final_balanced_idx &lt;- c(final_idx_0_sampled, final_idx_1)
+
+# Create balanced final dataset
+xs_balanced &lt;- xs[final_balanced_idx, ]
+y_balanced &lt;- y[final_balanced_idx]
+
+dm_full &lt;- xgb.DMatrix(data = xs_balanced, label = y_balanced)
+final_model &lt;- xgb.train(
+  params = best_params_list,
+  data = dm_full,
+  nrounds = best_params[[&quot;nrounds&quot;]],
+  verbose = FALSE
+)
+
+# Get probability predictions (z) for ALL data
+z &lt;- predict(final_model, xgb.DMatrix(data = xs))</code></pre>
+<pre class="r"><code># Calculate residuals for XGBoost predictions
+y &lt;- as.numeric(as.character(select_data$attempt))
+residuals &lt;- y - z
+
+# Histogram of residuals
+hist(residuals, main=&quot;Distribution of XGBoost Model Residuals&quot;, xlab=&quot;Residual&quot;, breaks=100)</code></pre>
+<p><img src="heckman_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># plot out the z values\
+plot(density(z), 
+     main = &quot;Density of Z Predictions&quot;,
+     xlab = &quot;Predicted Probability of Attempt&quot;,
+     ylab = &quot;Density&quot;)</code></pre>
+<p><img src="heckman_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># Calculate GIMR (lambda) This is Generalized inverse mills ratio
+GIMR &lt;- dnorm(qnorm(z)) / (1 - pnorm(qnorm(z)))
+
+# Add GIMR to the data
+select_data[, GIMR := GIMR]
+
+# Print variable importa</code></pre>
+<pre class="r"><code># Create a data.table with just my_id and GIMR from select_data
+GIMR_dt &lt;- data.table(my_id = select_data$my_id, GIMR = GIMR)
+
+# Add GIMR to outcome_data by matching on my_id
+outcome_data[GIMR_dt, GIMR := i.GIMR, on = &quot;my_id&quot;]</code></pre>
+<div id="step-2-outcome_data" class="section level1">
+<h1>step 2 outcome_data</h1>
+<pre class="r"><code>#kill - my_id
+outcome_data &lt;- outcome_data[, my_id := NULL]
+outcome_data[, year2017_team_ARI := NULL]
+outcome_data &lt;- outcome_data[, yardline_1_10:= NULL]</code></pre>
+<pre class="r"><code>outcome_data[, conversion := as.numeric(as.character(conversion))]
+# Then run OLS with GIMR correction
+ols_model &lt;- lm(conversion ~  ., data = outcome_data)</code></pre>
+<pre class="r"><code>library(sandwich)</code></pre>
+<pre><code>## Warning: package &#39;sandwich&#39; was built under R version 4.3.3</code></pre>
+<pre class="r"><code>library(lmtest)</code></pre>
+<pre><code>## Warning: package &#39;lmtest&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<pre class="r"><code># Get HC0-adjusted t-values and p-values
+robust_test &lt;- coeftest(ols_model, vcov = vcovHC(ols_model, type = &quot;HC0&quot;))
+t_stats &lt;- robust_test[, &quot;t value&quot;]
+p_values &lt;- robust_test[, &quot;Pr(&gt;|t|)&quot;]
+
+# Function to add significance stars
+get_stars &lt;- function(p) {
+    if (p &lt;= 0.01) return(&quot;***&quot;)
+    if (p &lt;= 0.05) return(&quot;**&quot;)
+    if (p &lt;= 0.1) return(&quot;*&quot;)
+    if (p &lt;= 0.15) return(&quot;.&quot;)
+    return(&quot;&quot;)
+}
+
+# Maximum width for variable names
+name_width &lt;- 15
+
+# Print header with alignment
+cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Variable&quot;, &quot;t-value&quot;, &quot;p-value&quot;, &quot;sig&quot;))</code></pre>
+<pre><code>## Variable            t-value     p-value   sig</code></pre>
+<pre class="r"><code>cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;---------&quot;, &quot;-------&quot;, &quot;-------&quot;, &quot;----&quot;))</code></pre>
+<pre><code>## ---------           -------     -------  ----</code></pre>
+<pre class="r"><code># Loop through and print values
+for (i in 1:length(t_stats)) {
+    var_name &lt;- rownames(robust_test)[i]
+    # Truncate name if too long
+    if (nchar(var_name) &gt; name_width) {
+        var_name &lt;- paste0(substr(var_name, 1, name_width-3), &quot;...&quot;)
+    }
+    cat(sprintf(&quot;%-*s  %10.4f  %10.4f  %4s\n&quot;, 
+                name_width, var_name, 
+                t_stats[i], p_values[i],
+                get_stars(p_values[i])))
+}</code></pre>
+<pre><code>## (Intercept)          1.6190      0.1055     .
+## ydstogo            -12.7278      0.0000   ***
+## posteam_time...      1.2701      0.2041      
+## defteam_time...      0.8487      0.3961      
+## rush_attempt         7.0368      0.0000   ***
+## week                 0.8856      0.3759      
+## temp                -0.4949      0.6207      
+## wind                 0.9515      0.3414      
+## vegas_wp             1.5998      0.1097     .
+## vegas_wp_pos...      0.7783      0.4364      
+## total_line           2.2265      0.0260    **
+## prep_days            0.6544      0.5129      
+## overall_win_pct     -0.0532      0.9576      
+## team_win_pct         0.4663      0.6410      
+## prev_shotgun...      1.0114      0.3119      
+## prev_singleb...      0.5401      0.5891      
+## prev_empty_rate      1.1368      0.2557      
+## prev_shotgun...     -1.6285      0.1035     .
+## prev_singleb...      0.8869      0.3752      
+## prev_empty_s...      0.5161      0.6058      
+## prev_stop_ra...      0.6844      0.4937      
+## prev_stop_ra...     -3.1809      0.0015   ***
+## shotgun_rate         1.6619      0.0966     *
+## singleback_rate      0.8259      0.4089      
+## empty_rate           0.0361      0.9712      
+## shotgun_success     -2.1139      0.0346    **
+## singleback_s...     -1.1512      0.2497      
+## empty_success       -0.6185      0.5363      
+## def_stop_rat...      1.9099      0.0562     *
+## def_stop_rat...     -1.0319      0.3022      
+## avg_pass_rus...     -0.7653      0.4441      
+## avg_box_defe...     -0.5922      0.5537      
+## cover0_rate         -0.3680      0.7129      
+## cover1_rate         -0.4909      0.6235      
+## cover2_rate          0.0473      0.9623      
+## cover3_rate          1.5646      0.1178     .
+## cover4_rate          1.4131      0.1577      
+## cover6_rate         -0.2616      0.7937      
+## two_man_rate         1.4694      0.1418     .
+## prevent_rate         2.6338      0.0085   ***
+## home_attendance      0.1385      0.8899      
+## roof_outdoors        0.0884      0.9296      
+## posteam_type...      0.8796      0.3791      
+## offense_form...      0.8379      0.4021      
+## offense_form...      0.2527      0.8005      
+## offense_form...      0.1399      0.8888      
+## offense_play...      2.7192      0.0066   ***
+## offense_play...     -1.3279      0.1843      
+## offense_play...      0.0321      0.9744      
+## offense_play...     -0.1204      0.9042      
+## offense_play...     -0.7061      0.4802      
+## offense_play...     -2.7623      0.0058   ***
+## offense_play...     -2.5256      0.0116    **
+## offense_play...     -0.3803      0.7038      
+## offense_play...     -0.8158      0.4147      
+## offense_play...      3.1669      0.0016   ***
+## offense_play...     -0.2470      0.8049      
+## offense_play...     -1.0094      0.3128      
+## offense_play...     -0.7644      0.4447      
+## offense_play...     -0.7710      0.4408      
+## offense_play...      0.2963      0.7670      
+## offense_play...     -1.2990      0.1940      
+## offense_play...      1.2441      0.2136      
+## offense_play...     -5.8623      0.0000   ***
+## offense_play...     -2.2363      0.0254    **
+## offense_play...     -3.1404      0.0017   ***
+## offense_play...     -0.7421      0.4581      
+## offense_play...      1.7830      0.0747     *
+## offense_play...      1.4329      0.1520      
+## offense_play...      1.2226      0.2215      
+## offense_play...      1.6933      0.0905     *
+## offense_play...     -0.7220      0.4704      
+## offense_play...      0.0931      0.9258      
+## offense_play...      0.7833      0.4335      
+## offense_play...      0.0365      0.9709      
+## offense_play...     -2.1841      0.0290    **
+## offense_play...      0.5391      0.5898      
+## offense_play...      0.6550      0.5125      
+## offense_play...      1.9850      0.0472    **
+## offense_play...     -0.9841      0.3251      
+## offense_play...     -0.4561      0.6483      
+## offense_play...      1.8785      0.0604     *
+## offense_play...      1.1620      0.2453      
+## offense_play...     -1.8774      0.0605     *
+## offense_play...      2.2754      0.0229    **
+## defense_play...     -1.7302      0.0837     *
+## defense_play...      1.7598      0.0785     *
+## defense_play...      0.3933      0.6941      
+## defense_play...     -1.0331      0.3016      
+## defense_play...     -1.2877      0.1979      
+## defense_play...     -0.6122      0.5404      
+## defense_play...      0.4297      0.6675      
+## defense_play...     -0.1804      0.8568      
+## defense_play...     -0.5090      0.6108      
+## defense_play...     -0.2465      0.8053      
+## defense_play...      2.2994      0.0215    **
+## defense_play...      0.4895      0.6245      
+## defense_play...      0.6348      0.5256      
+## defense_play...      0.0876      0.9302      
+## defense_play...      0.4125      0.6800      
+## defense_play...      1.3807      0.1674      
+## defense_play...      0.6782      0.4977      
+## defense_play...     -0.7689      0.4420      
+## defense_play...      1.3934      0.1636      
+## defense_play...      0.8959      0.3704      
+## defense_play...      1.0682      0.2855      
+## defense_play...     -0.2209      0.8252      
+## defense_play...     -0.7402      0.4592      
+## defense_play...      3.7078      0.0002   ***
+## defense_play...      0.5118      0.6088      
+## defense_play...     -3.4817      0.0005   ***
+## defense_play...      1.2774      0.2016      
+## defense_play...     -0.2980      0.7657      
+## defense_play...     -0.5032      0.6149      
+## defense_play...      0.0828      0.9340      
+## defense_play...      0.6055      0.5449      
+## defense_play...     -0.6487      0.5166      
+## defense_play...     -0.1227      0.9023      
+## defense_play...     -0.4320      0.6658      
+## defense_play...      1.4145      0.1573      
+## defense_play...     -1.6848      0.0921     *
+## defense_play...     -0.2242      0.8226      
+## defense_play...     -0.8071      0.4196      
+## defense_play...     -0.2059      0.8368      
+## defense_play...      1.0705      0.2845      
+## defense_play...     -0.7336      0.4633      
+## defense_play...      0.3910      0.6958      
+## defense_play...      1.7556      0.0792     *
+## defense_play...      0.6717      0.5018      
+## defense_play...     -1.7933      0.0730     *
+## defense_play...     -0.1002      0.9202      
+## yardline_11_20       2.4307      0.0151    **
+## yardline_21_30       2.2309      0.0257    **
+## yardline_31_40       2.3621      0.0182    **
+## yardline_41_50       3.9201      0.0001   ***
+## yardline_51_60       2.4946      0.0127    **
+## yardline_61_70       3.3276      0.0009   ***
+## yardline_71_80       3.3752      0.0007   ***
+## yardline_81_90       3.2311      0.0012   ***
+## yardline_91_100      1.2787      0.2011      
+## year2017_tea...     -0.8226      0.4108      
+## year2017_tea...      0.2747      0.7835      
+## year2017_tea...      1.0886      0.2764      
+## year2017_tea...     -1.0411      0.2979      
+## year2017_tea...     -0.4578      0.6471      
+## year2017_tea...      2.1534      0.0314    **
+## year2017_tea...      1.2997      0.1938      
+## year2017_tea...     -1.3712      0.1704      
+## year2017_tea...     -0.7333      0.4634      
+## year2017_tea...     -0.2614      0.7938      
+## year2017_tea...      1.5314      0.1257     .
+## year2017_tea...      0.1616      0.8716      
+## year2017_tea...     -0.0214      0.9829      
+## year2017_tea...      0.1305      0.8961      
+## year2017_tea...     -0.7343      0.4628      
+## year2017_tea...     -0.9440      0.3453      
+## year2017_tea...      0.6037      0.5461      
+## year2017_tea...      0.4236      0.6719      
+## year2017_tea...      0.8951      0.3708      
+## year2017_tea...      0.8620      0.3888      
+## year2017_tea...      0.7605      0.4470      
+## year2017_tea...      0.5325      0.5944      
+## year2017_tea...     -0.9304      0.3522      
+## year2017_tea...     -0.1893      0.8499      
+## year2017_tea...      0.2599      0.7950      
+## year2017_tea...      1.2524      0.2105      
+## year2017_tea...     -0.3825      0.7021      
+## year2017_tea...      0.6795      0.4969      
+## year2017_tea...      0.1159      0.9077      
+## year2017_tea...      0.0213      0.9830      
+## year2017_tea...      0.3866      0.6991      
+## year2018_tea...     -0.1574      0.8750      
+## year2018_tea...      0.1421      0.8870      
+## year2018_tea...      0.0959      0.9236      
+## year2018_tea...     -0.2615      0.7937      
+## year2018_tea...      0.2891      0.7725      
+## year2018_tea...      0.6038      0.5460      
+## year2018_tea...     -0.5737      0.5662      
+## year2018_tea...      0.3788      0.7048      
+## year2018_tea...      0.4385      0.6610      
+## year2018_tea...     -0.5244      0.6000      
+## year2018_tea...      0.1237      0.9016      
+## year2018_tea...     -0.6102      0.5418      
+## year2018_tea...     -0.5608      0.5750      
+## year2018_tea...     -0.1464      0.8836      
+## year2018_tea...     -0.5720      0.5673      
+## year2018_tea...     -0.3695      0.7117      
+## year2018_tea...     -0.1764      0.8600      
+## year2018_tea...     -0.3597      0.7191      
+## year2018_tea...     -0.1382      0.8901      
+## year2018_tea...     -0.3366      0.7364      
+## year2018_tea...      0.3961      0.6921      
+## year2018_tea...      0.4166      0.6770      
+## year2018_tea...      0.3578      0.7205      
+## year2018_tea...      0.1155      0.9080      
+## year2018_tea...     -0.1508      0.8801      
+## year2018_tea...      0.4733      0.6360      
+## year2018_tea...      0.4201      0.6745      
+## year2018_tea...      0.2892      0.7724      
+## year2018_tea...     -0.1794      0.8576      
+## year2018_tea...     -0.9230      0.3561      
+## year2018_tea...      0.3582      0.7202      
+## year2018_tea...     -0.0841      0.9330      
+## year2019_tea...     -0.4212      0.6737      
+## year2019_tea...     -0.6529      0.5138      
+## year2019_tea...      0.2124      0.8318      
+## year2019_tea...      0.4495      0.6531      
+## year2019_tea...     -0.4193      0.6750      
+## year2019_tea...     -0.5275      0.5979      
+## year2019_tea...      0.2153      0.8295      
+## year2019_tea...     -0.1102      0.9123      
+## year2019_tea...     -0.7829      0.4337      
+## year2019_tea...     -0.7018      0.4829      
+## year2019_tea...      0.1578      0.8746      
+## year2019_tea...     -0.9189      0.3582      
+## year2019_tea...     -0.1509      0.8801      
+## year2019_tea...     -0.0678      0.9459      
+## year2019_tea...     -0.1345      0.8930      
+## year2019_tea...     -0.2925      0.7699      
+## year2019_tea...      0.0768      0.9388      
+## year2019_tea...     -0.4135      0.6793      
+## year2019_tea...      0.3422      0.7322      
+## year2019_tea...     -0.7126      0.4761      
+## year2019_tea...     -0.3965      0.6918      
+## year2019_tea...     -0.7268      0.4674      
+## year2019_tea...     -1.2183      0.2232      
+## year2019_tea...     -0.6326      0.5271      
+## year2019_tea...     -1.2577      0.2086      
+## year2019_tea...     -0.5132      0.6079      
+## year2019_tea...     -1.5992      0.1099     .
+## year2019_tea...     -0.8119      0.4169      
+## year2019_tea...      0.4285      0.6683      
+## year2019_tea...     -0.4786      0.6323      
+## year2019_tea...     -0.0512      0.9592      
+## year2019_tea...     -0.5091      0.6107      
+## year2020_tea...      0.0780      0.9378      
+## year2020_tea...      0.3692      0.7120      
+## year2020_tea...      0.0002      0.9999      
+## year2020_tea...      0.4473      0.6547      
+## year2020_tea...      0.8400      0.4010      
+## year2020_tea...     -0.4102      0.6817      
+## year2020_tea...     -0.6590      0.5100      
+## year2020_tea...     -0.5554      0.5786      
+## year2020_tea...      0.2879      0.7735      
+## year2020_tea...     -0.9280      0.3535      
+## year2020_tea...      0.5400      0.5892      
+## year2020_tea...     -0.4455      0.6560      
+## year2020_tea...      0.0346      0.9724      
+## year2020_tea...     -0.1136      0.9095      
+## year2020_tea...     -0.0824      0.9343      
+## year2020_tea...     -0.0535      0.9574      
+## year2020_tea...     -0.1052      0.9162      
+## year2020_tea...     -0.1242      0.9012      
+## year2020_tea...     -0.2372      0.8125      
+## year2020_tea...     -0.4506      0.6523      
+## year2020_tea...     -0.7139      0.4753      
+## year2020_tea...     -0.0818      0.9348      
+## year2020_tea...      0.3951      0.6928      
+## year2020_tea...     -0.3559      0.7219      
+## year2020_tea...      0.3864      0.6993      
+## year2020_tea...     -1.0056      0.3147      
+## year2020_tea...     -0.3908      0.6960      
+## year2020_tea...      0.2517      0.8013      
+## year2020_tea...      0.3470      0.7286      
+## year2020_tea...     -0.2837      0.7767      
+## year2020_tea...      0.4683      0.6396      
+## year2020_tea...     -0.4929      0.6221      
+## year2021_tea...     -0.9614      0.3364      
+## year2021_tea...      0.3050      0.7604      
+## year2021_tea...     -0.9509      0.3417      
+## year2021_tea...     -0.2667      0.7898      
+## year2021_tea...      0.0714      0.9431      
+## year2021_tea...     -0.4123      0.6801      
+## year2021_tea...      0.0024      0.9981      
+## year2021_tea...     -0.4655      0.6416      
+## year2021_tea...      0.1959      0.8447      
+## year2021_tea...     -0.3424      0.7321      
+## year2021_tea...      0.2855      0.7753      
+## year2021_tea...     -0.2295      0.8185      
+## year2021_tea...      0.1145      0.9088      
+## year2021_tea...     -0.1508      0.8802      
+## year2021_tea...     -0.3881      0.6979      
+## year2021_tea...      0.2648      0.7912      
+## year2021_tea...      0.4551      0.6491      
+## year2021_tea...     -0.5139      0.6074      
+## year2021_tea...     -1.3056      0.1918      
+## year2021_tea...      0.3309      0.7407      
+## year2021_tea...     -0.3512      0.7255      
+## year2021_tea...     -0.0232      0.9815      
+## year2021_tea...      0.1378      0.8904      
+## year2021_tea...     -0.0888      0.9292      
+## year2021_tea...     -0.8985      0.3690      
+## year2021_tea...     -1.0956      0.2733      
+## year2021_tea...      0.0419      0.9666      
+## year2021_tea...     -0.7289      0.4661      
+## year2021_tea...     -0.7136      0.4755      
+## year2021_tea...     -0.0678      0.9459      
+## year2021_tea...     -0.1165      0.9073      
+## year2021_tea...     -0.2640      0.7918      
+## year2022_tea...     -1.2484      0.2120      
+## year2022_tea...     -1.5019      0.1332     .
+## year2022_tea...      0.2747      0.7835      
+## year2022_tea...     -0.5106      0.6097      
+## year2022_tea...     -0.6315      0.5278      
+## year2022_tea...     -0.4961      0.6199      
+## year2022_tea...     -0.5965      0.5509      
+## year2022_tea...     -0.5365      0.5916      
+## year2022_tea...     -0.9348      0.3500      
+## year2022_tea...     -0.2385      0.8115      
+## year2022_tea...      0.0146      0.9883      
+## year2022_tea...      0.5205      0.6028      
+## year2022_tea...     -0.3590      0.7196      
+## year2022_tea...     -1.1300      0.2585      
+## year2022_tea...      0.4249      0.6709      
+## year2022_tea...     -0.0872      0.9305      
+## year2022_tea...     -0.4781      0.6326      
+## year2022_tea...     -0.8335      0.4046      
+## year2022_tea...     -0.8382      0.4020      
+## year2022_tea...     -0.5668      0.5709      
+## year2022_tea...      0.5208      0.6025      
+## year2022_tea...      0.3834      0.7015      
+## year2022_tea...     -0.3201      0.7489      
+## year2022_tea...      0.2957      0.7675      
+## year2022_tea...      0.5933      0.5530      
+## year2022_tea...     -0.1707      0.8645      
+## year2022_tea...     -0.0749      0.9403      
+## year2022_tea...     -0.5770      0.5640      
+## year2022_tea...      0.0242      0.9807      
+## year2022_tea...     -0.7175      0.4731      
+## year2022_tea...     -0.5270      0.5983      
+## year2022_tea...     -1.0512      0.2933      
+## year2023_tea...     -0.6119      0.5407      
+## year2023_tea...     -0.9527      0.3408      
+## year2023_tea...     -1.0231      0.3063      
+## year2023_tea...      0.0093      0.9926      
+## year2023_tea...      0.0860      0.9315      
+## year2023_tea...     -0.0226      0.9820      
+## year2023_tea...      0.0305      0.9757      
+## year2023_tea...      0.0393      0.9687      
+## year2023_tea...      0.1592      0.8735      
+## year2023_tea...      0.5012      0.6163      
+## year2023_tea...     -0.4181      0.6759      
+## year2023_tea...      0.2244      0.8224      
+## year2023_tea...     -1.3137      0.1890      
+## year2023_tea...      0.0457      0.9635      
+## year2023_tea...      0.3441      0.7308      
+## year2023_tea...     -0.8919      0.3725      
+## year2023_tea...     -0.5372      0.5912      
+## year2023_tea...      0.0076      0.9939      
+## year2023_tea...      0.1511      0.8799      
+## year2023_tea...     -0.2022      0.8398      
+## year2023_tea...     -0.0160      0.9872      
+## year2023_tea...      0.0898      0.9284      
+## year2023_tea...     -0.2638      0.7919      
+## year2023_tea...     -0.3488      0.7272      
+## year2023_tea...     -0.2182      0.8273      
+## year2023_tea...     -0.1262      0.8996      
+## year2023_tea...     -1.1808      0.2378      
+## year2023_tea...     -0.7970      0.4255      
+## year2023_tea...     -0.0208      0.9834      
+## year2023_tea...      0.3323      0.7397      
+## year2023_tea...     -0.8037      0.4216      
+## year2023_tea...      0.4780      0.6327      
+## is_first_half       -1.0151      0.3101      
+## time_in_half         1.3929      0.1637      
+## GIMR                 2.2238      0.0262    **</code></pre>
+<pre class="r"><code>cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15&quot;)</code></pre>
+<pre><code>## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
+<pre class="r"><code># get vifs
+#library(car)
+#vif(ols_model)</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkhlY2ttYW4gU2VsZWN0aW9uIE1vZGVsIEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0Kb3V0Y29tZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X291dGNvbWUuY3N2Lmd6IikNCnNlbGVjdF9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X3NlbGVjdC5jc3YuZ3oiKQ0KYGBgDQoNCmBgYHtyfQ0Kc2VsZWN0X2RhdGFbLCBhdHRlbXB0IDo9IGFzLm51bWVyaWMoYXMuY2hhcmFjdGVyKGF0dGVtcHQpKV0NCmBgYA0KDQpgYGB7cn0NCiMgTG9hZCByZXF1aXJlZCBsaWJyYXJpZXMNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkoeGdib29zdCkNCmxpYnJhcnkoUk9DUikNCmxpYnJhcnkocGFyYWxsZWwpDQoNCiMgUHJlcGFyZSB0aGUgWEdCb29zdCBtYXRyaWNlcw0KeHMgPC0gbW9kZWwubWF0cml4KH4gLiAtIDEgLSBhdHRlbXB0IC0gbXlfaWQsIGRhdGEgPSBzZWxlY3RfZGF0YSkNCnkgPC0gYXMubnVtZXJpYyhhcy5jaGFyYWN0ZXIoc2VsZWN0X2RhdGEkYXR0ZW1wdCkpDQoNCiMgQ3JlYXRlIHBhcmFtZXRlciBncmlkDQpncmlkIDwtIGV4cGFuZC5ncmlkKA0KICBldGEgPSBzZXEoMC4wMDEsIDAuMSwgYnkgPSAwLjA1KSwNCiAgbWF4X2RlcHRoID0gc2VxKDUsIDksIGJ5ID0gNCksDQogIG1pbl9jaGlsZF93ZWlnaHQgPSBzZXEoMSwgMSwgYnkgPSAxKSwgICAgICAgIA0KICBzdWJzYW1wbGUgPSBzZXEoMC44LCAwLjgsIGJ5ID0gMC4yKSwNCiAgY29sc2FtcGxlX2J5dHJlZSA9IHNlcSgwLjgsIDAuOCwgYnkgPSAwLjIpLA0KICBsYW1iZGEgPSBzZXEoMSwgMSwgYnkgPSAxKSwgICAgICAgICAgICAgICAgDQogIGFscGhhID0gc2VxKDAsIDAsIGJ5ID0gMSksICAgICAgICAgICAgICAgICAgDQogIGdhbW1hID0gc2VxKDAsIDAuMSwgYnkgPSAwLjEpLCAgICAgICAgICAgICAgIA0KICBucm91bmRzID0gc2VxKDEwMCwgNTAwLCBieSA9IDQwMCkNCikNCg0KIyBTYW1wbGUgZ3JpZCBwb2ludHMNCmNvbmZfbGV2IDwtIC45NQ0KbnVtX21heCA8LSA1DQpuIDwtIGNlaWxpbmcobG9nKDEtY29uZl9sZXYpL2xvZygxLW51bV9tYXgvbnJvdyhncmlkKSkpDQppbmQgPC0gc2FtcGxlKG5yb3coZ3JpZCksIG4sIHJlcGxhY2UgPSBGQUxTRSkNCnJncmlkIDwtIGdyaWRbaW5kLCBdDQoNCiMgU2V0IHVwIHBhcmFsbGVsIHByb2Nlc3NpbmcNCm5jIDwtIGRldGVjdENvcmVzKCkgLSAxDQoNCiMgVmFsaWRhdGlvbiBwaGFzZQ0KY2F0KCJcblBoYXNlIDE6IFZhbGlkYXRpb24gUGhhc2VcbiIpDQpuX3ZhbGlkYXRpb25zIDwtIDINCnZhbGlkYXRpb25fcmVzdWx0cyA8LSBtYXRyaXgobnJvdyA9IG5yb3cocmdyaWQpLCBuY29sID0gbl92YWxpZGF0aW9ucykNCg0KZm9yIChqIGluIDE6bnJvdyhyZ3JpZCkpIHsNCiAgI2NhdCgiXG5UZXN0aW5nIHBhcmFtZXRlciBzZXQiLCBqLCAib2YiLCBucm93KHJncmlkKSwgIlxuIikNCiAgDQogIGZvciAoaSBpbiAxOm5fdmFsaWRhdGlvbnMpIHsNCiAgICAjIENyZWF0ZSB2YWxpZGF0aW9uIHNwbGl0DQogICAgaWR4IDwtIHVuaXF1ZShzYW1wbGUobnJvdyh4cyksIG5yb3coeHMpLCBUKSkNCiAgICB0cmFpbl94IDwtIHhzW2lkeCwgXQ0KICAgIHRyYWluX3kgPC0geVtpZHhdDQogICAgdmFsX3ggPC0geHNbLWlkeCwgXQ0KICAgIHZhbF95IDwtIHlbLWlkeF0NCiAgICANCiAgICAjIFVuZGVyc2FtcGxlIG1ham9yaXR5IGNsYXNzIGluIHRyYWluaW5nIGRhdGENCiAgICB0cmFpbl9pZHhfMCA8LSB3aGljaCh0cmFpbl95ID09IDApDQogICAgdHJhaW5faWR4XzEgPC0gd2hpY2godHJhaW5feSA9PSAxKQ0KICAgIA0KICAgICMgR2V0IG51bWJlciBvZiBtaW5vcml0eSBjbGFzcyBzYW1wbGVzDQogICAgbl9taW5vcml0eSA8LSBsZW5ndGgodHJhaW5faWR4XzEpDQogICAgDQogICAgIyBSYW5kb21seSBzYW1wbGUgZnJvbSBtYWpvcml0eSBjbGFzcw0KICAgIHRyYWluX2lkeF8wX3NhbXBsZWQgPC0gc2FtcGxlKHRyYWluX2lkeF8wLCBuX21pbm9yaXR5KQ0KICAgIA0KICAgICMgQ29tYmluZSBpbmRpY2VzIGZvciBiYWxhbmNlZCBkYXRhc2V0DQogICAgYmFsYW5jZWRfaWR4IDwtIGModHJhaW5faWR4XzBfc2FtcGxlZCwgdHJhaW5faWR4XzEpDQogICAgDQogICAgIyBDcmVhdGUgYmFsYW5jZWQgdHJhaW5pbmcgZGF0YXNldA0KICAgIHRyYWluX3hfYmFsYW5jZWQgPC0gdHJhaW5feFtiYWxhbmNlZF9pZHgsIF0NCiAgICB0cmFpbl95X2JhbGFuY2VkIDwtIHRyYWluX3lbYmFsYW5jZWRfaWR4XQ0KICAgIA0KICAgIHBybSA8LSBsaXN0KA0KICAgICAgYm9vc3RlciA9ICJnYnRyZWUiLA0KICAgICAgb2JqZWN0aXZlID0gImJpbmFyeTpsb2dpc3RpYyIsDQogICAgICBtYXhfZGVwdGggPSByZ3JpZFtqLCAibWF4X2RlcHRoIl0sDQogICAgICBldGEgPSByZ3JpZFtqLCAiZXRhIl0sDQogICAgICBzdWJzYW1wbGUgPSByZ3JpZFtqLCAic3Vic2FtcGxlIl0sDQogICAgICBjb2xzYW1wbGVfYnl0cmVlID0gcmdyaWRbaiwgImNvbHNhbXBsZV9ieXRyZWUiXSwNCiAgICAgIGdhbW1hID0gcmdyaWRbaiwgImdhbW1hIl0sDQogICAgICBtaW5fY2hpbGRfd2VpZ2h0ID0gcmdyaWRbaiwgIm1pbl9jaGlsZF93ZWlnaHQiXSwNCiAgICAgIGFscGhhID0gcmdyaWRbaiwgImFscGhhIl0sDQogICAgICBsYW1iZGEgPSByZ3JpZFtqLCAibGFtYmRhIl0sDQogICAgICBudGhyZWFkID0gbmMNCiAgICApDQogICAgDQogICAgZG1fdHJhaW4gPC0geGdiLkRNYXRyaXgoZGF0YSA9IHRyYWluX3hfYmFsYW5jZWQsIGxhYmVsID0gdHJhaW5feV9iYWxhbmNlZCkNCiAgICBtZGwgPC0geGdiLnRyYWluKA0KICAgICAgcGFyYW1zID0gcHJtLA0KICAgICAgZGF0YSA9IGRtX3RyYWluLA0KICAgICAgbnJvdW5kcyA9IHJncmlkW2osICJucm91bmRzIl0sDQogICAgICB2ZXJib3NlID0gRkFMU0UNCiAgICApDQogICAgDQogICAgcCA8LSBwcmVkaWN0KG1kbCwgeGdiLkRNYXRyaXgoZGF0YSA9IHZhbF94KSkNCiAgICBwcmVkIDwtIHByZWRpY3Rpb24ocCwgdmFsX3kpDQogICAgdmFsaWRhdGlvbl9yZXN1bHRzW2osIGldIDwtIHBlcmZvcm1hbmNlKHByZWQsICJhdWMiKUB5LnZhbHVlc1tbMV1dDQogIH0NCiAgDQogICNjYXQoIk1lYW4gQVVDOiIsIG1lYW4odmFsaWRhdGlvbl9yZXN1bHRzW2osXSksICJcbiIpDQogICNjYXQoIlNEIEFVQzoiLCBzZCh2YWxpZGF0aW9uX3Jlc3VsdHNbaixdKSwgIlxuIikNCn0NCg0KIyBSdW4gMTAwIHRlc3RzIHdpdGggYmVzdCBwYXJhbWV0ZXJzDQpjYXQoIlxuUnVubmluZyBYIHRlc3QgaXRlcmF0aW9ucyB3aXRoIGJlc3QgcGFyYW1ldGVycy4uLlxuIikNCnRlc3RfYXVjcyA8LSBjKCkNCg0KYmVzdF9wYXJhbXNfaWR4IDwtIHdoaWNoLm1heChyb3dNZWFucyh2YWxpZGF0aW9uX3Jlc3VsdHMpKQ0KYmVzdF9wYXJhbXMgPC0gcmdyaWRbYmVzdF9wYXJhbXNfaWR4LF0NCg0KIyBUcmFpbiBmaW5hbCBtb2RlbCB3aXRoIGJlc3QgcGFyYW1ldGVycw0KYmVzdF9wYXJhbXNfbGlzdCA8LSBhcy5saXN0KGJlc3RfcGFyYW1zWy13aGljaChuYW1lcyhiZXN0X3BhcmFtcykgPT0gIm5yb3VuZHMiKV0pDQpiZXN0X3BhcmFtc19saXN0JGJvb3N0ZXIgPC0gImdidHJlZSINCmJlc3RfcGFyYW1zX2xpc3Qkb2JqZWN0aXZlIDwtICJiaW5hcnk6bG9naXN0aWMiDQpiZXN0X3BhcmFtc19saXN0JG50aHJlYWQgPC0gbmMNCg0KZm9yKGkgaW4gMToxMCkgew0KICAjY2F0KCJcbkl0ZXJhdGlvbiIsIGksICJvZiAxMDBcbiIpICAgICAgIA0KICAjIENyZWF0ZSB0ZXN0IHNwbGl0DQogIGlkeCA8LSB1bmlxdWUoc2FtcGxlKG5yb3coeHMpLCBucm93KHhzKSwgVCkpDQogIHRyYWluX3ggPC0geHNbaWR4LCBdDQogIHRyYWluX3kgPC0geVtpZHhdDQogIHRlc3RfeCA8LSB4c1staWR4LCBdDQogIHRlc3RfeSA8LSB5Wy1pZHhdDQogIA0KICAjIFVuZGVyc2FtcGxlIHRyYWluaW5nIGRhdGENCiAgdHJhaW5faWR4XzAgPC0gd2hpY2godHJhaW5feSA9PSAwKQ0KICB0cmFpbl9pZHhfMSA8LSB3aGljaCh0cmFpbl95ID09IDEpDQogIG5fbWlub3JpdHkgPC0gbGVuZ3RoKHRyYWluX2lkeF8xKQ0KICB0cmFpbl9pZHhfMF9zYW1wbGVkIDwtIHNhbXBsZSh0cmFpbl9pZHhfMCwgbl9taW5vcml0eSkNCiAgYmFsYW5jZWRfaWR4IDwtIGModHJhaW5faWR4XzBfc2FtcGxlZCwgdHJhaW5faWR4XzEpDQogIA0KICAjIENyZWF0ZSBiYWxhbmNlZCB0cmFpbmluZyBkYXRhc2V0DQogIHRyYWluX3hfYmFsYW5jZWQgPC0gdHJhaW5feFtiYWxhbmNlZF9pZHgsIF0NCiAgdHJhaW5feV9iYWxhbmNlZCA8LSB0cmFpbl95W2JhbGFuY2VkX2lkeF0NCiAgDQogICMgVHJhaW4gbW9kZWwNCiAgZG1fdHJhaW4gPC0geGdiLkRNYXRyaXgoZGF0YSA9IHRyYWluX3hfYmFsYW5jZWQsIGxhYmVsID0gdHJhaW5feV9iYWxhbmNlZCkNCiAgbWRsIDwtIHhnYi50cmFpbigNCiAgICBwYXJhbXMgPSBiZXN0X3BhcmFtc19saXN0LA0KICAgIGRhdGEgPSBkbV90cmFpbiwNCiAgICBucm91bmRzID0gYmVzdF9wYXJhbXNbWyJucm91bmRzIl1dLA0KICAgIHZlcmJvc2UgPSBGQUxTRQ0KICApDQogIA0KICAjIFRlc3Qgb24gdW5iYWxhbmNlZCB0ZXN0IHNldA0KICBwIDwtIHByZWRpY3QobWRsLCB4Z2IuRE1hdHJpeChkYXRhID0gdGVzdF94KSkNCiAgcHJlZCA8LSBwcmVkaWN0aW9uKHAsIHRlc3RfeSkNCiAgdGVzdF9hdWNzW2ldIDwtIHBlcmZvcm1hbmNlKHByZWQsICJhdWMiKUB5LnZhbHVlc1tbMV1dDQp9DQoNCiMgUHJpbnQgcmVzdWx0cw0KY2F0KCJcblRlc3QgUmVzdWx0cyBvdmVyIDEwMCBpdGVyYXRpb25zOlxuIikNCmNhdCgiTWVhbiBBVUM6IiwgbWVhbih0ZXN0X2F1Y3MpLCAiXG4iKQ0KY2F0KCJTRCBBVUM6Iiwgc2QodGVzdF9hdWNzKSwgIlxuIikNCmNhdCgiOTUlIENJOiIsIG1lYW4odGVzdF9hdWNzKSAtIDEuOTYgKiBzZCh0ZXN0X2F1Y3MpLCANCiAgICAidG8iLCBtZWFuKHRlc3RfYXVjcykgKyAxLjk2ICogc2QodGVzdF9hdWNzKSwgIlxuIikNCg0KIyBOb3cgdHJhaW4gZmluYWwgbW9kZWwgb24gZnVsbCBkYXRhIGZvciB6IHNjb3Jlcw0KZmluYWxfaWR4XzAgPC0gd2hpY2goeSA9PSAwKQ0KZmluYWxfaWR4XzEgPC0gd2hpY2goeSA9PSAxKQ0Kbl9taW5vcml0eV9maW5hbCA8LSBsZW5ndGgoZmluYWxfaWR4XzEpDQpmaW5hbF9pZHhfMF9zYW1wbGVkIDwtIHNhbXBsZShmaW5hbF9pZHhfMCwgbl9taW5vcml0eV9maW5hbCkNCmZpbmFsX2JhbGFuY2VkX2lkeCA8LSBjKGZpbmFsX2lkeF8wX3NhbXBsZWQsIGZpbmFsX2lkeF8xKQ0KDQojIENyZWF0ZSBiYWxhbmNlZCBmaW5hbCBkYXRhc2V0DQp4c19iYWxhbmNlZCA8LSB4c1tmaW5hbF9iYWxhbmNlZF9pZHgsIF0NCnlfYmFsYW5jZWQgPC0geVtmaW5hbF9iYWxhbmNlZF9pZHhdDQoNCmRtX2Z1bGwgPC0geGdiLkRNYXRyaXgoZGF0YSA9IHhzX2JhbGFuY2VkLCBsYWJlbCA9IHlfYmFsYW5jZWQpDQpmaW5hbF9tb2RlbCA8LSB4Z2IudHJhaW4oDQogIHBhcmFtcyA9IGJlc3RfcGFyYW1zX2xpc3QsDQogIGRhdGEgPSBkbV9mdWxsLA0KICBucm91bmRzID0gYmVzdF9wYXJhbXNbWyJucm91bmRzIl1dLA0KICB2ZXJib3NlID0gRkFMU0UNCikNCg0KIyBHZXQgcHJvYmFiaWxpdHkgcHJlZGljdGlvbnMgKHopIGZvciBBTEwgZGF0YQ0KeiA8LSBwcmVkaWN0KGZpbmFsX21vZGVsLCB4Z2IuRE1hdHJpeChkYXRhID0geHMpKQ0KYGBgDQoNCmBgYHtyfQ0KIyBDYWxjdWxhdGUgcmVzaWR1YWxzIGZvciBYR0Jvb3N0IHByZWRpY3Rpb25zDQp5IDwtIGFzLm51bWVyaWMoYXMuY2hhcmFjdGVyKHNlbGVjdF9kYXRhJGF0dGVtcHQpKQ0KcmVzaWR1YWxzIDwtIHkgLSB6DQoNCiMgSGlzdG9ncmFtIG9mIHJlc2lkdWFscw0KaGlzdChyZXNpZHVhbHMsIG1haW49IkRpc3RyaWJ1dGlvbiBvZiBYR0Jvb3N0IE1vZGVsIFJlc2lkdWFscyIsIHhsYWI9IlJlc2lkdWFsIiwgYnJlYWtzPTEwMCkNCmBgYA0KDQpgYGB7cn0NCiMgcGxvdCBvdXQgdGhlIHogdmFsdWVzXA0KcGxvdChkZW5zaXR5KHopLCANCiAgICAgbWFpbiA9ICJEZW5zaXR5IG9mIFogUHJlZGljdGlvbnMiLA0KICAgICB4bGFiID0gIlByZWRpY3RlZCBQcm9iYWJpbGl0eSBvZiBBdHRlbXB0IiwNCiAgICAgeWxhYiA9ICJEZW5zaXR5IikNCmBgYA0KDQpgYGB7cn0NCiMgQ2FsY3VsYXRlIEdJTVIgKGxhbWJkYSkgVGhpcyBpcyBHZW5lcmFsaXplZCBpbnZlcnNlIG1pbGxzIHJhdGlvDQpHSU1SIDwtIGRub3JtKHFub3JtKHopKSAvICgxIC0gcG5vcm0ocW5vcm0oeikpKQ0KDQojIEFkZCBHSU1SIHRvIHRoZSBkYXRhDQpzZWxlY3RfZGF0YVssIEdJTVIgOj0gR0lNUl0NCg0KIyBQcmludCB2YXJpYWJsZSBpbXBvcnRhDQpgYGANCg0KYGBge3J9DQojIENyZWF0ZSBhIGRhdGEudGFibGUgd2l0aCBqdXN0IG15X2lkIGFuZCBHSU1SIGZyb20gc2VsZWN0X2RhdGENCkdJTVJfZHQgPC0gZGF0YS50YWJsZShteV9pZCA9IHNlbGVjdF9kYXRhJG15X2lkLCBHSU1SID0gR0lNUikNCg0KIyBBZGQgR0lNUiB0byBvdXRjb21lX2RhdGEgYnkgbWF0Y2hpbmcgb24gbXlfaWQNCm91dGNvbWVfZGF0YVtHSU1SX2R0LCBHSU1SIDo9IGkuR0lNUiwgb24gPSAibXlfaWQiXQ0KYGBgDQoNCiMgc3RlcCAyIG91dGNvbWVfZGF0YQ0KDQpgYGB7cn0NCiNraWxsIC0gbXlfaWQNCm91dGNvbWVfZGF0YSA8LSBvdXRjb21lX2RhdGFbLCBteV9pZCA6PSBOVUxMXQ0Kb3V0Y29tZV9kYXRhWywgeWVhcjIwMTdfdGVhbV9BUkkgOj0gTlVMTF0NCm91dGNvbWVfZGF0YSA8LSBvdXRjb21lX2RhdGFbLCB5YXJkbGluZV8xXzEwOj0gTlVMTF0NCmBgYA0KDQpgYGB7cn0NCm91dGNvbWVfZGF0YVssIGNvbnZlcnNpb24gOj0gYXMubnVtZXJpYyhhcy5jaGFyYWN0ZXIoY29udmVyc2lvbikpXQ0KIyBUaGVuIHJ1biBPTFMgd2l0aCBHSU1SIGNvcnJlY3Rpb24NCm9sc19tb2RlbCA8LSBsbShjb252ZXJzaW9uIH4gIC4sIGRhdGEgPSBvdXRjb21lX2RhdGEpDQpgYGANCg0KYGBge3J9DQpsaWJyYXJ5KHNhbmR3aWNoKQ0KbGlicmFyeShsbXRlc3QpDQoNCiMgR2V0IEhDMC1hZGp1c3RlZCB0LXZhbHVlcyBhbmQgcC12YWx1ZXMNCnJvYnVzdF90ZXN0IDwtIGNvZWZ0ZXN0KG9sc19tb2RlbCwgdmNvdiA9IHZjb3ZIQyhvbHNfbW9kZWwsIHR5cGUgPSAiSEMwIikpDQp0X3N0YXRzIDwtIHJvYnVzdF90ZXN0WywgInQgdmFsdWUiXQ0KcF92YWx1ZXMgPC0gcm9idXN0X3Rlc3RbLCAiUHIoPnx0fCkiXQ0KDQojIEZ1bmN0aW9uIHRvIGFkZCBzaWduaWZpY2FuY2Ugc3RhcnMNCmdldF9zdGFycyA8LSBmdW5jdGlvbihwKSB7DQogICAgaWYgKHAgPD0gMC4wMSkgcmV0dXJuKCIqKioiKQ0KICAgIGlmIChwIDw9IDAuMDUpIHJldHVybigiKioiKQ0KICAgIGlmIChwIDw9IDAuMSkgcmV0dXJuKCIqIikNCiAgICBpZiAocCA8PSAwLjE1KSByZXR1cm4oIi4iKQ0KICAgIHJldHVybigiIikNCn0NCg0KIyBNYXhpbXVtIHdpZHRoIGZvciB2YXJpYWJsZSBuYW1lcw0KbmFtZV93aWR0aCA8LSAxNQ0KDQojIFByaW50IGhlYWRlciB3aXRoIGFsaWdubWVudA0KY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIlZhcmlhYmxlIiwgInQtdmFsdWUiLCAicC12YWx1ZSIsICJzaWciKSkNCmNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICItLS0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0iKSkNCg0KIyBMb29wIHRocm91Z2ggYW5kIHByaW50IHZhbHVlcw0KZm9yIChpIGluIDE6bGVuZ3RoKHRfc3RhdHMpKSB7DQogICAgdmFyX25hbWUgPC0gcm93bmFtZXMocm9idXN0X3Rlc3QpW2ldDQogICAgIyBUcnVuY2F0ZSBuYW1lIGlmIHRvbyBsb25nDQogICAgaWYgKG5jaGFyKHZhcl9uYW1lKSA+IG5hbWVfd2lkdGgpIHsNCiAgICAgICAgdmFyX25hbWUgPC0gcGFzdGUwKHN1YnN0cih2YXJfbmFtZSwgMSwgbmFtZV93aWR0aC0zKSwgIi4uLiIpDQogICAgfQ0KICAgIGNhdChzcHJpbnRmKCIlLSpzICAlMTAuNGYgICUxMC40ZiAgJTRzXG4iLCANCiAgICAgICAgICAgICAgICBuYW1lX3dpZHRoLCB2YXJfbmFtZSwgDQogICAgICAgICAgICAgICAgdF9zdGF0c1tpXSwgcF92YWx1ZXNbaV0sDQogICAgICAgICAgICAgICAgZ2V0X3N0YXJzKHBfdmFsdWVzW2ldKSkpDQp9DQoNCmNhdCgiXG5TaWduaWZpY2FuY2UgY29kZXM6IDAgJyoqKicgMC4wMSAnKionIDAuMDUgJyonIDAuMSAnLicgMC4xNSIpDQpgYGANCg0KYGBge3J9DQojIGdldCB2aWZzDQojbGlicmFyeShjYXIpDQojdmlmKG9sc19tb2RlbCkNCmBgYA0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("heckman.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

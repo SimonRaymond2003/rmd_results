@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Attendance Impact Analysis</title>
+
+<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">4th Downs in the NFL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="heckman.html">Heckman Selection</a>
+</li>
+<li>
+  <a href="xgboost.html">XGBoost Prediction</a>
+</li>
+<li>
+  <a href="attendance.html">Attendance Impact</a>
+</li>
+<li>
+  <a href="thirddown.html">Third Down Analysis</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Attendance Impact Analysis</h1>
+
+</div>
+
+
+<pre class="r"><code>library(data.table)
+attendance_data &lt;- fread(&quot;predict_attendance.csv.gz&quot;)</code></pre>
+<pre class="r"><code># interact home_attendance and posteam_type_home
+attendance_data$interact_HxA &lt;- attendance_data$home_attendance * attendance_data$posteam_type_home</code></pre>
+<pre class="r"><code># kill my_id                      
+attendance_data$my_id &lt;- NULL</code></pre>
+<pre class="r"><code># ols                     
+ols &lt;- lm(attempt ~., data = attendance_data)
+summary(ols)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = attempt ~ ., data = attendance_data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.7551 -0.2586 -0.1143  0.1580  1.1257 
+## 
+## Coefficients:
+##                                                         Estimate Std. Error
+## (Intercept)                                            3.083e-01  1.483e-02
+## ydstogo                                               -1.116e-01  4.612e-03
+## yardline_100                                          -5.504e-02  4.759e-03
+## posteam_timeouts_remaining                            -3.540e-02  5.248e-03
+## defteam_timeouts_remaining                            -1.277e-03  5.340e-03
+## week                                                  -5.127e-03  5.419e-03
+## temp                                                  -3.194e-03  5.712e-03
+## wind                                                   4.714e-05  6.207e-03
+## vegas_wp                                              -7.217e-02  1.028e-02
+## vegas_wp_posteam                                       1.198e-03  4.526e-03
+## total_line                                             4.054e-05  6.032e-03
+## score_diff                                            -1.672e-02  9.231e-03
+## down1_pct                                              8.409e-03  5.891e-03
+## down2_pct                                             -1.700e-02  6.045e-03
+## down3_pct                                             -3.280e-03  5.909e-03
+## down4_pct                                              4.335e-03  5.627e-03
+## prep_days                                             -3.568e-03  4.490e-03
+## overall_win_pct                                        8.207e-03  8.746e-03
+## team_win_pct                                           1.559e-02  9.136e-03
+## prev_shotgun_rate                                     -6.381e-03  7.813e-03
+## prev_singleback_rate                                  -1.479e-02  6.910e-03
+## prev_empty_rate                                       -1.483e-02  5.370e-03
+## prev_shotgun_success                                  -2.535e-03  6.513e-03
+## prev_singleback_success                                2.620e-03  6.772e-03
+## prev_empty_success                                     3.219e-03  5.383e-03
+## prev_stop_rate_run                                     3.110e-03  5.353e-03
+## prev_stop_rate_pass                                    2.548e-03  5.274e-03
+## prev_win_pct                                           5.203e-03  6.299e-03
+## shotgun_rate                                           2.407e-02  6.276e-03
+## singleback_rate                                        3.325e-02  6.177e-03
+## empty_rate                                             2.973e-02  6.295e-03
+## shotgun_success                                        2.824e-02  5.572e-03
+## singleback_success                                    -6.442e-04  5.579e-03
+## empty_success                                          6.318e-03  5.852e-03
+## def_stop_rate_run                                     -2.156e-03  5.379e-03
+## def_stop_rate_pass                                    -1.552e-02  5.350e-03
+## avg_pass_rushers                                      -2.922e-03  5.852e-03
+## avg_box_defenders                                      9.035e-03  5.764e-03
+## cover0_rate                                           -1.719e-03  5.658e-03
+## cover1_rate                                            9.067e-03  8.156e-03
+## cover2_rate                                           -7.595e-03  6.174e-03
+## cover3_rate                                            7.800e-05  7.829e-03
+## cover4_rate                                            1.022e-03  6.664e-03
+## cover6_rate                                           -5.567e-03  5.939e-03
+## two_man_rate                                           1.044e-02  5.191e-03
+## prevent_rate                                          -2.598e-03  5.057e-03
+## home_attendance                                       -3.624e-02  1.490e-02
+## roof_outdoors                                         -3.333e-03  1.437e-02
+## posteam_type_home                                      1.364e-03  1.285e-02
+## p_player_26_punting_grades_grades_punter_12w           2.133e-03  6.516e-03
+## p_player_26_punting_grades_grades_punter_2w           -3.648e-03  6.545e-03
+## k_player_25_field_goals_grades_grades_fgep_kicker_12w -1.013e-02  6.265e-03
+## k_player_25_field_goals_grades_grades_fgep_kicker_2w   8.340e-03  6.271e-03
+## is_first_half                                         -1.448e-01  8.904e-03
+## time_in_half                                          -4.291e-02  5.683e-03
+## interact_HxA                                           3.495e-02  1.787e-02
+##                                                       t value Pr(&gt;|t|)    
+## (Intercept)                                            20.795  &lt; 2e-16 ***
+## ydstogo                                               -24.188  &lt; 2e-16 ***
+## yardline_100                                          -11.565  &lt; 2e-16 ***
+## posteam_timeouts_remaining                             -6.745 1.66e-11 ***
+## defteam_timeouts_remaining                             -0.239 0.811015    
+## week                                                   -0.946 0.344187    
+## temp                                                   -0.559 0.576065    
+## wind                                                    0.008 0.993940    
+## vegas_wp                                               -7.022 2.39e-12 ***
+## vegas_wp_posteam                                        0.265 0.791171    
+## total_line                                              0.007 0.994637    
+## score_diff                                             -1.811 0.070199 .  
+## down1_pct                                               1.427 0.153497    
+## down2_pct                                              -2.813 0.004918 ** 
+## down3_pct                                              -0.555 0.578920    
+## down4_pct                                               0.770 0.441092    
+## prep_days                                              -0.795 0.426861    
+## overall_win_pct                                         0.938 0.348077    
+## team_win_pct                                            1.706 0.088047 .  
+## prev_shotgun_rate                                      -0.817 0.414108    
+## prev_singleback_rate                                   -2.140 0.032363 *  
+## prev_empty_rate                                        -2.762 0.005765 ** 
+## prev_shotgun_success                                   -0.389 0.697105    
+## prev_singleback_success                                 0.387 0.698880    
+## prev_empty_success                                      0.598 0.549901    
+## prev_stop_rate_run                                      0.581 0.561243    
+## prev_stop_rate_pass                                     0.483 0.628930    
+## prev_win_pct                                            0.826 0.408856    
+## shotgun_rate                                            3.835 0.000127 ***
+## singleback_rate                                         5.382 7.59e-08 ***
+## empty_rate                                              4.722 2.38e-06 ***
+## shotgun_success                                         5.068 4.11e-07 ***
+## singleback_success                                     -0.115 0.908068    
+## empty_success                                           1.080 0.280360    
+## def_stop_rate_run                                      -0.401 0.688533    
+## def_stop_rate_pass                                     -2.901 0.003732 ** 
+## avg_pass_rushers                                       -0.499 0.617634    
+## avg_box_defenders                                       1.567 0.117062    
+## cover0_rate                                            -0.304 0.761214    
+## cover1_rate                                             1.112 0.266320    
+## cover2_rate                                            -1.230 0.218646    
+## cover3_rate                                             0.010 0.992051    
+## cover4_rate                                             0.153 0.878096    
+## cover6_rate                                            -0.937 0.348642    
+## two_man_rate                                            2.012 0.044254 *  
+## prevent_rate                                           -0.514 0.607439    
+## home_attendance                                        -2.433 0.015012 *  
+## roof_outdoors                                          -0.232 0.816599    
+## posteam_type_home                                       0.106 0.915484    
+## p_player_26_punting_grades_grades_punter_12w            0.327 0.743466    
+## p_player_26_punting_grades_grades_punter_2w            -0.557 0.577289    
+## k_player_25_field_goals_grades_grades_fgep_kicker_12w  -1.617 0.105943    
+## k_player_25_field_goals_grades_grades_fgep_kicker_2w    1.330 0.183577    
+## is_first_half                                         -16.258  &lt; 2e-16 ***
+## time_in_half                                           -7.551 4.88e-14 ***
+## interact_HxA                                            1.956 0.050561 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3698 on 7005 degrees of freedom
+## Multiple R-squared:  0.2255, Adjusted R-squared:  0.2194 
+## F-statistic: 37.09 on 55 and 7005 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code># probit
+probit &lt;- glm(attempt ~ ., data = attendance_data, family = binomial(link = &quot;probit&quot;))
+summary(probit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = attempt ~ ., family = binomial(link = &quot;probit&quot;), 
+##     data = attendance_data)
+## 
+## Coefficients:
+##                                                         Estimate Std. Error
+## (Intercept)                                           -0.6420436  0.0626559
+## ydstogo                                               -0.5519303  0.0250923
+## yardline_100                                          -0.2233212  0.0200626
+## posteam_timeouts_remaining                            -0.1188446  0.0209518
+## defteam_timeouts_remaining                            -0.0052200  0.0218699
+## week                                                  -0.0177176  0.0230864
+## temp                                                  -0.0223176  0.0245033
+## wind                                                  -0.0068888  0.0262712
+## vegas_wp                                              -0.2789131  0.0434208
+## vegas_wp_posteam                                       0.0110670  0.0189411
+## total_line                                            -0.0049884  0.0256309
+## score_diff                                            -0.0511607  0.0385998
+## down1_pct                                              0.0360875  0.0255341
+## down2_pct                                             -0.0879857  0.0264672
+## down3_pct                                             -0.0035709  0.0259523
+## down4_pct                                              0.0120851  0.0242548
+## prep_days                                             -0.0123755  0.0191293
+## overall_win_pct                                        0.0161710  0.0373025
+## team_win_pct                                           0.0740698  0.0388649
+## prev_shotgun_rate                                     -0.0293363  0.0334556
+## prev_singleback_rate                                  -0.0626404  0.0299135
+## prev_empty_rate                                       -0.0685766  0.0232124
+## prev_shotgun_success                                  -0.0202862  0.0277112
+## prev_singleback_success                                0.0161013  0.0287995
+## prev_empty_success                                     0.0095858  0.0230042
+## prev_stop_rate_run                                     0.0124247  0.0229103
+## prev_stop_rate_pass                                    0.0151649  0.0222048
+## prev_win_pct                                           0.0188098  0.0267633
+## shotgun_rate                                           0.1176284  0.0266631
+## singleback_rate                                        0.1562852  0.0256692
+## empty_rate                                             0.1339958  0.0264341
+## shotgun_success                                        0.1045419  0.0228195
+## singleback_success                                    -0.0064901  0.0228051
+## empty_success                                          0.0271674  0.0235060
+## def_stop_rate_run                                     -0.0059690  0.0232680
+## def_stop_rate_pass                                    -0.0713950  0.0236376
+## avg_pass_rushers                                      -0.0007916  0.0251868
+## avg_box_defenders                                      0.0237898  0.0246185
+## cover0_rate                                           -0.0143325  0.0240737
+## cover1_rate                                            0.0236396  0.0344271
+## cover2_rate                                           -0.0274039  0.0265915
+## cover3_rate                                           -0.0130806  0.0334607
+## cover4_rate                                           -0.0078907  0.0282710
+## cover6_rate                                           -0.0282480  0.0255630
+## two_man_rate                                           0.0435249  0.0219802
+## prevent_rate                                          -0.0032654  0.0224649
+## home_attendance                                       -0.1561444  0.0632667
+## roof_outdoors                                         -0.0230183  0.0612472
+## posteam_type_home                                      0.0030511  0.0542382
+## p_player_26_punting_grades_grades_punter_12w           0.0104664  0.0263562
+## p_player_26_punting_grades_grades_punter_2w           -0.0243929  0.0271966
+## k_player_25_field_goals_grades_grades_fgep_kicker_12w -0.0416061  0.0261780
+## k_player_25_field_goals_grades_grades_fgep_kicker_2w   0.0325331  0.0264829
+## is_first_half                                         -0.5994292  0.0387882
+## time_in_half                                          -0.1888545  0.0247846
+## interact_HxA                                           0.1503756  0.0764558
+##                                                       z value Pr(&gt;|z|)    
+## (Intercept)                                           -10.247  &lt; 2e-16 ***
+## ydstogo                                               -21.996  &lt; 2e-16 ***
+## yardline_100                                          -11.131  &lt; 2e-16 ***
+## posteam_timeouts_remaining                             -5.672 1.41e-08 ***
+## defteam_timeouts_remaining                             -0.239 0.811350    
+## week                                                   -0.767 0.442817    
+## temp                                                   -0.911 0.362402    
+## wind                                                   -0.262 0.793153    
+## vegas_wp                                               -6.423 1.33e-10 ***
+## vegas_wp_posteam                                        0.584 0.559028    
+## total_line                                             -0.195 0.845688    
+## score_diff                                             -1.325 0.185033    
+## down1_pct                                               1.413 0.157565    
+## down2_pct                                              -3.324 0.000886 ***
+## down3_pct                                              -0.138 0.890560    
+## down4_pct                                               0.498 0.618304    
+## prep_days                                              -0.647 0.517670    
+## overall_win_pct                                         0.434 0.664644    
+## team_win_pct                                            1.906 0.056673 .  
+## prev_shotgun_rate                                      -0.877 0.380556    
+## prev_singleback_rate                                   -2.094 0.036255 *  
+## prev_empty_rate                                        -2.954 0.003134 ** 
+## prev_shotgun_success                                   -0.732 0.464132    
+## prev_singleback_success                                 0.559 0.576104    
+## prev_empty_success                                      0.417 0.676899    
+## prev_stop_rate_run                                      0.542 0.587598    
+## prev_stop_rate_pass                                     0.683 0.494634    
+## prev_win_pct                                            0.703 0.482166    
+## shotgun_rate                                            4.412 1.03e-05 ***
+## singleback_rate                                         6.088 1.14e-09 ***
+## empty_rate                                              5.069 4.00e-07 ***
+## shotgun_success                                         4.581 4.62e-06 ***
+## singleback_success                                     -0.285 0.775960    
+## empty_success                                           1.156 0.247778    
+## def_stop_rate_run                                      -0.257 0.797538    
+## def_stop_rate_pass                                     -3.020 0.002524 ** 
+## avg_pass_rushers                                       -0.031 0.974927    
+## avg_box_defenders                                       0.966 0.333875    
+## cover0_rate                                            -0.595 0.551603    
+## cover1_rate                                             0.687 0.492299    
+## cover2_rate                                            -1.031 0.302752    
+## cover3_rate                                            -0.391 0.695853    
+## cover4_rate                                            -0.279 0.780162    
+## cover6_rate                                            -1.105 0.269145    
+## two_man_rate                                            1.980 0.047682 *  
+## prevent_rate                                           -0.145 0.884431    
+## home_attendance                                        -2.468 0.013586 *  
+## roof_outdoors                                          -0.376 0.707046    
+## posteam_type_home                                       0.056 0.955139    
+## p_player_26_punting_grades_grades_punter_12w            0.397 0.691283    
+## p_player_26_punting_grades_grades_punter_2w            -0.897 0.369767    
+## k_player_25_field_goals_grades_grades_fgep_kicker_12w  -1.589 0.111981    
+## k_player_25_field_goals_grades_grades_fgep_kicker_2w    1.228 0.219275    
+## is_first_half                                         -15.454  &lt; 2e-16 ***
+## time_in_half                                           -7.620 2.54e-14 ***
+## interact_HxA                                            1.967 0.049203 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 7554.7  on 7060  degrees of freedom
+## Residual deviance: 5741.5  on 7005  degrees of freedom
+## AIC: 5853.5
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgSW1wYWN0IEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KYXR0ZW5kYW5jZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X2F0dGVuZGFuY2UuY3N2Lmd6IikNCmBgYA0KDQpgYGB7cn0NCiMgaW50ZXJhY3QgaG9tZV9hdHRlbmRhbmNlIGFuZCBwb3N0ZWFtX3R5cGVfaG9tZQ0KYXR0ZW5kYW5jZV9kYXRhJGludGVyYWN0X0h4QSA8LSBhdHRlbmRhbmNlX2RhdGEkaG9tZV9hdHRlbmRhbmNlICogYXR0ZW5kYW5jZV9kYXRhJHBvc3RlYW1fdHlwZV9ob21lDQpgYGANCg0KYGBge3J9DQojIGtpbGwgbXlfaWQgICAgICAgICAgICAgICAgICAgICAgDQphdHRlbmRhbmNlX2RhdGEkbXlfaWQgPC0gTlVMTA0KYGBgDQoNCmBgYHtyfSANCiMgb2xzICAgICAgICAgICAgICAgICAgICAgDQpvbHMgPC0gbG0oYXR0ZW1wdCB+LiwgZGF0YSA9IGF0dGVuZGFuY2VfZGF0YSkNCnN1bW1hcnkob2xzKQ0KYGBgDQoNCmBgYHtyfSAgICAgICAgICAgICAgDQojIHByb2JpdA0KcHJvYml0IDwtIGdsbShhdHRlbXB0IH4gLiwgZGF0YSA9IGF0dGVuZGFuY2VfZGF0YSwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJwcm9iaXQiKSkNCnN1bW1hcnkocHJvYml0KQ0KYGBgDQoNCg0KDQo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("attendance.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

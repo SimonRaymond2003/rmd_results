@@ -1,0 +1,454 @@
+---
+title: "XGBoost Prediction Model"
+output: html_document
+---
+
+
+```{r options, include=FALSE}
+options(max.print=10000)
+```
+
+```{r}
+library(data.table)   
+
+outcome_data <- fread("predict_outcome.csv.gz")
+
+```
+
+```{r}
+# Load library and prepare data
+#library(randomForest)
+#rf_data <- copy(outcome_data)[, my_id := NULL]
+#rf_data[, conversion := as.factor(conversion)]
+
+# Run RF and get OOB AUC
+#rf_model <- randomForest(conversion ~ ., data = rf_data, ntree = 100, importance = TRUE)
+#pred_oob <- predict(rf_model, type = "prob")[,2]
+#cat("\nOOB AUC:", as.numeric(performance(prediction(pred_oob, as.numeric(as.character(rf_data$conversion))), "auc")@y.values))
+
+# Filter variables based on positive MDA
+#mda_scores <- importance(rf_model)[, "MeanDecreaseAccuracy"]
+#keep_vars <- unique(c(names(mda_scores[mda_scores > 0]), "my_id", "conversion"))
+#outcome_data <- outcome_data[, .SD, .SDcols = keep_vars]
+
+#cat("\nVariables kept:", length(keep_vars), "out of", ncol(rf_data) + 1)
+```
+
+
+
+```{r, warning=FALSE, message=FALSE}                        
+# Load required libraries
+library(xgboost)
+library(ROCR)
+library(parallel)
+
+# Prepare the XGBoost matrices
+xs <- model.matrix(~ . - 1 - conversion - my_id, data = outcome_data)
+y <- as.numeric(as.character(outcome_data$conversion))
+
+# Create parameter grid
+grid <- expand.grid(
+  eta = seq(0.001, 0.1, by = 0.01),
+  max_depth = seq(5, 7, by = 2),
+  min_child_weight = seq(1, 1, by = 1),        
+  subsample = seq(0.8, 0.8, by = 0.2),
+  colsample_bytree = seq(0.8, 0.8, by = 0.2),
+  lambda = seq(1, 1, by = 1),                
+  alpha = seq(0, 0, by = 1),                  
+  gamma = seq(0, 0, by = 0.1),               
+  nrounds = seq(100, 500, by = 50)
+)
+
+# Sample grid points
+conf_lev <- .95
+num_max <- 5
+n <- ceiling(log(1-conf_lev)/log(1-num_max/nrow(grid)))
+ind <- sample(nrow(grid), n, replace = FALSE)
+rgrid <- grid[ind, ]
+
+# Set up parallel processing
+nc <- detectCores() - 1
+
+# Validation phase
+cat("\nPhase 1: Validation Phase\n")
+n_validations <- 2
+validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
+validation_j_stats <- matrix(nrow = nrow(rgrid), ncol = n_validations)
+
+for (j in 1:nrow(rgrid)) {
+ # cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
+  #cat("eta =", rgrid[j, "eta"], ", nrounds =", rgrid[j, "nrounds"], "\n")
+  
+  for (i in 1:n_validations) {
+    # Create validation split
+    idx <- unique(sample(nrow(xs), nrow(xs), T))
+    train_x <- xs[idx, ]
+    train_y <- y[idx]
+    val_x <- xs[-idx, ]
+    val_y <- y[-idx]
+    
+    prm <- list(
+      booster = "gbtree",
+      objective = "binary:logistic",
+      max_depth = rgrid[j, "max_depth"],
+      eta = rgrid[j, "eta"],
+      subsample = rgrid[j, "subsample"],
+      colsample_bytree = rgrid[j, "colsample_bytree"],
+      gamma = rgrid[j, "gamma"],
+      min_child_weight = rgrid[j, "min_child_weight"],
+      alpha = rgrid[j, "alpha"],
+      lambda = rgrid[j, "lambda"],
+      nthread = nc
+    )
+    
+    dm_train <- xgb.DMatrix(data = train_x, label = train_y)
+    mdl <- xgb.train(
+      params = prm,
+      data = dm_train,
+      nrounds = rgrid[j, "nrounds"],
+      verbose = FALSE
+    )
+    
+    # Get predictions and ROC metrics
+    p <- predict(mdl, xgb.DMatrix(data = val_x))
+    pred <- prediction(p, val_y)
+    
+    # Calculate AUC
+    validation_results[j, i] <- performance(pred, "auc")@y.values[[1]]
+    
+    # Calculate Youden's J Statistic
+    roc <- performance(pred, "tpr", "fpr")
+    tpr <- unlist(roc@y.values)
+    fpr <- unlist(roc@x.values)
+    j_stats <- tpr - fpr
+    validation_j_stats[j, i] <- max(j_stats)
+  }
+  
+  #cat("Mean AUC:", mean(validation_results[j,]), "\n")
+  #cat("SD AUC:", sd(validation_results[j,]), "\n")
+  #cat("Mean J statistic:", mean(validation_j_stats[j,]), "\n")
+}
+
+# Select best parameters based on validation AUC
+best_params_idx <- which.max(rowMeans(validation_results))
+best_params <- rgrid[best_params_idx,]
+cat("\nBest parameters:\n")
+print(best_params)
+
+# Run 100 tests with best parameters
+cat("\nRunning 100 test iterations with best parameters...\n")
+test_aucs <- c()
+test_j_stats <- c()
+confusion_matrices <- list()
+performance_list <- list()
+all_thresholds <- c()                             
+
+# Train final model with best parameters
+best_params_list <- as.list(best_params[-which(names(best_params) == "nrounds")])
+best_params_list$booster <- "gbtree"
+best_params_list$objective <- "binary:logistic"
+best_params_list$nthread <- nc
+
+for(i in 1:100) {
+  #cat("\nIteration", i, "of 100\n")       
+  # Create test split
+  idx <- unique(sample(nrow(xs), nrow(xs), T))
+  train_x <- xs[idx, ]
+  train_y <- y[idx]
+  test_x <- xs[-idx, ]
+  test_y <- y[-idx]
+  
+  # Train model
+  dm_train <- xgb.DMatrix(data = train_x, label = train_y)
+  mdl <- xgb.train(
+    params = best_params_list,
+    data = dm_train,
+    nrounds = best_params[["nrounds"]],
+    verbose = FALSE
+  )
+  
+  # Get predictions
+  p <- predict(mdl, xgb.DMatrix(data = test_x))
+  pred <- prediction(p, test_y)
+  
+  # Calculate AUC
+  test_aucs[i] <- performance(pred, "auc")@y.values[[1]]
+  
+  # Calculate ROC curve and store
+  perf <- performance(pred, "tpr", "fpr")
+  performance_list[[i]] <- perf
+  
+  # Find optimal threshold using Youden's J statistic
+  tpr <- unlist(perf@y.values)
+  fpr <- unlist(perf@x.values)
+  j_stats <- tpr - fpr
+  best_j_idx <- which.max(j_stats)
+  optimal_threshold <- unlist(perf@alpha.values)[best_j_idx]
+  all_thresholds[i] <- optimal_threshold
+  test_j_stats[i] <- j_stats[best_j_idx]
+  
+  # Create confusion matrix with optimal threshold (1-0 order with TP in top left)
+  pred_class <- ifelse(p >= optimal_threshold, 1, 0)
+  cm <- table(factor(test_y, levels=c(1,0)), 
+             factor(pred_class, levels=c(1,0)))
+  colnames(cm) <- c("Pred 1", "Pred 0")
+  rownames(cm) <- c("True 1", "True 0")
+  confusion_matrices[[i]] <- cm
+}
+
+# Calculate average confusion matrix
+avg_cm <- Reduce('+', confusion_matrices) / length(confusion_matrices)
+
+# Print final results
+cat("\nTest Results over 100 iterations:\n")
+cat("Mean AUC:", mean(test_aucs), "\n")
+cat("SD AUC:", sd(test_aucs), "\n")
+cat("Mean Youden's J:", mean(test_j_stats), "\n")
+cat("SD Youden's J:", sd(test_j_stats), "\n")
+cat("Mean Optimal Threshold:", mean(all_thresholds), "\n")
+cat("95% CI for AUC:", mean(test_aucs) - 1.96 * sd(test_aucs), 
+    "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
+cat("\nAverage Confusion Matrix:\n")
+print(avg_cm)
+
+# Plot ROC curve with confidence intervals
+plot(0:100/100, 0:100/100, type="l", lty=2, 
+     xlab="False Positive Rate", ylab="True Positive Rate",
+     main="ROC Curve")
+
+# Calculate average ROC curve with confidence intervals
+fpr_grid <- seq(0, 1, length.out = 100)
+tpr_matrix <- matrix(NA, nrow = length(performance_list), ncol = length(fpr_grid))
+
+for(i in seq_along(performance_list)) {
+  curve_i <- performance_list[[i]]
+  tpr_matrix[i,] <- approx(curve_i@x.values[[1]], 
+                          curve_i@y.values[[1]], 
+                          xout = fpr_grid)$y
+}
+
+mean_tpr <- colMeans(tpr_matrix, na.rm = TRUE)
+lines(fpr_grid, mean_tpr, col="red", lwd=2)
+
+# Add optimal threshold point
+opt_point_idx <- which.min(abs(fpr_grid - mean(all_thresholds)))
+points(fpr_grid[opt_point_idx], mean_tpr[opt_point_idx], 
+       col="blue", pch=19, cex=1.5)
+
+# Add confidence interval
+ci_lower <- apply(tpr_matrix, 2, function(x) quantile(x, 0.025, na.rm=TRUE))
+ci_upper <- apply(tpr_matrix, 2, function(x) quantile(x, 0.975, na.rm=TRUE))
+lines(fpr_grid, ci_lower, col="gray", lty=2)
+lines(fpr_grid, ci_upper, col="gray", lty=2)
+
+# Add legend
+legend("bottomright", 
+       legend=c("Random", "Average ROC", "95% CI", "Optimal Threshold"),
+       col=c("black", "red", "gray", "blue"), 
+       lty=c(2,1,2,NA), 
+       pch=c(NA,NA,NA,19),
+       lwd=c(1,2,1,NA))
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+# Load required libraries
+library(data.table)
+library(xgboost)
+library(ROCR)
+library(parallel)
+
+# Prepare the XGBoost matrices
+xs <- model.matrix(~ . - 1 - conversion - my_id, data = outcome_data)
+y <- as.numeric(as.character(outcome_data$conversion))
+
+# Create parameter grid - only tune eta and nrounds
+grid <- expand.grid(
+  eta = seq(0.001, 0.1, by = 0.003),
+  nrounds = seq(50, 500, by = 50)
+)
+
+# Sample grid points
+conf_lev <- .95
+num_max <- 5
+n <- ceiling(log(1-conf_lev)/log(1-num_max/nrow(grid)))
+ind <- sample(nrow(grid), n, replace = FALSE)
+rgrid <- grid[ind, ]
+
+# Set up parallel processing
+nc <- detectCores() - 1
+
+# Validation phase
+cat("\nPhase 1: Validation Phase\n")
+n_validations <- 20
+validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
+validation_j_stats <- matrix(nrow = nrow(rgrid), ncol = n_validations)
+
+for (j in 1:nrow(rgrid)) {
+  #cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
+  #cat("eta =", rgrid[j, "eta"], ", nrounds =", rgrid[j, "nrounds"], "\n")
+  
+  for (i in 1:n_validations) {
+    # Create validation split
+    idx <- unique(sample(nrow(xs), nrow(xs), T))
+    train_x <- xs[idx, ]
+    train_y <- y[idx]
+    val_x <- xs[-idx, ]
+    val_y <- y[-idx]
+    
+    prm <- list(
+      booster = "gblinear",
+      objective = "binary:logistic",
+      eta = rgrid[j, "eta"],
+      nthread = nc
+    )
+    
+    dm_train <- xgb.DMatrix(data = train_x, label = train_y)
+    mdl <- xgb.train(
+      params = prm,
+      data = dm_train,
+      nrounds = rgrid[j, "nrounds"],
+      verbose = FALSE
+    )
+    
+    # Get predictions and ROC metrics
+    p <- predict(mdl, xgb.DMatrix(data = val_x))
+    pred <- prediction(p, val_y)
+    
+    # Calculate AUC
+    validation_results[j, i] <- performance(pred, "auc")@y.values[[1]]
+    
+    # Calculate Youden's J Statistic
+    roc <- performance(pred, "tpr", "fpr")
+    tpr <- unlist(roc@y.values)
+    fpr <- unlist(roc@x.values)
+    j_stats <- tpr - fpr
+    validation_j_stats[j, i] <- max(j_stats)
+  }
+  
+  #cat("Mean AUC:", mean(validation_results[j,]), "\n")
+  #cat("SD AUC:", sd(validation_results[j,]), "\n")
+  #cat("Mean J statistic:", mean(validation_j_stats[j,]), "\n")
+}
+
+# Select best parameters based on validation AUC
+best_params_idx <- which.max(rowMeans(validation_results))
+best_params <- rgrid[best_params_idx,]
+cat("\nBest parameters:\n")
+print(best_params)
+
+# Run X tests with best parameters
+cat("\nRunning X test iterations with best parameters...\n")
+test_aucs <- c()
+test_j_stats <- c()
+confusion_matrices <- list()
+performance_list <- list()
+all_thresholds <- c()
+
+# Train final model with best parameters
+best_params_list <- as.list(best_params[-which(names(best_params) == "nrounds")])
+best_params_list$booster <- "gblinear"
+best_params_list$objective <- "binary:logistic"
+best_params_list$nthread <- nc
+
+for(i in 1:100) {
+  #cat("\nIteration", i, "of 100\n")       
+  # Create test split
+  idx <- unique(sample(nrow(xs), nrow(xs), T))
+  train_x <- xs[idx, ]
+  train_y <- y[idx]
+  test_x <- xs[-idx, ]
+  test_y <- y[-idx]
+  
+  # Train model
+  dm_train <- xgb.DMatrix(data = train_x, label = train_y)
+  mdl <- xgb.train(
+    params = best_params_list,
+    data = dm_train,
+    nrounds = best_params[["nrounds"]],
+    verbose = FALSE
+  )
+  
+  # Get predictions
+  p <- predict(mdl, xgb.DMatrix(data = test_x))
+  pred <- prediction(p, test_y)
+  
+  # Calculate AUC
+  test_aucs[i] <- performance(pred, "auc")@y.values[[1]]
+  
+  # Calculate ROC curve and store
+  perf <- performance(pred, "tpr", "fpr")
+  performance_list[[i]] <- perf
+  
+  # Find optimal threshold using Youden's J statistic
+  tpr <- unlist(perf@y.values)
+  fpr <- unlist(perf@x.values)
+  j_stats <- tpr - fpr
+  best_j_idx <- which.max(j_stats)
+  optimal_threshold <- unlist(perf@alpha.values)[best_j_idx]
+  all_thresholds[i] <- optimal_threshold
+  test_j_stats[i] <- j_stats[best_j_idx]
+  
+  # Create confusion matrix with optimal threshold (1-0 order with TP in top left)
+  pred_class <- ifelse(p >= optimal_threshold, 1, 0)
+  cm <- table(factor(test_y, levels=c(1,0)), 
+             factor(pred_class, levels=c(1,0)))
+  colnames(cm) <- c("Pred 1", "Pred 0")
+  rownames(cm) <- c("True 1", "True 0")
+  confusion_matrices[[i]] <- cm
+}
+
+# Calculate average confusion matrix
+avg_cm <- Reduce('+', confusion_matrices) / length(confusion_matrices)
+
+# Print final results
+cat("\nTest Results over 100 iterations:\n")
+cat("Mean AUC:", mean(test_aucs), "\n")
+cat("SD AUC:", sd(test_aucs), "\n")
+cat("Mean Youden's J:", mean(test_j_stats), "\n")
+cat("SD Youden's J:", sd(test_j_stats), "\n")
+cat("Mean Optimal Threshold:", mean(all_thresholds), "\n")
+cat("95% CI for AUC:", mean(test_aucs) - 1.96 * sd(test_aucs), 
+    "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
+cat("\nAverage Confusion Matrix:\n")
+print(avg_cm)
+
+# Plot ROC curve with confidence intervals
+plot(0:100/100, 0:100/100, type="l", lty=2, 
+     xlab="False Positive Rate", ylab="True Positive Rate",
+     main="ROC Curve")
+
+# Calculate average ROC curve with confidence intervals
+fpr_grid <- seq(0, 1, length.out = 100)
+tpr_matrix <- matrix(NA, nrow = length(performance_list), ncol = length(fpr_grid))
+
+for(i in seq_along(performance_list)) {
+  curve_i <- performance_list[[i]]
+  tpr_matrix[i,] <- approx(curve_i@x.values[[1]], 
+                          curve_i@y.values[[1]], 
+                          xout = fpr_grid)$y
+}
+
+mean_tpr <- colMeans(tpr_matrix, na.rm = TRUE)
+lines(fpr_grid, mean_tpr, col="red", lwd=2)
+
+# Add optimal threshold point
+opt_point_idx <- which.min(abs(fpr_grid - mean(all_thresholds)))
+points(fpr_grid[opt_point_idx], mean_tpr[opt_point_idx], 
+       col="blue", pch=19, cex=1.5)
+
+# Add confidence interval
+ci_lower <- apply(tpr_matrix, 2, function(x) quantile(x, 0.025, na.rm=TRUE))
+ci_upper <- apply(tpr_matrix, 2, function(x) quantile(x, 0.975, na.rm=TRUE))
+lines(fpr_grid, ci_lower, col="gray", lty=2)
+lines(fpr_grid, ci_upper, col="gray", lty=2)
+
+# Add legend
+legend("bottomright", 
+       legend=c("Random", "Average ROC", "95% CI", "Optimal Threshold"),
+       col=c("black", "red", "gray", "blue"), 
+       lty=c(2,1,2,NA), 
+       pch=c(NA,NA,NA,19),
+       lwd=c(1,2,1,NA))
+```
+

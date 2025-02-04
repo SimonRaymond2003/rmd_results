@@ -1,0 +1,279 @@
+:root {
+    --nfl-blue: #013369;
+    --nfl-red: #D50A0A;
+    --nfl-white: #ffffff;
+    --nfl-gray: #f8f9fa;
+    --nfl-light-gray: #e9ecef;
+}
+
+/* Base Layout and Typography */
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding-top: 60px;
+    background: #ffffff;
+}
+
+.main-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Custom Navigation */
+.navbar {
+    background: var(--nfl-blue);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 60px;
+    align-items: center;
+}
+
+.navbar-nav li {
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand {
+    color: var(--nfl-white);
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    color: var(--nfl-red) !important;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border: 2px solid var(--nfl-white);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.nav-link:hover {
+    background: var(--nfl-red);
+    color: var(--nfl-white) !important;
+    border-color: var(--nfl-red);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background: var(--nfl-red);
+    color: var(--nfl-white) !important;
+    border-color: var(--nfl-red);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--nfl-blue);
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h1 { font-size: 2.5em; }
+h2 { font-size: 2em; }
+h3 { font-size: 1.75em; }
+h4 { font-size: 1.5em; }
+
+/* Table of Contents */
+#TOC {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 250px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    background: var(--nfl-gray);
+    padding: 20px;
+    border-right: 1px solid var(--nfl-light-gray);
+    z-index: 100;
+}
+
+#TOC ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#TOC ul li a {
+    color: var(--nfl-blue);
+    text-decoration: none;
+    display: block;
+    padding: 5px 10px;
+    margin: 2px 0;
+    border-radius: 4px;
+}
+
+#TOC ul li a:hover {
+    background: var(--nfl-light-gray);
+    color: var(--nfl-red);
+}
+
+/* Code Blocks */
+pre {
+    background: var(--nfl-gray);
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    border: 1px solid var(--nfl-light-gray);
+    max-width: 100%;
+    width: auto;
+    margin: 1.5em 0;
+}
+
+code {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.9em;
+    color: var(--nfl-blue);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    max-width: none;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+th {
+    background: var(--nfl-blue);
+    color: white;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--nfl-light-gray);
+}
+
+tr:hover {
+    background: var(--nfl-gray);
+}
+
+/* Links */
+a {
+    color: var(--nfl-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--nfl-red);
+}
+
+/* Content Area */
+.section {
+    margin-left: 270px;
+    padding: 20px;
+    max-width: none;
+}
+
+/* Plots and images */
+img, .plot-container {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Code folding buttons */
+.btn-code-copy {
+    background: var(--nfl-blue);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn-code-copy:hover {
+    background: var(--nfl-red);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .section {
+        margin-left: 0;
+    }
+    
+    #TOC {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--nfl-light-gray);
+    }
+    
+    .main-container {
+        padding: 0 10px;
+    }
+    
+    .nav-link {
+        width: 100%;
+        margin: 5px 0;
+        justify-content: center;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar {
+        display: none;
+    }
+    
+    body {
+        padding-top: 0;
+    }
+    
+    .section {
+        margin-left: 0;
+    }
+    
+    #TOC {
+        display: none;
+    }
+    
+    pre {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+    }
+}

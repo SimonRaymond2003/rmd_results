@@ -1,0 +1,291 @@
+---
+title: "Heckman Selection Model Analysis"
+output: html_document
+---
+
+```{r options, include=FALSE}
+options(max.print=10000)
+```
+
+```{r}
+library(data.table)
+outcome_data <- fread("predict_outcome.csv.gz")
+select_data <- fread("predict_select.csv.gz")
+```
+
+```{r}
+select_data[, attempt := as.numeric(as.character(attempt))]
+```
+
+```{r}
+# Load required libraries
+library(data.table)
+library(xgboost)
+library(ROCR)
+library(parallel)
+
+# Prepare the XGBoost matrices
+xs <- model.matrix(~ . - 1 - attempt - my_id, data = select_data)
+y <- as.numeric(as.character(select_data$attempt))
+
+# Create parameter grid
+grid <- expand.grid(
+  eta = seq(0.001, 0.1, by = 0.01),
+  max_depth = seq(5, 7, by = 2),
+  min_child_weight = seq(1, 1, by = 1),        
+  subsample = seq(0.8, 0.8, by = 0.2),
+  colsample_bytree = seq(0.8, 0.8, by = 0.2),
+  lambda = seq(1, 1, by = 1),                
+  alpha = seq(0, 0, by = 1),                  
+  gamma = seq(0, 0, by = 0.1),               
+  nrounds = seq(100, 500, by = 50)
+)
+
+# Sample grid points
+conf_lev <- .95
+num_max <- 5
+n <- ceiling(log(1-conf_lev)/log(1-num_max/nrow(grid)))
+ind <- sample(nrow(grid), n, replace = FALSE)
+rgrid <- grid[ind, ]
+
+# Set up parallel processing
+nc <- detectCores() - 1
+
+# Validation phase
+cat("\nPhase 1: Validation Phase\n")
+n_validations <- 2
+validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
+
+for (j in 1:nrow(rgrid)) {
+  #cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
+  
+  for (i in 1:n_validations) {
+    # Create validation split
+    idx <- unique(sample(nrow(xs), nrow(xs), T))
+    train_x <- xs[idx, ]
+    train_y <- y[idx]
+    val_x <- xs[-idx, ]
+    val_y <- y[-idx]
+    
+    # Undersample majority class in training data
+    train_idx_0 <- which(train_y == 0)
+    train_idx_1 <- which(train_y == 1)
+    
+    # Get number of minority class samples
+    n_minority <- length(train_idx_1)
+    
+    # Randomly sample from majority class
+    train_idx_0_sampled <- sample(train_idx_0, n_minority)
+    
+    # Combine indices for balanced dataset
+    balanced_idx <- c(train_idx_0_sampled, train_idx_1)
+    
+    # Create balanced training dataset
+    train_x_balanced <- train_x[balanced_idx, ]
+    train_y_balanced <- train_y[balanced_idx]
+    
+    prm <- list(
+      booster = "gbtree",
+      objective = "binary:logistic",
+      max_depth = rgrid[j, "max_depth"],
+      eta = rgrid[j, "eta"],
+      subsample = rgrid[j, "subsample"],
+      colsample_bytree = rgrid[j, "colsample_bytree"],
+      gamma = rgrid[j, "gamma"],
+      min_child_weight = rgrid[j, "min_child_weight"],
+      alpha = rgrid[j, "alpha"],
+      lambda = rgrid[j, "lambda"],
+      nthread = nc
+    )
+    
+    dm_train <- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+    mdl <- xgb.train(
+      params = prm,
+      data = dm_train,
+      nrounds = rgrid[j, "nrounds"],
+      verbose = FALSE
+    )
+    
+    p <- predict(mdl, xgb.DMatrix(data = val_x))
+    pred <- prediction(p, val_y)
+    validation_results[j, i] <- performance(pred, "auc")@y.values[[1]]
+  }
+  
+  #cat("Mean AUC:", mean(validation_results[j,]), "\n")
+  #cat("SD AUC:", sd(validation_results[j,]), "\n")
+}
+
+# Run 100 tests with best parameters
+cat("\nRunning X test iterations with best parameters...\n")
+test_aucs <- c()
+
+best_params_idx <- which.max(rowMeans(validation_results))
+best_params <- rgrid[best_params_idx,]
+
+# Train final model with best parameters
+best_params_list <- as.list(best_params[-which(names(best_params) == "nrounds")])
+best_params_list$booster <- "gbtree"
+best_params_list$objective <- "binary:logistic"
+best_params_list$nthread <- nc
+
+for(i in 1:100) {
+  #cat("\nIteration", i, "of 100\n")       
+  # Create test split
+  idx <- unique(sample(nrow(xs), nrow(xs), T))
+  train_x <- xs[idx, ]
+  train_y <- y[idx]
+  test_x <- xs[-idx, ]
+  test_y <- y[-idx]
+  
+  # Undersample training data
+  train_idx_0 <- which(train_y == 0)
+  train_idx_1 <- which(train_y == 1)
+  n_minority <- length(train_idx_1)
+  train_idx_0_sampled <- sample(train_idx_0, n_minority)
+  balanced_idx <- c(train_idx_0_sampled, train_idx_1)
+  
+  # Create balanced training dataset
+  train_x_balanced <- train_x[balanced_idx, ]
+  train_y_balanced <- train_y[balanced_idx]
+  
+  # Train model
+  dm_train <- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+  mdl <- xgb.train(
+    params = best_params_list,
+    data = dm_train,
+    nrounds = best_params[["nrounds"]],
+    verbose = FALSE
+  )
+  
+  # Test on unbalanced test set
+  p <- predict(mdl, xgb.DMatrix(data = test_x))
+  pred <- prediction(p, test_y)
+  test_aucs[i] <- performance(pred, "auc")@y.values[[1]]
+}
+
+# Print results
+cat("\nTest Results over 100 iterations:\n")
+cat("Mean AUC:", mean(test_aucs), "\n")
+cat("SD AUC:", sd(test_aucs), "\n")
+cat("95% CI:", mean(test_aucs) - 1.96 * sd(test_aucs), 
+    "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
+
+# Now train final model on full data for z scores
+final_idx_0 <- which(y == 0)
+final_idx_1 <- which(y == 1)
+n_minority_final <- length(final_idx_1)
+final_idx_0_sampled <- sample(final_idx_0, n_minority_final)
+final_balanced_idx <- c(final_idx_0_sampled, final_idx_1)
+
+# Create balanced final dataset
+xs_balanced <- xs[final_balanced_idx, ]
+y_balanced <- y[final_balanced_idx]
+
+dm_full <- xgb.DMatrix(data = xs_balanced, label = y_balanced)
+final_model <- xgb.train(
+  params = best_params_list,
+  data = dm_full,
+  nrounds = best_params[["nrounds"]],
+  verbose = FALSE
+)
+
+# Get probability predictions (z) for ALL data
+z <- predict(final_model, xgb.DMatrix(data = xs))
+```
+
+```{r}
+# Calculate residuals for XGBoost predictions
+y <- as.numeric(as.character(select_data$attempt))
+residuals <- y - z
+
+# Histogram of residuals
+hist(residuals, main="Distribution of XGBoost Model Residuals", xlab="Residual", breaks=100)
+```
+
+```{r}
+# plot out the z values\
+plot(density(z), 
+     main = "Density of Z Predictions",
+     xlab = "Predicted Probability of Attempt",
+     ylab = "Density")
+```
+
+```{r}
+# Calculate GIMR (lambda) This is Generalized inverse mills ratio
+GIMR <- dnorm(qnorm(z)) / (1 - pnorm(qnorm(z)))
+
+# Add GIMR to the data
+select_data[, GIMR := GIMR]
+
+# Print variable importa
+```
+
+```{r}
+# Create a data.table with just my_id and GIMR from select_data
+GIMR_dt <- data.table(my_id = select_data$my_id, GIMR = GIMR)
+
+# Add GIMR to outcome_data by matching on my_id
+outcome_data[GIMR_dt, GIMR := i.GIMR, on = "my_id"]
+```
+
+# step 2 outcome_data
+
+```{r}
+#kill - my_id
+outcome_data <- outcome_data[, my_id := NULL]
+outcome_data[, year2017_team_ARI := NULL]
+outcome_data <- outcome_data[, yardline_1_10:= NULL]
+```
+
+```{r}
+outcome_data[, conversion := as.numeric(as.character(conversion))]
+# Then run OLS with GIMR correction
+ols_model <- lm(conversion ~  ., data = outcome_data)
+```
+
+```{r}
+library(sandwich)
+library(lmtest)
+
+# Get HC0-adjusted t-values and p-values
+robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
+t_stats <- robust_test[, "t value"]
+p_values <- robust_test[, "Pr(>|t|)"]
+
+# Function to add significance stars
+get_stars <- function(p) {
+    if (p <= 0.01) return("***")
+    if (p <= 0.05) return("**")
+    if (p <= 0.1) return("*")
+    if (p <= 0.15) return(".")
+    return("")
+}
+
+# Maximum width for variable names
+name_width <- 15
+
+# Print header with alignment
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
+
+# Loop through and print values
+for (i in 1:length(t_stats)) {
+    var_name <- rownames(robust_test)[i]
+    # Truncate name if too long
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                t_stats[i], p_values[i],
+                get_stars(p_values[i])))
+}
+
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+```
+
+```{r}
+# get vifs
+#library(car)
+#vif(ols_model)
+```
