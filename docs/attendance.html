@@ -13,7 +13,7 @@
 
 <title>Attendance Impact Analysis</title>
 
-<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -374,130 +374,238 @@ div.tocify {
 
 
 <pre class="r"><code>library(data.table)
-attendance_data &lt;- fread(&quot;predict_attendance.csv.gz&quot;)</code></pre>
-<pre class="r"><code># interact home_attendance and posteam_type_home
-attendance_data$interact_HxA &lt;- attendance_data$home_attendance * attendance_data$posteam_type_home</code></pre>
-<pre class="r"><code># move those three cols all to the end of the data
-# Get all column names except the three we want to move
-other_cols &lt;- setdiff(names(attendance_data), 
-                     c(&quot;home_attendance&quot;, &quot;posteam_type_home&quot;, &quot;interact_HxA&quot;))
-
-# Reorder columns by putting the three columns at the end
-setcolorder(attendance_data, c(other_cols, 
-                             &quot;home_attendance&quot;, 
-                             &quot;posteam_type_home&quot;, 
-                             &quot;interact_HxA&quot;))
-
-str(attendance_data)</code></pre>
-<pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   7061 obs. of  57 variables:
-##  $ my_id                                                : chr  &quot;2019_02_ARI_BAL_165&quot; &quot;2019_02_ARI_BAL_479&quot; &quot;2019_02_ARI_BAL_575&quot; &quot;2019_02_ARI_BAL_756&quot; ...
-##  $ attempt                                              : int  0 0 1 0 0 1 0 0 0 0 ...
-##  $ ydstogo                                              : num  -1.193 0.922 -0.84 -1.193 -0.84 ...
-##  $ yardline_100                                         : num  0.279 1.254 -0.248 -1.832 -1.385 ...
-##  $ posteam_timeouts_remaining                           : num  0.615 0.615 0.615 0.615 0.615 ...
-##  $ defteam_timeouts_remaining                           : num  0.602 0.602 0.602 0.602 -0.608 ...
-##  $ week                                                 : num  -1.63 -1.63 -1.63 -1.63 -1.63 ...
-##  $ temp                                                 : num  1.36 1.36 1.36 1.36 1.36 ...
-##  $ wind                                                 : num  0.332 0.332 0.332 0.332 0.332 ...
-##  $ vegas_wp                                             : num  -0.975 -1.25 1.424 -1.155 1.389 ...
-##  $ vegas_wp_posteam                                     : num  0.999 1.272 1.27 1.177 1.236 ...
-##  $ total_line                                           : num  -0.0888 -0.0888 -0.0888 -0.0888 -0.0888 ...
-##  $ score_diff                                           : num  0.106 -0.538 0.75 -0.538 0.474 ...
-##  $ down1_pct                                            : num  -1.13 -1.13 3.7 -1.13 3.7 ...
-##  $ down2_pct                                            : num  -2.19 -2.19 1.73 -2.19 1.73 ...
-##  $ down3_pct                                            : num  -1.06 -1.06 2.01 -1.06 2.01 ...
-##  $ down4_pct                                            : num  0.377 0.377 0.377 0.377 0.377 ...
-##  $ prep_days                                            : num  -0.239 -0.239 -0.239 -0.239 -0.239 ...
-##  $ overall_win_pct                                      : num  -1.12 -1.12 1.34 -1.12 1.34 ...
-##  $ team_win_pct                                         : num  -0.455 -0.455 1.996 -0.455 1.996 ...
-##  $ prev_shotgun_rate                                    : num  -0.12 -0.12 -0.562 -0.12 -0.562 ...
-##  $ prev_singleback_rate                                 : num  0.769 0.769 -1.743 0.769 -1.743 ...
-##  $ prev_empty_rate                                      : num  -1.01 -1.01 0.3 -1.01 0.3 ...
-##  $ prev_shotgun_success                                 : num  -2.22 -2.22 0.0118 -2.22 0.0118 ...
-##  $ prev_singleback_success                              : num  -0.389 -0.389 1.24 -0.389 1.24 ...
-##  $ prev_empty_success                                   : num  -0.242 -0.242 -0.86 -0.242 -0.86 ...
-##  $ prev_stop_rate_run                                   : num  0.694 0.694 -1.312 0.694 -1.312 ...
-##  $ prev_stop_rate_pass                                  : num  1.935 1.935 -0.234 1.935 -0.234 ...
-##  $ prev_win_pct                                         : num  -1.682 -1.682 0.598 -1.682 0.598 ...
-##  $ shotgun_rate                                         : num  -0.132 -0.132 -2.748 -0.132 -2.748 ...
-##  $ singleback_rate                                      : num  -0.739 -0.739 -0.739 -0.739 -0.739 ...
-##  $ empty_rate                                           : num  -0.595 -0.595 -0.595 -0.595 -0.595 ...
-##  $ shotgun_success                                      : num  -0.927 -0.927 -0.927 -0.927 -0.927 ...
-##  $ singleback_success                                   : num  0.6 0.6 0.6 0.6 0.6 ...
-##  $ empty_success                                        : num  -0.535 -0.535 -0.535 -0.535 -0.535 ...
-##  $ def_stop_rate_run                                    : num  3.33 3.33 1.9 3.33 1.9 ...
-##  $ def_stop_rate_pass                                   : num  1.175 1.175 -0.646 1.175 -0.646 ...
-##  $ avg_pass_rushers                                     : num  2.14 2.14 2.49 2.14 2.49 ...
-##  $ avg_box_defenders                                    : num  -1.98 -1.98 1.21 -1.98 1.21 ...
-##  $ cover0_rate                                          : num  1.867 1.867 0.592 1.867 0.592 ...
-##  $ cover1_rate                                          : num  -0.862 -0.862 0.55 -0.862 0.55 ...
-##  $ cover2_rate                                          : num  -1.0141 -1.0141 -0.0961 -1.0141 -0.0961 ...
-##  $ cover3_rate                                          : num  3.958 3.958 -0.497 3.958 -0.497 ...
-##  $ cover4_rate                                          : num  -0.176 -0.176 -0.445 -0.176 -0.445 ...
-##  $ cover6_rate                                          : num  -1.227 -1.227 -0.425 -1.227 -0.425 ...
-##  $ two_man_rate                                         : num  -0.969 -0.969 1.283 -0.969 1.283 ...
-##  $ prevent_rate                                         : num  -0.606 -0.606 2.203 -0.606 2.203 ...
-##  $ roof_outdoors                                        : int  1 1 1 1 1 1 1 1 1 1 ...
-##  $ p_player_26_punting_grades_grades_punter_12w         : num  0.407 0.407 0.075 0.407 0.075 ...
-##  $ p_player_26_punting_grades_grades_punter_2w          : num  0.3999 0.3999 0.0975 0.3999 0.0975 ...
-##  $ k_player_25_field_goals_grades_grades_fgep_kicker_12w: num  0.116 0.116 0.455 0.116 0.455 ...
-##  $ k_player_25_field_goals_grades_grades_fgep_kicker_2w : num  0.904 0.904 0.66 0.904 0.66 ...
-##  $ is_first_half                                        : int  1 1 1 1 1 1 1 1 1 0 ...
-##  $ time_in_half                                         : num  1.581 0.961 0.727 0.467 0.109 ...
-##  $ home_attendance                                      : int  1 1 1 1 1 1 1 1 1 1 ...
-##  $ posteam_type_home                                    : int  0 0 1 0 1 0 0 0 1 1 ...
-##  $ interact_HxA                                         : int  0 0 1 0 1 0 0 0 1 1 ...
-##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</code></pre>
-<pre class="r"><code># kill my_id                      
-attendance_data$my_id &lt;- NULL</code></pre>
-<pre class="r"><code># ols                     
-ols_model &lt;- lm(attempt ~., data = attendance_data)</code></pre>
-<pre class="r"><code>library(sandwich)</code></pre>
-<pre><code>## Warning: package &#39;sandwich&#39; was built under R version 4.3.3</code></pre>
-<pre class="r"><code>library(lmtest)</code></pre>
-<pre><code>## Warning: package &#39;lmtest&#39; was built under R version 4.3.3</code></pre>
+library(sandwich)
+library(lmtest)</code></pre>
 <pre><code>## Loading required package: zoo</code></pre>
-<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:data.table&#39;:
+## 
+##     yearmon, yearqtr</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     as.Date, as.Date.numeric</code></pre>
-<pre class="r"><code># Get HC0-adjusted t-values and p-values
-robust_test &lt;- coeftest(ols_model, vcov = vcovHC(ols_model, type = &quot;HC0&quot;))
-t_stats &lt;- robust_test[, &quot;t value&quot;]
-p_values &lt;- robust_test[, &quot;Pr(&gt;|t|)&quot;]
-
-# Function to add significance stars
-get_stars &lt;- function(p) {
-    if (p &lt;= 0.01) return(&quot;***&quot;)
-    if (p &lt;= 0.05) return(&quot;**&quot;)
-    if (p &lt;= 0.1) return(&quot;*&quot;)
-    if (p &lt;= 0.15) return(&quot;.&quot;)
-    return(&quot;&quot;)
+<pre class="r"><code># Function to run analysis for a single file
+run_attendance_analysis &lt;- function(file_path, year) {
+    cat(&quot;\n\n========================================&quot;)
+    cat(sprintf(&quot;\nAnalyzing %s vs 2020\n&quot;, year))
+    cat(&quot;========================================\n\n&quot;)
+    
+    # Read data
+    attendance_data &lt;- fread(file_path)
+    
+    # Create interaction term
+    attendance_data$interact_HxA &lt;- attendance_data$home_attendance * attendance_data$posteam_type_home
+    
+    # Reorder columns
+    other_cols &lt;- setdiff(names(attendance_data), 
+                         c(&quot;home_attendance&quot;, &quot;posteam_type_home&quot;, &quot;interact_HxA&quot;))
+    setcolorder(attendance_data, c(other_cols, 
+                                 &quot;home_attendance&quot;, 
+                                 &quot;posteam_type_home&quot;, 
+                                 &quot;interact_HxA&quot;))
+    
+    # Remove my_id
+    attendance_data$my_id &lt;- NULL
+    
+    # Run OLS
+    ols_model &lt;- lm(attempt ~ ., data = attendance_data)
+    
+    # Get robust statistics
+    robust_test &lt;- coeftest(ols_model, vcov = vcovHC(ols_model, type = &quot;HC0&quot;))
+    t_stats &lt;- robust_test[, &quot;t value&quot;]
+    p_values &lt;- robust_test[, &quot;Pr(&gt;|t|)&quot;]
+    
+    # Function to add significance stars
+    get_stars &lt;- function(p) {
+        if (p &lt;= 0.01) return(&quot;***&quot;)
+        if (p &lt;= 0.05) return(&quot;**&quot;)
+        if (p &lt;= 0.1) return(&quot;*&quot;)
+        if (p &lt;= 0.15) return(&quot;.&quot;)
+        return(&quot;&quot;)
+    }
+    
+    # Print results
+    name_width &lt;- 20
+    cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Variable&quot;, &quot;t-value&quot;, &quot;p-value&quot;, &quot;sig&quot;))
+    cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;---------&quot;, &quot;-------&quot;, &quot;-------&quot;, &quot;----&quot;))
+    
+    for (i in 1:length(t_stats)) {
+        var_name &lt;- rownames(robust_test)[i]
+        if (nchar(var_name) &gt; name_width) {
+            var_name &lt;- paste0(substr(var_name, 1, name_width-3), &quot;...&quot;)
+        }
+        cat(sprintf(&quot;%-*s  %10.4f  %10.4f  %4s\n&quot;, 
+                    name_width, var_name, 
+                    t_stats[i], p_values[i],
+                    get_stars(p_values[i])))
+    }
+    cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15\n&quot;)
+    
+    # Return key statistics for potential further analysis
+    return(list(
+        year = year,
+        model = ols_model,
+        robust_test = robust_test
+    ))
 }
 
-# Maximum width for variable names
-name_width &lt;- 20
+# Years to analyze
+years &lt;- c(2017, 2018, 2019, 2021, 2022, 2023)
 
-# Print header with alignment
-cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Variable&quot;, &quot;t-value&quot;, &quot;p-value&quot;, &quot;sig&quot;))</code></pre>
-<pre><code>## Variable                 t-value     p-value   sig</code></pre>
-<pre class="r"><code>cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;---------&quot;, &quot;-------&quot;, &quot;-------&quot;, &quot;----&quot;))</code></pre>
-<pre><code>## ---------                -------     -------  ----</code></pre>
-<pre class="r"><code># Loop through and print values
-for (i in 1:length(t_stats)) {
-    var_name &lt;- rownames(robust_test)[i]
-    # Truncate name if too long
-    if (nchar(var_name) &gt; name_width) {
-        var_name &lt;- paste0(substr(var_name, 1, name_width-3), &quot;...&quot;)
+# Store results for all years
+results_list &lt;- list()
+
+# Run analysis for each year
+for (year in years) {
+    file_path &lt;- sprintf(&quot;predict_attendance_%s_vs_2020.csv.gz&quot;, year)
+    if (file.exists(file_path)) {
+        results_list[[as.character(year)]] &lt;- run_attendance_analysis(file_path, year)
+    } else {
+        cat(sprintf(&quot;\nWarning: File for year %s not found\n&quot;, year))
     }
-    cat(sprintf(&quot;%-*s  %10.4f  %10.4f  %4s\n&quot;, 
-                name_width, var_name, 
-                t_stats[i], p_values[i],
-                get_stars(p_values[i])))
 }</code></pre>
-<pre><code>## (Intercept)              20.4752      0.0000   ***
+<pre><code>## 
+## 
+## ========================================
+## Analyzing 2017 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              12.8715      0.0000   ***
+## ydstogo                 -20.0045      0.0000   ***
+## yardline_100            -13.7281      0.0000   ***
+## posteam_timeouts_...     -6.2506      0.0000   ***
+## defteam_timeouts_...     -0.7168      0.4735      
+## week                     -2.1868      0.0288    **
+## temp                     -0.7267      0.4674      
+## wind                     -0.4147      0.6784      
+## vegas_wp                 -7.9606      0.0000   ***
+## vegas_wp_posteam          1.4901      0.1362     .
+## total_line               -1.0668      0.2861      
+## score_diff               -0.8189      0.4129      
+## down1_pct                 1.2870      0.1981      
+## down2_pct                 0.3635      0.7162      
+## down3_pct                -1.5112      0.1308     .
+## down4_pct                 0.8442      0.3986      
+## prep_days                -1.0352      0.3006      
+## overall_win_pct           1.3344      0.1821      
+## team_win_pct              1.3959      0.1628      
+## prev_shotgun_rate         1.1528      0.2490      
+## prev_singleback_rate     -0.2228      0.8237      
+## prev_empty_rate          -2.0441      0.0410    **
+## prev_shotgun_success      0.5664      0.5711      
+## prev_singleback_s...      0.3350      0.7376      
+## prev_empty_success        1.5446      0.1225     .
+## prev_stop_rate_run        1.0761      0.2819      
+## prev_stop_rate_pass      -0.3756      0.7072      
+## prev_win_pct              2.2114      0.0270    **
+## shotgun_rate              1.2354      0.2167      
+## singleback_rate           2.5195      0.0118    **
+## empty_rate                4.1282      0.0000   ***
+## shotgun_success           6.7631      0.0000   ***
+## singleback_success       -1.2484      0.2119      
+## empty_success             1.0040      0.3154      
+## def_stop_rate_run         0.7634      0.4453      
+## def_stop_rate_pass       -3.1787      0.0015   ***
+## avg_pass_rushers         -0.8271      0.4082      
+## avg_box_defenders         0.6621      0.5079      
+## cover0_rate               0.2751      0.7833      
+## cover1_rate               1.7392      0.0820     *
+## cover2_rate              -0.8192      0.4127      
+## cover3_rate               0.3375      0.7357      
+## cover4_rate               0.0620      0.9505      
+## cover6_rate              -1.3190      0.1872      
+## two_man_rate              0.5841      0.5592      
+## prevent_rate              0.3579      0.7205      
+## roof_outdoors             0.2267      0.8206      
+## p_player_26_punti...      0.3307      0.7409      
+## p_player_26_punti...     -0.9044      0.3658      
+## k_player_25_field...     -1.4042      0.1603      
+## k_player_25_field...      0.7135      0.4756      
+## is_first_half           -14.4435      0.0000   ***
+## time_in_half             -7.4865      0.0000   ***
+## home_attendance          -1.2299      0.2188      
+## posteam_type_home         0.3836      0.7013      
+## interact_HxA              0.5095      0.6104      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2018 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              19.3389      0.0000   ***
+## ydstogo                 -23.7094      0.0000   ***
+## yardline_100            -12.8141      0.0000   ***
+## posteam_timeouts_...     -5.4973      0.0000   ***
+## defteam_timeouts_...      0.4325      0.6654      
+## week                     -0.6964      0.4862      
+## temp                     -2.6997      0.0070   ***
+## wind                      0.0491      0.9608      
+## vegas_wp                 -7.9441      0.0000   ***
+## vegas_wp_posteam          0.7391      0.4599      
+## total_line               -0.9465      0.3439      
+## score_diff               -0.6060      0.5446      
+## down1_pct                -0.0853      0.9321      
+## down2_pct                -0.1141      0.9091      
+## down3_pct                -1.2739      0.2027      
+## down4_pct                 2.0235      0.0431    **
+## prep_days                -0.6558      0.5120      
+## overall_win_pct           1.5389      0.1239     .
+## team_win_pct              0.9487      0.3428      
+## prev_shotgun_rate         0.0626      0.9501      
+## prev_singleback_rate     -1.3212      0.1865      
+## prev_empty_rate          -2.1872      0.0288    **
+## prev_shotgun_success      1.2701      0.2041      
+## prev_singleback_s...      0.9518      0.3412      
+## prev_empty_success        0.4193      0.6750      
+## prev_stop_rate_run        1.6993      0.0893     *
+## prev_stop_rate_pass      -0.7330      0.4636      
+## prev_win_pct              0.8055      0.4206      
+## shotgun_rate              2.1550      0.0312    **
+## singleback_rate           3.4292      0.0006   ***
+## empty_rate                3.2857      0.0010   ***
+## shotgun_success           5.1779      0.0000   ***
+## singleback_success        0.4680      0.6398      
+## empty_success             1.7712      0.0766     *
+## def_stop_rate_run        -0.5048      0.6137      
+## def_stop_rate_pass       -3.4792      0.0005   ***
+## avg_pass_rushers          0.2431      0.8079      
+## avg_box_defenders         0.6087      0.5427      
+## cover0_rate               0.5302      0.5960      
+## cover1_rate               1.6186      0.1056     .
+## cover2_rate               0.8036      0.4217      
+## cover3_rate               0.7725      0.4399      
+## cover4_rate               1.1436      0.2528      
+## cover6_rate              -0.6778      0.4979      
+## two_man_rate              0.4166      0.6770      
+## prevent_rate             -0.5700      0.5687      
+## roof_outdoors            -0.1765      0.8599      
+## p_player_26_punti...      1.8261      0.0679     *
+## p_player_26_punti...     -2.0996      0.0358    **
+## k_player_25_field...     -0.7427      0.4577      
+## k_player_25_field...      0.3738      0.7085      
+## is_first_half           -15.0133      0.0000   ***
+## time_in_half             -8.7231      0.0000   ***
+## home_attendance          -2.6746      0.0075   ***
+## posteam_type_home         0.2129      0.8314      
+## interact_HxA              1.3312      0.1832      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2019 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              20.4752      0.0000   ***
 ## ydstogo                 -24.4179      0.0000   ***
 ## yardline_100            -12.0048      0.0000   ***
 ## posteam_timeouts_...     -6.1153      0.0000   ***
@@ -552,12 +660,265 @@ for (i in 1:length(t_stats)) {
 ## time_in_half             -7.7369      0.0000   ***
 ## home_attendance          -2.4225      0.0154    **
 ## posteam_type_home         0.1052      0.9162      
-## interact_HxA              1.9734      0.0485    **</code></pre>
-<pre class="r"><code>cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15&quot;)</code></pre>
-<pre><code>## 
+## interact_HxA              1.9734      0.0485    **
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2021 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              19.5719      0.0000   ***
+## ydstogo                 -25.2620      0.0000   ***
+## yardline_100            -12.9689      0.0000   ***
+## posteam_timeouts_...     -5.5627      0.0000   ***
+## defteam_timeouts_...     -0.8857      0.3758      
+## week                     -1.0130      0.3111      
+## temp                     -1.2273      0.2197      
+## wind                     -1.0855      0.2777      
+## vegas_wp                 -6.3744      0.0000   ***
+## vegas_wp_posteam          0.3956      0.6924      
+## total_line                0.2094      0.8341      
+## score_diff               -2.8619      0.0042   ***
+## down1_pct                 2.1939      0.0283    **
+## down2_pct                -1.8906      0.0587     *
+## down3_pct                 0.4184      0.6757      
+## down4_pct                 0.7633      0.4453      
+## prep_days                 0.4437      0.6572      
+## overall_win_pct           0.2847      0.7759      
+## team_win_pct              3.5734      0.0004   ***
+## prev_shotgun_rate        -0.2107      0.8331      
+## prev_singleback_rate     -2.4435      0.0146    **
+## prev_empty_rate          -3.0102      0.0026   ***
+## prev_shotgun_success      0.4975      0.6188      
+## prev_singleback_s...      0.1619      0.8714      
+## prev_empty_success        0.5842      0.5591      
+## prev_stop_rate_run        0.6006      0.5481      
+## prev_stop_rate_pass      -0.2561      0.7979      
+## prev_win_pct             -0.7314      0.4645      
+## shotgun_rate              3.9822      0.0001   ***
+## singleback_rate           5.5892      0.0000   ***
+## empty_rate                5.1831      0.0000   ***
+## shotgun_success           4.5574      0.0000   ***
+## singleback_success       -0.4360      0.6629      
+## empty_success             0.9573      0.3385      
+## def_stop_rate_run         0.1127      0.9102      
+## def_stop_rate_pass       -2.3063      0.0211    **
+## avg_pass_rushers         -0.4023      0.6874      
+## avg_box_defenders         0.6219      0.5341      
+## cover0_rate               0.3038      0.7613      
+## cover1_rate               0.5002      0.6170      
+## cover2_rate              -0.7437      0.4571      
+## cover3_rate              -0.5513      0.5815      
+## cover4_rate              -0.4172      0.6765      
+## cover6_rate              -0.9226      0.3562      
+## two_man_rate              0.3563      0.7216      
+## prevent_rate             -0.2993      0.7648      
+## roof_outdoors             0.5458      0.5852      
+## p_player_26_punti...      0.1091      0.9131      
+## p_player_26_punti...     -0.8347      0.4039      
+## k_player_25_field...     -3.5031      0.0005   ***
+## k_player_25_field...      2.9408      0.0033   ***
+## is_first_half           -14.9897      0.0000   ***
+## time_in_half             -7.6180      0.0000   ***
+## home_attendance           0.9300      0.3524      
+## posteam_type_home         0.1575      0.8748      
+## interact_HxA              0.8971      0.3697      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2022 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              18.7086      0.0000   ***
+## ydstogo                 -26.3916      0.0000   ***
+## yardline_100            -13.8353      0.0000   ***
+## posteam_timeouts_...     -5.4386      0.0000   ***
+## defteam_timeouts_...     -1.1543      0.2484      
+## week                     -2.1943      0.0282    **
+## temp                     -0.9482      0.3431      
+## wind                     -0.6706      0.5025      
+## vegas_wp                 -7.9783      0.0000   ***
+## vegas_wp_posteam          0.1000      0.9204      
+## total_line                0.8058      0.4204      
+## score_diff               -1.1415      0.2537      
+## down1_pct                 2.8162      0.0049   ***
+## down2_pct                -0.0444      0.9646      
+## down3_pct                -0.7965      0.4257      
+## down4_pct                 0.9117      0.3619      
+## prep_days                 0.5607      0.5750      
+## overall_win_pct           0.0922      0.9265      
+## team_win_pct              3.4176      0.0006   ***
+## prev_shotgun_rate         1.0938      0.2741      
+## prev_singleback_rate     -0.5269      0.5983      
+## prev_empty_rate          -1.5487      0.1215     .
+## prev_shotgun_success      0.8699      0.3844      
+## prev_singleback_s...      0.4171      0.6766      
+## prev_empty_success       -0.1597      0.8731      
+## prev_stop_rate_run        2.3089      0.0210    **
+## prev_stop_rate_pass      -0.9287      0.3531      
+## prev_win_pct             -1.1593      0.2464      
+## shotgun_rate              2.7691      0.0056   ***
+## singleback_rate           4.3166      0.0000   ***
+## empty_rate                4.5201      0.0000   ***
+## shotgun_success           4.7098      0.0000   ***
+## singleback_success       -0.9855      0.3244      
+## empty_success             1.0227      0.3065      
+## def_stop_rate_run         0.0945      0.9247      
+## def_stop_rate_pass       -3.3254      0.0009   ***
+## avg_pass_rushers         -0.7806      0.4351      
+## avg_box_defenders         0.6688      0.5037      
+## cover0_rate              -0.9889      0.3228      
+## cover1_rate               0.0046      0.9964      
+## cover2_rate              -0.7514      0.4524      
+## cover3_rate              -0.9760      0.3291      
+## cover4_rate              -0.6952      0.4870      
+## cover6_rate              -1.4540      0.1460     .
+## two_man_rate             -1.2629      0.2067      
+## prevent_rate              0.2458      0.8058      
+## roof_outdoors             1.0394      0.2986      
+## p_player_26_punti...     -0.8850      0.3762      
+## p_player_26_punti...      0.5173      0.6049      
+## k_player_25_field...     -2.8514      0.0044   ***
+## k_player_25_field...      2.7219      0.0065   ***
+## is_first_half           -14.5002      0.0000   ***
+## time_in_half             -7.7295      0.0000   ***
+## home_attendance           0.7580      0.4485      
+## posteam_type_home         0.3092      0.7572      
+## interact_HxA              1.6871      0.0916     *
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2023 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              19.2781      0.0000   ***
+## ydstogo                 -25.7101      0.0000   ***
+## yardline_100            -13.4054      0.0000   ***
+## posteam_timeouts_...     -5.5548      0.0000   ***
+## defteam_timeouts_...      1.1702      0.2419      
+## week                     -0.7336      0.4632      
+## temp                     -1.9980      0.0458    **
+## wind                      1.2694      0.2043      
+## vegas_wp                 -8.0171      0.0000   ***
+## vegas_wp_posteam          1.3511      0.1767      
+## total_line                0.8465      0.3973      
+## score_diff               -0.5549      0.5790      
+## down1_pct                 3.1954      0.0014   ***
+## down2_pct                -0.7726      0.4398      
+## down3_pct                 0.7653      0.4441      
+## down4_pct                 1.2925      0.1962      
+## prep_days                -1.1438      0.2527      
+## overall_win_pct           1.1979      0.2310      
+## team_win_pct              1.3264      0.1848      
+## prev_shotgun_rate         1.4761      0.1400     .
+## prev_singleback_rate     -1.5584      0.1192     .
+## prev_empty_rate          -1.5962      0.1105     .
+## prev_shotgun_success      1.2221      0.2217      
+## prev_singleback_s...     -0.1221      0.9028      
+## prev_empty_success        0.7639      0.4449      
+## prev_stop_rate_run        3.2732      0.0011   ***
+## prev_stop_rate_pass       0.2505      0.8022      
+## prev_win_pct              0.5381      0.5905      
+## shotgun_rate              4.2914      0.0000   ***
+## singleback_rate           4.1694      0.0000   ***
+## empty_rate                4.5829      0.0000   ***
+## shotgun_success           5.1576      0.0000   ***
+## singleback_success       -0.1664      0.8679      
+## empty_success             0.9749      0.3296      
+## def_stop_rate_run        -0.4371      0.6621      
+## def_stop_rate_pass       -4.4645      0.0000   ***
+## avg_pass_rushers         -0.5564      0.5780      
+## avg_box_defenders         1.5533      0.1204     .
+## cover0_rate               0.2248      0.8221      
+## cover1_rate               1.4755      0.1401     .
+## cover2_rate              -1.4419      0.1494     .
+## cover3_rate               1.8507      0.0643     *
+## cover4_rate               0.2213      0.8249      
+## cover6_rate               0.2936      0.7691      
+## two_man_rate             -0.3420      0.7324      
+## prevent_rate              0.8553      0.3924      
+## roof_outdoors            -1.7721      0.0764     *
+## p_player_26_punti...     -0.1437      0.8858      
+## p_player_26_punti...      0.2579      0.7965      
+## k_player_25_field...     -2.7138      0.0067   ***
+## k_player_25_field...      1.8240      0.0682     *
+## is_first_half           -14.5907      0.0000   ***
+## time_in_half             -8.6321      0.0000   ***
+## home_attendance           2.9533      0.0032   ***
+## posteam_type_home         0.3349      0.7377      
+## interact_HxA              0.7003      0.4838      
+## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
+<pre class="r"><code># Optional: Add summary comparison across years
+cat(&quot;\n\n========================================&quot;)</code></pre>
+<pre><code>## 
+## 
+## ========================================</code></pre>
+<pre class="r"><code>cat(&quot;\nComparison of Key Coefficients Across Years&quot;)</code></pre>
+<pre><code>## 
+## Comparison of Key Coefficients Across Years</code></pre>
+<pre class="r"><code>cat(&quot;\n========================================\n\n&quot;)</code></pre>
+<pre><code>## 
+## ========================================</code></pre>
+<pre class="r"><code># Extract and compare key coefficients (home_attendance, posteam_type_home, interact_HxA)
+key_vars &lt;- c(&quot;home_attendance&quot;, &quot;posteam_type_home&quot;, &quot;interact_HxA&quot;)
+for (var in key_vars) {
+    cat(sprintf(&quot;\n%s coefficients by year:\n&quot;, var))
+    cat(&quot;Year\tCoefficient\tt-value\tp-value\n&quot;)
+    for (year in years) {
+        if (!is.null(results_list[[as.character(year)]])) {
+            coef_idx &lt;- which(rownames(results_list[[as.character(year)]]$robust_test) == var)
+            if (length(coef_idx) &gt; 0) {
+                result &lt;- results_list[[as.character(year)]]$robust_test[coef_idx, ]
+                cat(sprintf(&quot;%s\t%.4f\t%.4f\t%.4f\n&quot;, 
+                          year, result[&quot;Estimate&quot;], 
+                          result[&quot;t value&quot;], 
+                          result[&quot;Pr(&gt;|t|)&quot;]))
+            }
+        }
+    }
+}</code></pre>
+<pre><code>## 
+## home_attendance coefficients by year:
+## Year Coefficient t-value p-value
+## 2017 -0.0377 -1.2299 0.2188
+## 2018 -0.0432 -2.6746 0.0075
+## 2019 -0.0362 -2.4225 0.0154
+## 2021 0.0145  0.9300  0.3524
+## 2022 0.0122  0.7580  0.4485
+## 2023 0.0497  2.9533  0.0032
+## 
+## posteam_type_home coefficients by year:
+## Year Coefficient t-value p-value
+## 2017 0.0050  0.3836  0.7013
+## 2018 0.0028  0.2129  0.8314
+## 2019 0.0014  0.1052  0.9162
+## 2021 0.0021  0.1575  0.8748
+## 2022 0.0041  0.3092  0.7572
+## 2023 0.0044  0.3349  0.7377
+## 
+## interact_HxA coefficients by year:
+## Year Coefficient t-value p-value
+## 2017 0.0087  0.5095  0.6104
+## 2018 0.0235  1.3312  0.1832
+## 2019 0.0350  1.9734  0.0485
+## 2021 0.0161  0.8971  0.3697
+## 2022 0.0301  1.6871  0.0916
+## 2023 0.0127  0.7003  0.4838</code></pre>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgSW1wYWN0IEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KYXR0ZW5kYW5jZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X2F0dGVuZGFuY2UuY3N2Lmd6IikNCmBgYA0KDQpgYGB7cn0NCiMgaW50ZXJhY3QgaG9tZV9hdHRlbmRhbmNlIGFuZCBwb3N0ZWFtX3R5cGVfaG9tZQ0KYXR0ZW5kYW5jZV9kYXRhJGludGVyYWN0X0h4QSA8LSBhdHRlbmRhbmNlX2RhdGEkaG9tZV9hdHRlbmRhbmNlICogYXR0ZW5kYW5jZV9kYXRhJHBvc3RlYW1fdHlwZV9ob21lDQpgYGANCg0KYGBge3J9DQojIG1vdmUgdGhvc2UgdGhyZWUgY29scyBhbGwgdG8gdGhlIGVuZCBvZiB0aGUgZGF0YQ0KIyBHZXQgYWxsIGNvbHVtbiBuYW1lcyBleGNlcHQgdGhlIHRocmVlIHdlIHdhbnQgdG8gbW92ZQ0Kb3RoZXJfY29scyA8LSBzZXRkaWZmKG5hbWVzKGF0dGVuZGFuY2VfZGF0YSksIA0KICAgICAgICAgICAgICAgICAgICAgYygiaG9tZV9hdHRlbmRhbmNlIiwgInBvc3RlYW1fdHlwZV9ob21lIiwgImludGVyYWN0X0h4QSIpKQ0KDQojIFJlb3JkZXIgY29sdW1ucyBieSBwdXR0aW5nIHRoZSB0aHJlZSBjb2x1bW5zIGF0IHRoZSBlbmQNCnNldGNvbG9yZGVyKGF0dGVuZGFuY2VfZGF0YSwgYyhvdGhlcl9jb2xzLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImhvbWVfYXR0ZW5kYW5jZSIsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAicG9zdGVhbV90eXBlX2hvbWUiLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImludGVyYWN0X0h4QSIpKQ0KDQpzdHIoYXR0ZW5kYW5jZV9kYXRhKQ0KYGBgDQoNCg0KYGBge3J9DQojIGtpbGwgbXlfaWQgICAgICAgICAgICAgICAgICAgICAgDQphdHRlbmRhbmNlX2RhdGEkbXlfaWQgPC0gTlVMTA0KYGBgDQoNCmBgYHtyfSANCiMgb2xzICAgICAgICAgICAgICAgICAgICAgDQpvbHNfbW9kZWwgPC0gbG0oYXR0ZW1wdCB+LiwgZGF0YSA9IGF0dGVuZGFuY2VfZGF0YSkNCmBgYA0KDQpgYGB7cn0NCmxpYnJhcnkoc2FuZHdpY2gpDQpsaWJyYXJ5KGxtdGVzdCkNCg0KIyBHZXQgSEMwLWFkanVzdGVkIHQtdmFsdWVzIGFuZCBwLXZhbHVlcw0Kcm9idXN0X3Rlc3QgPC0gY29lZnRlc3Qob2xzX21vZGVsLCB2Y292ID0gdmNvdkhDKG9sc19tb2RlbCwgdHlwZSA9ICJIQzAiKSkNCnRfc3RhdHMgPC0gcm9idXN0X3Rlc3RbLCAidCB2YWx1ZSJdDQpwX3ZhbHVlcyA8LSByb2J1c3RfdGVzdFssICJQcig+fHR8KSJdDQoNCiMgRnVuY3Rpb24gdG8gYWRkIHNpZ25pZmljYW5jZSBzdGFycw0KZ2V0X3N0YXJzIDwtIGZ1bmN0aW9uKHApIHsNCiAgICBpZiAocCA8PSAwLjAxKSByZXR1cm4oIioqKiIpDQogICAgaWYgKHAgPD0gMC4wNSkgcmV0dXJuKCIqKiIpDQogICAgaWYgKHAgPD0gMC4xKSByZXR1cm4oIioiKQ0KICAgIGlmIChwIDw9IDAuMTUpIHJldHVybigiLiIpDQogICAgcmV0dXJuKCIiKQ0KfQ0KDQojIE1heGltdW0gd2lkdGggZm9yIHZhcmlhYmxlIG5hbWVzDQpuYW1lX3dpZHRoIDwtIDIwDQoNCiMgUHJpbnQgaGVhZGVyIHdpdGggYWxpZ25tZW50DQpjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiVmFyaWFibGUiLCAidC12YWx1ZSIsICJwLXZhbHVlIiwgInNpZyIpKQ0KY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIi0tLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLSIpKQ0KDQojIExvb3AgdGhyb3VnaCBhbmQgcHJpbnQgdmFsdWVzDQpmb3IgKGkgaW4gMTpsZW5ndGgodF9zdGF0cykpIHsNCiAgICB2YXJfbmFtZSA8LSByb3duYW1lcyhyb2J1c3RfdGVzdClbaV0NCiAgICAjIFRydW5jYXRlIG5hbWUgaWYgdG9vIGxvbmcNCiAgICBpZiAobmNoYXIodmFyX25hbWUpID4gbmFtZV93aWR0aCkgew0KICAgICAgICB2YXJfbmFtZSA8LSBwYXN0ZTAoc3Vic3RyKHZhcl9uYW1lLCAxLCBuYW1lX3dpZHRoLTMpLCAiLi4uIikNCiAgICB9DQogICAgY2F0KHNwcmludGYoIiUtKnMgICUxMC40ZiAgJTEwLjRmICAlNHNcbiIsIA0KICAgICAgICAgICAgICAgIG5hbWVfd2lkdGgsIHZhcl9uYW1lLCANCiAgICAgICAgICAgICAgICB0X3N0YXRzW2ldLCBwX3ZhbHVlc1tpXSwNCiAgICAgICAgICAgICAgICBnZXRfc3RhcnMocF92YWx1ZXNbaV0pKSkNCn0NCg0KY2F0KCJcblNpZ25pZmljYW5jZSBjb2RlczogMCAnKioqJyAwLjAxICcqKicgMC4wNSAnKicgMC4xICcuJyAwLjE1IikNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgSW1wYWN0IEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KbGlicmFyeShzYW5kd2ljaCkNCmxpYnJhcnkobG10ZXN0KQ0KDQojIEZ1bmN0aW9uIHRvIHJ1biBhbmFseXNpcyBmb3IgYSBzaW5nbGUgZmlsZQ0KcnVuX2F0dGVuZGFuY2VfYW5hbHlzaXMgPC0gZnVuY3Rpb24oZmlsZV9wYXRoLCB5ZWFyKSB7DQogICAgY2F0KCJcblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSIpDQogICAgY2F0KHNwcmludGYoIlxuQW5hbHl6aW5nICVzIHZzIDIwMjBcbiIsIHllYXIpKQ0KICAgIGNhdCgiPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG4iKQ0KICAgIA0KICAgICMgUmVhZCBkYXRhDQogICAgYXR0ZW5kYW5jZV9kYXRhIDwtIGZyZWFkKGZpbGVfcGF0aCkNCiAgICANCiAgICAjIENyZWF0ZSBpbnRlcmFjdGlvbiB0ZXJtDQogICAgYXR0ZW5kYW5jZV9kYXRhJGludGVyYWN0X0h4QSA8LSBhdHRlbmRhbmNlX2RhdGEkaG9tZV9hdHRlbmRhbmNlICogYXR0ZW5kYW5jZV9kYXRhJHBvc3RlYW1fdHlwZV9ob21lDQogICAgDQogICAgIyBSZW9yZGVyIGNvbHVtbnMNCiAgICBvdGhlcl9jb2xzIDwtIHNldGRpZmYobmFtZXMoYXR0ZW5kYW5jZV9kYXRhKSwgDQogICAgICAgICAgICAgICAgICAgICAgICAgYygiaG9tZV9hdHRlbmRhbmNlIiwgInBvc3RlYW1fdHlwZV9ob21lIiwgImludGVyYWN0X0h4QSIpKQ0KICAgIHNldGNvbG9yZGVyKGF0dGVuZGFuY2VfZGF0YSwgYyhvdGhlcl9jb2xzLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJob21lX2F0dGVuZGFuY2UiLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJwb3N0ZWFtX3R5cGVfaG9tZSIsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImludGVyYWN0X0h4QSIpKQ0KICAgIA0KICAgICMgUmVtb3ZlIG15X2lkDQogICAgYXR0ZW5kYW5jZV9kYXRhJG15X2lkIDwtIE5VTEwNCiAgICANCiAgICAjIFJ1biBPTFMNCiAgICBvbHNfbW9kZWwgPC0gbG0oYXR0ZW1wdCB+IC4sIGRhdGEgPSBhdHRlbmRhbmNlX2RhdGEpDQogICAgDQogICAgIyBHZXQgcm9idXN0IHN0YXRpc3RpY3MNCiAgICByb2J1c3RfdGVzdCA8LSBjb2VmdGVzdChvbHNfbW9kZWwsIHZjb3YgPSB2Y292SEMob2xzX21vZGVsLCB0eXBlID0gIkhDMCIpKQ0KICAgIHRfc3RhdHMgPC0gcm9idXN0X3Rlc3RbLCAidCB2YWx1ZSJdDQogICAgcF92YWx1ZXMgPC0gcm9idXN0X3Rlc3RbLCAiUHIoPnx0fCkiXQ0KICAgIA0KICAgICMgRnVuY3Rpb24gdG8gYWRkIHNpZ25pZmljYW5jZSBzdGFycw0KICAgIGdldF9zdGFycyA8LSBmdW5jdGlvbihwKSB7DQogICAgICAgIGlmIChwIDw9IDAuMDEpIHJldHVybigiKioqIikNCiAgICAgICAgaWYgKHAgPD0gMC4wNSkgcmV0dXJuKCIqKiIpDQogICAgICAgIGlmIChwIDw9IDAuMSkgcmV0dXJuKCIqIikNCiAgICAgICAgaWYgKHAgPD0gMC4xNSkgcmV0dXJuKCIuIikNCiAgICAgICAgcmV0dXJuKCIiKQ0KICAgIH0NCiAgICANCiAgICAjIFByaW50IHJlc3VsdHMNCiAgICBuYW1lX3dpZHRoIDwtIDIwDQogICAgY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIlZhcmlhYmxlIiwgInQtdmFsdWUiLCAicC12YWx1ZSIsICJzaWciKSkNCiAgICBjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiLS0tLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tIikpDQogICAgDQogICAgZm9yIChpIGluIDE6bGVuZ3RoKHRfc3RhdHMpKSB7DQogICAgICAgIHZhcl9uYW1lIDwtIHJvd25hbWVzKHJvYnVzdF90ZXN0KVtpXQ0KICAgICAgICBpZiAobmNoYXIodmFyX25hbWUpID4gbmFtZV93aWR0aCkgew0KICAgICAgICAgICAgdmFyX25hbWUgPC0gcGFzdGUwKHN1YnN0cih2YXJfbmFtZSwgMSwgbmFtZV93aWR0aC0zKSwgIi4uLiIpDQogICAgICAgIH0NCiAgICAgICAgY2F0KHNwcmludGYoIiUtKnMgICUxMC40ZiAgJTEwLjRmICAlNHNcbiIsIA0KICAgICAgICAgICAgICAgICAgICBuYW1lX3dpZHRoLCB2YXJfbmFtZSwgDQogICAgICAgICAgICAgICAgICAgIHRfc3RhdHNbaV0sIHBfdmFsdWVzW2ldLA0KICAgICAgICAgICAgICAgICAgICBnZXRfc3RhcnMocF92YWx1ZXNbaV0pKSkNCiAgICB9DQogICAgY2F0KCJcblNpZ25pZmljYW5jZSBjb2RlczogMCAnKioqJyAwLjAxICcqKicgMC4wNSAnKicgMC4xICcuJyAwLjE1XG4iKQ0KICAgIA0KICAgICMgUmV0dXJuIGtleSBzdGF0aXN0aWNzIGZvciBwb3RlbnRpYWwgZnVydGhlciBhbmFseXNpcw0KICAgIHJldHVybihsaXN0KA0KICAgICAgICB5ZWFyID0geWVhciwNCiAgICAgICAgbW9kZWwgPSBvbHNfbW9kZWwsDQogICAgICAgIHJvYnVzdF90ZXN0ID0gcm9idXN0X3Rlc3QNCiAgICApKQ0KfQ0KDQojIFllYXJzIHRvIGFuYWx5emUNCnllYXJzIDwtIGMoMjAxNywgMjAxOCwgMjAxOSwgMjAyMSwgMjAyMiwgMjAyMykNCg0KIyBTdG9yZSByZXN1bHRzIGZvciBhbGwgeWVhcnMNCnJlc3VsdHNfbGlzdCA8LSBsaXN0KCkNCg0KIyBSdW4gYW5hbHlzaXMgZm9yIGVhY2ggeWVhcg0KZm9yICh5ZWFyIGluIHllYXJzKSB7DQogICAgZmlsZV9wYXRoIDwtIHNwcmludGYoInByZWRpY3RfYXR0ZW5kYW5jZV8lc192c18yMDIwLmNzdi5neiIsIHllYXIpDQogICAgaWYgKGZpbGUuZXhpc3RzKGZpbGVfcGF0aCkpIHsNCiAgICAgICAgcmVzdWx0c19saXN0W1thcy5jaGFyYWN0ZXIoeWVhcildXSA8LSBydW5fYXR0ZW5kYW5jZV9hbmFseXNpcyhmaWxlX3BhdGgsIHllYXIpDQogICAgfSBlbHNlIHsNCiAgICAgICAgY2F0KHNwcmludGYoIlxuV2FybmluZzogRmlsZSBmb3IgeWVhciAlcyBub3QgZm91bmRcbiIsIHllYXIpKQ0KICAgIH0NCn0NCg0KIyBPcHRpb25hbDogQWRkIHN1bW1hcnkgY29tcGFyaXNvbiBhY3Jvc3MgeWVhcnMNCmNhdCgiXG5cbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iKQ0KY2F0KCJcbkNvbXBhcmlzb24gb2YgS2V5IENvZWZmaWNpZW50cyBBY3Jvc3MgWWVhcnMiKQ0KY2F0KCJcbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cblxuIikNCg0KIyBFeHRyYWN0IGFuZCBjb21wYXJlIGtleSBjb2VmZmljaWVudHMgKGhvbWVfYXR0ZW5kYW5jZSwgcG9zdGVhbV90eXBlX2hvbWUsIGludGVyYWN0X0h4QSkNCmtleV92YXJzIDwtIGMoImhvbWVfYXR0ZW5kYW5jZSIsICJwb3N0ZWFtX3R5cGVfaG9tZSIsICJpbnRlcmFjdF9IeEEiKQ0KZm9yICh2YXIgaW4ga2V5X3ZhcnMpIHsNCiAgICBjYXQoc3ByaW50ZigiXG4lcyBjb2VmZmljaWVudHMgYnkgeWVhcjpcbiIsIHZhcikpDQogICAgY2F0KCJZZWFyXHRDb2VmZmljaWVudFx0dC12YWx1ZVx0cC12YWx1ZVxuIikNCiAgICBmb3IgKHllYXIgaW4geWVhcnMpIHsNCiAgICAgICAgaWYgKCFpcy5udWxsKHJlc3VsdHNfbGlzdFtbYXMuY2hhcmFjdGVyKHllYXIpXV0pKSB7DQogICAgICAgICAgICBjb2VmX2lkeCA8LSB3aGljaChyb3duYW1lcyhyZXN1bHRzX2xpc3RbW2FzLmNoYXJhY3Rlcih5ZWFyKV1dJHJvYnVzdF90ZXN0KSA9PSB2YXIpDQogICAgICAgICAgICBpZiAobGVuZ3RoKGNvZWZfaWR4KSA+IDApIHsNCiAgICAgICAgICAgICAgICByZXN1bHQgPC0gcmVzdWx0c19saXN0W1thcy5jaGFyYWN0ZXIoeWVhcildXSRyb2J1c3RfdGVzdFtjb2VmX2lkeCwgXQ0KICAgICAgICAgICAgICAgIGNhdChzcHJpbnRmKCIlc1x0JS40Zlx0JS40Zlx0JS40ZlxuIiwgDQogICAgICAgICAgICAgICAgICAgICAgICAgIHllYXIsIHJlc3VsdFsiRXN0aW1hdGUiXSwgDQogICAgICAgICAgICAgICAgICAgICAgICAgIHJlc3VsdFsidCB2YWx1ZSJdLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzdWx0WyJQcig+fHR8KSJdKSkNCiAgICAgICAgICAgIH0NCiAgICAgICAgfQ0KICAgIH0NCn0NCmBgYA0KDQoNCg==</div>
 
 
 </div>

@@ -9,78 +9,113 @@ options(max.print=10000)
 
 ```{r}
 library(data.table)
-attendance_data <- fread("predict_attendance.csv.gz")
-```
-
-```{r}
-# interact home_attendance and posteam_type_home
-attendance_data$interact_HxA <- attendance_data$home_attendance * attendance_data$posteam_type_home
-```
-
-```{r}
-# move those three cols all to the end of the data
-# Get all column names except the three we want to move
-other_cols <- setdiff(names(attendance_data), 
-                     c("home_attendance", "posteam_type_home", "interact_HxA"))
-
-# Reorder columns by putting the three columns at the end
-setcolorder(attendance_data, c(other_cols, 
-                             "home_attendance", 
-                             "posteam_type_home", 
-                             "interact_HxA"))
-
-str(attendance_data)
-```
-
-
-```{r}
-# kill my_id                      
-attendance_data$my_id <- NULL
-```
-
-```{r} 
-# ols                     
-ols_model <- lm(attempt ~., data = attendance_data)
-```
-
-```{r}
 library(sandwich)
 library(lmtest)
 
-# Get HC0-adjusted t-values and p-values
-robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
-t_stats <- robust_test[, "t value"]
-p_values <- robust_test[, "Pr(>|t|)"]
-
-# Function to add significance stars
-get_stars <- function(p) {
-    if (p <= 0.01) return("***")
-    if (p <= 0.05) return("**")
-    if (p <= 0.1) return("*")
-    if (p <= 0.15) return(".")
-    return("")
-}
-
-# Maximum width for variable names
-name_width <- 20
-
-# Print header with alignment
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
-
-# Loop through and print values
-for (i in 1:length(t_stats)) {
-    var_name <- rownames(robust_test)[i]
-    # Truncate name if too long
-    if (nchar(var_name) > name_width) {
-        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+# Function to run analysis for a single file
+run_attendance_analysis <- function(file_path, year) {
+    cat("\n\n========================================")
+    cat(sprintf("\nAnalyzing %s vs 2020\n", year))
+    cat("========================================\n\n")
+    
+    # Read data
+    attendance_data <- fread(file_path)
+    
+    # Create interaction term
+    attendance_data$interact_HxA <- attendance_data$home_attendance * attendance_data$posteam_type_home
+    
+    # Reorder columns
+    other_cols <- setdiff(names(attendance_data), 
+                         c("home_attendance", "posteam_type_home", "interact_HxA"))
+    setcolorder(attendance_data, c(other_cols, 
+                                 "home_attendance", 
+                                 "posteam_type_home", 
+                                 "interact_HxA"))
+    
+    # Remove my_id
+    attendance_data$my_id <- NULL
+    
+    # Run OLS
+    ols_model <- lm(attempt ~ ., data = attendance_data)
+    
+    # Get robust statistics
+    robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
+    t_stats <- robust_test[, "t value"]
+    p_values <- robust_test[, "Pr(>|t|)"]
+    
+    # Function to add significance stars
+    get_stars <- function(p) {
+        if (p <= 0.01) return("***")
+        if (p <= 0.05) return("**")
+        if (p <= 0.1) return("*")
+        if (p <= 0.15) return(".")
+        return("")
     }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name, 
-                t_stats[i], p_values[i],
-                get_stars(p_values[i])))
+    
+    # Print results
+    name_width <- 20
+    cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+    cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
+    
+    for (i in 1:length(t_stats)) {
+        var_name <- rownames(robust_test)[i]
+        if (nchar(var_name) > name_width) {
+            var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+        }
+        cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                    name_width, var_name, 
+                    t_stats[i], p_values[i],
+                    get_stars(p_values[i])))
+    }
+    cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
+    
+    # Return key statistics for potential further analysis
+    return(list(
+        year = year,
+        model = ols_model,
+        robust_test = robust_test
+    ))
 }
 
-cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+# Years to analyze
+years <- c(2017, 2018, 2019, 2021, 2022, 2023)
+
+# Store results for all years
+results_list <- list()
+
+# Run analysis for each year
+for (year in years) {
+    file_path <- sprintf("predict_attendance_%s_vs_2020.csv.gz", year)
+    if (file.exists(file_path)) {
+        results_list[[as.character(year)]] <- run_attendance_analysis(file_path, year)
+    } else {
+        cat(sprintf("\nWarning: File for year %s not found\n", year))
+    }
+}
+
+# Optional: Add summary comparison across years
+cat("\n\n========================================")
+cat("\nComparison of Key Coefficients Across Years")
+cat("\n========================================\n\n")
+
+# Extract and compare key coefficients (home_attendance, posteam_type_home, interact_HxA)
+key_vars <- c("home_attendance", "posteam_type_home", "interact_HxA")
+for (var in key_vars) {
+    cat(sprintf("\n%s coefficients by year:\n", var))
+    cat("Year\tCoefficient\tt-value\tp-value\n")
+    for (year in years) {
+        if (!is.null(results_list[[as.character(year)]])) {
+            coef_idx <- which(rownames(results_list[[as.character(year)]]$robust_test) == var)
+            if (length(coef_idx) > 0) {
+                result <- results_list[[as.character(year)]]$robust_test[coef_idx, ]
+                cat(sprintf("%s\t%.4f\t%.4f\t%.4f\n", 
+                          year, result["Estimate"], 
+                          result["t value"], 
+                          result["Pr(>|t|)"]))
+            }
+        }
+    }
+}
 ```
+
 
