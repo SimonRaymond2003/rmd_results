@@ -12,6 +12,7 @@ ctd1 <- fread("predict_ctd1.csv.gz")
 ```{r}
 #kill my_id
 ctd1$my_id <- NULL
+ctd1[, year2017_team_ARI := NULL]
 ```
 
 

@@ -30,7 +30,7 @@ y <- as.numeric(as.character(select_data$attempt))
 
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.1, by = 0.01),
+  eta = seq(0.001, 0.1, by = 0.02),
   max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
   subsample = seq(0.8, 0.8, by = 0.2),
@@ -169,6 +169,20 @@ cat("Mean AUC:", mean(test_aucs), "\n")
 cat("SD AUC:", sd(test_aucs), "\n")
 cat("95% CI:", mean(test_aucs) - 1.96 * sd(test_aucs), 
     "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
+
+# Plotting AUC distribution - removed type="o" to not connect dots
+plot(test_aucs, col="red", pch=20,
+     main="AUC Test Distribution",
+     xlab="Iteration", ylab="AUC")
+abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)
+abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+legend("bottomright", 
+       legend=c("AUC Values", "Mean", "95% CI Bounds"),
+       col=c("red", "blue", "green"),
+       lty=c(NA, 2, 3),
+       pch=c(20, NA, NA))
+
 
 # Now train final model on full data for z scores
 final_idx_0 <- which(y == 0)

@@ -13,7 +13,105 @@ library(data.table)
 
 outcome_data <- fread("predict_outcome.csv.gz")
 
+# Filter out year*_team columns
+year_cols <- grep("^year[0-9]+_team", names(outcome_data), value = TRUE)
+outcome_data[, (year_cols) := NULL]
 ```
+
+```{r}
+# Function to check column variance and other potential issues
+check_columns <- function(dt) {
+  # Create a list to store results
+  col_issues <- list(
+    zero_var = character(),
+    all_na = character(),
+    perfect_cor = character(),
+    character_cols = character()
+  )
+  
+  # First, identify character columns (except my_id)
+  for(col in names(dt)) {
+    if(is.character(dt[[col]]) && col != "my_id") {
+      col_issues$character_cols <- c(col_issues$character_cols, col)
+    }
+  }
+  
+  # Get numeric columns only
+  numeric_cols <- names(dt)[sapply(dt, is.numeric)]
+  numeric_cols <- setdiff(numeric_cols, "conversion")  # exclude target variable
+  
+  # Check each numeric column
+  for(col in numeric_cols) {
+    # Get column data without NAs
+    col_data <- dt[[col]][!is.na(dt[[col]])]
+    
+    # Check for zero variance
+    if(length(unique(col_data)) == 1) {
+      col_issues$zero_var <- c(col_issues$zero_var, col)
+      next
+    }
+    
+    # Check for all NA
+    if(all(is.na(dt[[col]]))) {
+      col_issues$all_na <- c(col_issues$all_na, col)
+    }
+  }
+  
+  # Check correlations for remaining numeric columns
+  remaining_cols <- setdiff(numeric_cols, 
+                          unique(c(col_issues$zero_var, col_issues$all_na)))
+  
+  if(length(remaining_cols) > 1) {
+    # Create correlation matrix
+    cor_matrix <- cor(dt[, ..remaining_cols], use = "pairwise.complete.obs")
+    
+    # Find highly correlated pairs
+    for(i in 1:(length(remaining_cols)-1)) {
+      for(j in (i+1):length(remaining_cols)) {
+        if(!is.na(cor_matrix[i,j]) && abs(cor_matrix[i,j]) > 0.9999) {
+          col_issues$perfect_cor <- c(col_issues$perfect_cor, remaining_cols[j])
+        }
+      }
+    }
+  }
+  
+  return(col_issues)
+}
+
+# Find problematic columns
+issues <- check_columns(outcome_data)
+
+# Print summary of issues found
+cat("Found the following issues:\n")
+if(length(issues$character_cols) > 0) {
+  cat("\nCharacter columns (excluding my_id):", paste(issues$character_cols, collapse=", "))
+}
+if(length(issues$zero_var) > 0) {
+  cat("\nZero variance columns:", paste(issues$zero_var, collapse=", "))
+}
+if(length(issues$all_na) > 0) {
+  cat("\nAll NA columns:", paste(issues$all_na, collapse=", "))
+}
+if(length(issues$perfect_cor) > 0) {
+  cat("\nPerfectly correlated columns:", paste(unique(issues$perfect_cor), collapse=", "))
+}
+
+# Combine all problematic columns
+problem_cols <- unique(c(issues$zero_var, issues$all_na, 
+                        issues$perfect_cor, issues$character_cols))
+
+# Remove problematic columns
+if(length(problem_cols) > 0) {
+  outcome_data[, (problem_cols) := NULL]
+}
+
+# Print summary of remaining columns
+cat("\n\nRemoved", length(problem_cols), "problematic columns")
+cat("\nRemaining columns:", ncol(outcome_data))
+```
+
+
+
 
 ```{r}
 # Load library and prepare data
@@ -34,6 +132,215 @@ outcome_data <- fread("predict_outcome.csv.gz")
 #cat("\nVariables kept:", length(keep_vars), "out of", ncol(rf_data) + 1)
 ```
 
+```{r}
+library(randomForest)
+library(ROCR)  # Added this library
+
+# Initialize variables for RF loop
+rf_data <- copy(outcome_data)[, my_id := NULL]
+rf_data[, conversion := as.factor(conversion)]
+best_auc <- 0
+previous_data <- NULL
+
+# Iterative RF process for variable selection
+while(TRUE) {
+    # Run RF
+    rf_model <- randomForest(conversion ~ ., data = rf_data, ntree = 100, importance = TRUE)
+    pred_oob <- predict(rf_model, type = "prob")[,2]
+    
+    # Calculate OOB AUC using ROCR
+    pred <- prediction(pred_oob, as.numeric(as.character(rf_data$conversion)))
+    current_auc <- as.numeric(performance(pred, "auc")@y.values)
+    
+    cat("\nCurrent AUC:", round(current_auc, 4), "with", ncol(rf_data)-1, "variables")
+    
+    # Check if AUC dropped
+    if(!is.null(previous_data) && current_auc < best_auc) {
+        cat("\nAUC dropped, reverting to previous state")
+        outcome_data <- previous_data
+        break
+    }
+    
+    # Update best and prepare for next iteration
+    if(current_auc > best_auc) {
+        best_auc <- current_auc
+        previous_data <- copy(outcome_data)
+    }
+    
+    # Filter variables based on positive MDA
+    mda_scores <- importance(rf_model)[, "MeanDecreaseAccuracy"]
+    keep_vars <- unique(c(names(mda_scores[mda_scores > 0]), "my_id", "conversion"))
+    
+    # Update data for next iteration
+    outcome_data <- outcome_data[, .SD, .SDcols = keep_vars]
+    rf_data <- copy(outcome_data)[, my_id := NULL]
+    rf_data[, conversion := as.factor(conversion)]
+}
+
+```
+
+```{r}
+#kill my id
+outcome_data$my_id <- NULL
+```
+
+
+
+```{r, warning=FALSE, message=FALSE}
+# Run 100 tests with linear model
+cat("\nRunning 100 test iterations with linear model...\n")
+test_aucs <- c()
+test_j_stats <- c()
+confusion_matrices <- list()
+performance_list <- list()
+all_thresholds <- c()
+
+# Convert data for linear model
+model_data <- copy(outcome_data)
+model_data[, conversion := as.numeric(as.character(conversion))]
+
+# Run 100 tests with linear model
+test_aucs <- c()
+test_j_stats <- c()
+confusion_matrices <- list()
+performance_list <- list()
+all_thresholds <- c()
+
+# Convert data for linear model
+model_data <- copy(outcome_data)
+model_data[, conversion := as.numeric(as.character(conversion))]
+
+for(i in 1:100) {
+  # Create test split
+  idx <- sample(1:nrow(model_data), size = floor(0.7 * nrow(model_data)))  # Changed sampling approach
+  train_data <- model_data[idx, ]
+  test_data <- model_data[-idx, ]
+  
+  # Train model
+  mdl <- lm(conversion ~ ., data = train_data)
+  
+  # Get predictions and handle potential issues
+  p <- predict(mdl, test_data)
+  
+  # Clean predictions
+  p[is.na(p)] <- 0  # Handle NAs
+  p[is.infinite(p)] <- 1  # Handle Inf
+  p[p > 1] <- 1  # Bound predictions
+  p[p < 0] <- 0
+  
+  # Convert predictions and actual values to numeric vectors
+  pred_values <- as.numeric(p)
+  actual_values <- as.numeric(test_data$conversion)
+  
+  # Check for any remaining issues
+  if(any(is.na(pred_values)) || any(is.infinite(pred_values))) {
+    cat("Warning: Invalid predictions in iteration", i, "\n")
+    next
+  }
+  
+  # Create ROCR prediction object with error handling
+  tryCatch({
+    pred <- prediction(pred_values, actual_values)
+    
+    # Calculate AUC
+    perf_auc <- performance(pred, "auc")
+    test_aucs[i] <- perf_auc@y.values[[1]]
+    
+    # Calculate ROC curve
+    perf <- performance(pred, "tpr", "fpr")
+    performance_list[[i]] <- perf
+    
+    # Find optimal threshold using Youden's J statistic
+    tpr <- unlist(perf@y.values)
+    fpr <- unlist(perf@x.values)
+    j_stats <- tpr - fpr
+    best_j_idx <- which.max(j_stats)
+    optimal_threshold <- unlist(perf@alpha.values)[best_j_idx]
+    all_thresholds[i] <- optimal_threshold
+    test_j_stats[i] <- j_stats[best_j_idx]
+    
+    # Create confusion matrix
+    pred_class <- ifelse(pred_values >= optimal_threshold, 1, 0)
+    cm <- table(factor(actual_values, levels=c(1,0)), 
+               factor(pred_class, levels=c(1,0)))
+    colnames(cm) <- c("Pred 1", "Pred 0")
+    rownames(cm) <- c("True 1", "True 0")
+    confusion_matrices[[i]] <- cm
+  }, error = function(e) {
+    cat("Error in iteration", i, ":", e$message, "\n")
+  })
+}
+
+# Calculate average confusion matrix
+avg_cm <- Reduce('+', confusion_matrices) / length(confusion_matrices)
+
+# Print final results
+cat("\nTest Results over 100 iterations:\n")
+cat("Mean AUC:", mean(test_aucs), "\n")
+cat("SD AUC:", sd(test_aucs), "\n")
+cat("Mean Youden's J:", mean(test_j_stats), "\n")
+cat("SD Youden's J:", sd(test_j_stats), "\n")
+cat("Mean Optimal Threshold:", mean(all_thresholds), "\n")
+cat("95% CI for AUC:", mean(test_aucs) - 1.96 * sd(test_aucs), 
+    "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
+cat("\nAverage Confusion Matrix:\n")
+print(avg_cm)
+
+# Plotting AUC distribution - removed type="o" to not connect dots
+plot(test_aucs, col="red", pch=20,
+     main="AUC Test Distribution",
+     xlab="Iteration", ylab="AUC")
+abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)
+abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+legend("bottomright", 
+       legend=c("AUC Values", "Mean", "95% CI Bounds"),
+       col=c("red", "blue", "green"),
+       lty=c(NA, 2, 3),
+       pch=c(20, NA, NA))
+
+# Plot ROC curve with confidence intervals
+suppressWarnings({
+  plot(0:100/100, 0:100/100, type="l", lty=2, 
+       xlab="False Positive Rate", ylab="True Positive Rate",
+       main="ROC Curve - Linear Model")
+  
+  # Calculate average ROC curve with confidence intervals
+  fpr_grid <- seq(0, 1, length.out = 100)
+  tpr_matrix <- matrix(NA, nrow = length(performance_list), ncol = length(fpr_grid))
+  
+  for(i in seq_along(performance_list)) {
+    curve_i <- performance_list[[i]]
+    tpr_matrix[i,] <- approx(curve_i@x.values[[1]], 
+                            curve_i@y.values[[1]], 
+                            xout = fpr_grid)$y
+  }
+  
+  mean_tpr <- colMeans(tpr_matrix, na.rm = TRUE)
+  lines(fpr_grid, mean_tpr, col="red", lwd=2)
+  
+  # Add optimal threshold point
+  opt_point_idx <- which.min(abs(fpr_grid - mean(all_thresholds)))
+  points(fpr_grid[opt_point_idx], mean_tpr[opt_point_idx], 
+         col="blue", pch=19, cex=1.5)
+  
+  # Add confidence interval
+  ci_lower <- apply(tpr_matrix, 2, function(x) quantile(x, 0.025, na.rm=TRUE))
+  ci_upper <- apply(tpr_matrix, 2, function(x) quantile(x, 0.975, na.rm=TRUE))
+  lines(fpr_grid, ci_lower, col="gray", lty=2)
+  lines(fpr_grid, ci_upper, col="gray", lty=2)
+  
+  # Add legend
+  legend("bottomright", 
+         legend=c("Random", "Average ROC", "95% CI", "Optimal Threshold"),
+         col=c("black", "red", "gray", "blue"), 
+         lty=c(2,1,2,NA), 
+         pch=c(NA,NA,NA,19),
+         lwd=c(1,2,1,NA))
+})
+```
+
+
 
 
 ```{r, warning=FALSE, message=FALSE}                        
@@ -43,12 +350,13 @@ library(ROCR)
 library(parallel)
 
 # Prepare the XGBoost matrices
-xs <- model.matrix(~ . - 1 - conversion - my_id, data = outcome_data)
+xs <- model.matrix(~ . - 1 - conversion, data = outcome_data)
 y <- as.numeric(as.character(outcome_data$conversion))
+
 
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.1, by = 0.01),
+  eta = seq(0.001, 0.1, by = 0.02),
   max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
   subsample = seq(0.8, 0.8, by = 0.2),
@@ -211,6 +519,20 @@ cat("95% CI for AUC:", mean(test_aucs) - 1.96 * sd(test_aucs),
 cat("\nAverage Confusion Matrix:\n")
 print(avg_cm)
 
+# Plotting AUC distribution - removed type="o" to not connect dots
+plot(test_aucs, col="red", pch=20,
+     main="AUC Test Distribution",
+     xlab="Iteration", ylab="AUC")
+abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)
+abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+legend("bottomright", 
+       legend=c("AUC Values", "Mean", "95% CI Bounds"),
+       col=c("red", "blue", "green"),
+       lty=c(NA, 2, 3),
+       pch=c(20, NA, NA))
+
+
 # Plot ROC curve with confidence intervals
 plot(0:100/100, 0:100/100, type="l", lty=2, 
      xlab="False Positive Rate", ylab="True Positive Rate",
@@ -259,12 +581,12 @@ library(ROCR)
 library(parallel)
 
 # Prepare the XGBoost matrices
-xs <- model.matrix(~ . - 1 - conversion - my_id, data = outcome_data)
+xs <- model.matrix(~ . - 1 - conversion, data = outcome_data)
 y <- as.numeric(as.character(outcome_data$conversion))
 
 # Create parameter grid - only tune eta and nrounds
 grid <- expand.grid(
-  eta = seq(0.001, 0.1, by = 0.003),
+  eta = seq(0.001, 0.1, by = 0.01),
   nrounds = seq(50, 500, by = 50)
 )
 
@@ -412,6 +734,20 @@ cat("95% CI for AUC:", mean(test_aucs) - 1.96 * sd(test_aucs),
     "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
 cat("\nAverage Confusion Matrix:\n")
 print(avg_cm)
+
+# Plotting AUC distribution - removed type="o" to not connect dots
+plot(test_aucs, col="red", pch=20,
+     main="AUC Test Distribution",
+     xlab="Iteration", ylab="AUC")
+abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)
+abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+legend("bottomright", 
+       legend=c("AUC Values", "Mean", "95% CI Bounds"),
+       col=c("red", "blue", "green"),
+       lty=c(NA, 2, 3),
+       pch=c(20, NA, NA))
+
 
 # Plot ROC curve with confidence intervals
 plot(0:100/100, 0:100/100, type="l", lty=2, 

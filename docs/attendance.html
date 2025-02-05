@@ -377,275 +377,187 @@ div.tocify {
 attendance_data &lt;- fread(&quot;predict_attendance.csv.gz&quot;)</code></pre>
 <pre class="r"><code># interact home_attendance and posteam_type_home
 attendance_data$interact_HxA &lt;- attendance_data$home_attendance * attendance_data$posteam_type_home</code></pre>
+<pre class="r"><code># move those three cols all to the end of the data
+# Get all column names except the three we want to move
+other_cols &lt;- setdiff(names(attendance_data), 
+                     c(&quot;home_attendance&quot;, &quot;posteam_type_home&quot;, &quot;interact_HxA&quot;))
+
+# Reorder columns by putting the three columns at the end
+setcolorder(attendance_data, c(other_cols, 
+                             &quot;home_attendance&quot;, 
+                             &quot;posteam_type_home&quot;, 
+                             &quot;interact_HxA&quot;))
+
+str(attendance_data)</code></pre>
+<pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   7061 obs. of  57 variables:
+##  $ my_id                                                : chr  &quot;2019_02_ARI_BAL_165&quot; &quot;2019_02_ARI_BAL_479&quot; &quot;2019_02_ARI_BAL_575&quot; &quot;2019_02_ARI_BAL_756&quot; ...
+##  $ attempt                                              : int  0 0 1 0 0 1 0 0 0 0 ...
+##  $ ydstogo                                              : num  -1.193 0.922 -0.84 -1.193 -0.84 ...
+##  $ yardline_100                                         : num  0.279 1.254 -0.248 -1.832 -1.385 ...
+##  $ posteam_timeouts_remaining                           : num  0.615 0.615 0.615 0.615 0.615 ...
+##  $ defteam_timeouts_remaining                           : num  0.602 0.602 0.602 0.602 -0.608 ...
+##  $ week                                                 : num  -1.63 -1.63 -1.63 -1.63 -1.63 ...
+##  $ temp                                                 : num  1.36 1.36 1.36 1.36 1.36 ...
+##  $ wind                                                 : num  0.332 0.332 0.332 0.332 0.332 ...
+##  $ vegas_wp                                             : num  -0.975 -1.25 1.424 -1.155 1.389 ...
+##  $ vegas_wp_posteam                                     : num  0.999 1.272 1.27 1.177 1.236 ...
+##  $ total_line                                           : num  -0.0888 -0.0888 -0.0888 -0.0888 -0.0888 ...
+##  $ score_diff                                           : num  0.106 -0.538 0.75 -0.538 0.474 ...
+##  $ down1_pct                                            : num  -1.13 -1.13 3.7 -1.13 3.7 ...
+##  $ down2_pct                                            : num  -2.19 -2.19 1.73 -2.19 1.73 ...
+##  $ down3_pct                                            : num  -1.06 -1.06 2.01 -1.06 2.01 ...
+##  $ down4_pct                                            : num  0.377 0.377 0.377 0.377 0.377 ...
+##  $ prep_days                                            : num  -0.239 -0.239 -0.239 -0.239 -0.239 ...
+##  $ overall_win_pct                                      : num  -1.12 -1.12 1.34 -1.12 1.34 ...
+##  $ team_win_pct                                         : num  -0.455 -0.455 1.996 -0.455 1.996 ...
+##  $ prev_shotgun_rate                                    : num  -0.12 -0.12 -0.562 -0.12 -0.562 ...
+##  $ prev_singleback_rate                                 : num  0.769 0.769 -1.743 0.769 -1.743 ...
+##  $ prev_empty_rate                                      : num  -1.01 -1.01 0.3 -1.01 0.3 ...
+##  $ prev_shotgun_success                                 : num  -2.22 -2.22 0.0118 -2.22 0.0118 ...
+##  $ prev_singleback_success                              : num  -0.389 -0.389 1.24 -0.389 1.24 ...
+##  $ prev_empty_success                                   : num  -0.242 -0.242 -0.86 -0.242 -0.86 ...
+##  $ prev_stop_rate_run                                   : num  0.694 0.694 -1.312 0.694 -1.312 ...
+##  $ prev_stop_rate_pass                                  : num  1.935 1.935 -0.234 1.935 -0.234 ...
+##  $ prev_win_pct                                         : num  -1.682 -1.682 0.598 -1.682 0.598 ...
+##  $ shotgun_rate                                         : num  -0.132 -0.132 -2.748 -0.132 -2.748 ...
+##  $ singleback_rate                                      : num  -0.739 -0.739 -0.739 -0.739 -0.739 ...
+##  $ empty_rate                                           : num  -0.595 -0.595 -0.595 -0.595 -0.595 ...
+##  $ shotgun_success                                      : num  -0.927 -0.927 -0.927 -0.927 -0.927 ...
+##  $ singleback_success                                   : num  0.6 0.6 0.6 0.6 0.6 ...
+##  $ empty_success                                        : num  -0.535 -0.535 -0.535 -0.535 -0.535 ...
+##  $ def_stop_rate_run                                    : num  3.33 3.33 1.9 3.33 1.9 ...
+##  $ def_stop_rate_pass                                   : num  1.175 1.175 -0.646 1.175 -0.646 ...
+##  $ avg_pass_rushers                                     : num  2.14 2.14 2.49 2.14 2.49 ...
+##  $ avg_box_defenders                                    : num  -1.98 -1.98 1.21 -1.98 1.21 ...
+##  $ cover0_rate                                          : num  1.867 1.867 0.592 1.867 0.592 ...
+##  $ cover1_rate                                          : num  -0.862 -0.862 0.55 -0.862 0.55 ...
+##  $ cover2_rate                                          : num  -1.0141 -1.0141 -0.0961 -1.0141 -0.0961 ...
+##  $ cover3_rate                                          : num  3.958 3.958 -0.497 3.958 -0.497 ...
+##  $ cover4_rate                                          : num  -0.176 -0.176 -0.445 -0.176 -0.445 ...
+##  $ cover6_rate                                          : num  -1.227 -1.227 -0.425 -1.227 -0.425 ...
+##  $ two_man_rate                                         : num  -0.969 -0.969 1.283 -0.969 1.283 ...
+##  $ prevent_rate                                         : num  -0.606 -0.606 2.203 -0.606 2.203 ...
+##  $ roof_outdoors                                        : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ p_player_26_punting_grades_grades_punter_12w         : num  0.407 0.407 0.075 0.407 0.075 ...
+##  $ p_player_26_punting_grades_grades_punter_2w          : num  0.3999 0.3999 0.0975 0.3999 0.0975 ...
+##  $ k_player_25_field_goals_grades_grades_fgep_kicker_12w: num  0.116 0.116 0.455 0.116 0.455 ...
+##  $ k_player_25_field_goals_grades_grades_fgep_kicker_2w : num  0.904 0.904 0.66 0.904 0.66 ...
+##  $ is_first_half                                        : int  1 1 1 1 1 1 1 1 1 0 ...
+##  $ time_in_half                                         : num  1.581 0.961 0.727 0.467 0.109 ...
+##  $ home_attendance                                      : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ posteam_type_home                                    : int  0 0 1 0 1 0 0 0 1 1 ...
+##  $ interact_HxA                                         : int  0 0 1 0 1 0 0 0 1 1 ...
+##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</code></pre>
 <pre class="r"><code># kill my_id                      
 attendance_data$my_id &lt;- NULL</code></pre>
 <pre class="r"><code># ols                     
-ols &lt;- lm(attempt ~., data = attendance_data)
-summary(ols)</code></pre>
+ols_model &lt;- lm(attempt ~., data = attendance_data)</code></pre>
+<pre class="r"><code>library(sandwich)</code></pre>
+<pre><code>## Warning: package &#39;sandwich&#39; was built under R version 4.3.3</code></pre>
+<pre class="r"><code>library(lmtest)</code></pre>
+<pre><code>## Warning: package &#39;lmtest&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## 
-## Call:
-## lm(formula = attempt ~ ., data = attendance_data)
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -0.7551 -0.2586 -0.1143  0.1580  1.1257 
-## 
-## Coefficients:
-##                                                         Estimate Std. Error
-## (Intercept)                                            3.083e-01  1.483e-02
-## ydstogo                                               -1.116e-01  4.612e-03
-## yardline_100                                          -5.504e-02  4.759e-03
-## posteam_timeouts_remaining                            -3.540e-02  5.248e-03
-## defteam_timeouts_remaining                            -1.277e-03  5.340e-03
-## week                                                  -5.127e-03  5.419e-03
-## temp                                                  -3.194e-03  5.712e-03
-## wind                                                   4.714e-05  6.207e-03
-## vegas_wp                                              -7.217e-02  1.028e-02
-## vegas_wp_posteam                                       1.198e-03  4.526e-03
-## total_line                                             4.054e-05  6.032e-03
-## score_diff                                            -1.672e-02  9.231e-03
-## down1_pct                                              8.409e-03  5.891e-03
-## down2_pct                                             -1.700e-02  6.045e-03
-## down3_pct                                             -3.280e-03  5.909e-03
-## down4_pct                                              4.335e-03  5.627e-03
-## prep_days                                             -3.568e-03  4.490e-03
-## overall_win_pct                                        8.207e-03  8.746e-03
-## team_win_pct                                           1.559e-02  9.136e-03
-## prev_shotgun_rate                                     -6.381e-03  7.813e-03
-## prev_singleback_rate                                  -1.479e-02  6.910e-03
-## prev_empty_rate                                       -1.483e-02  5.370e-03
-## prev_shotgun_success                                  -2.535e-03  6.513e-03
-## prev_singleback_success                                2.620e-03  6.772e-03
-## prev_empty_success                                     3.219e-03  5.383e-03
-## prev_stop_rate_run                                     3.110e-03  5.353e-03
-## prev_stop_rate_pass                                    2.548e-03  5.274e-03
-## prev_win_pct                                           5.203e-03  6.299e-03
-## shotgun_rate                                           2.407e-02  6.276e-03
-## singleback_rate                                        3.325e-02  6.177e-03
-## empty_rate                                             2.973e-02  6.295e-03
-## shotgun_success                                        2.824e-02  5.572e-03
-## singleback_success                                    -6.442e-04  5.579e-03
-## empty_success                                          6.318e-03  5.852e-03
-## def_stop_rate_run                                     -2.156e-03  5.379e-03
-## def_stop_rate_pass                                    -1.552e-02  5.350e-03
-## avg_pass_rushers                                      -2.922e-03  5.852e-03
-## avg_box_defenders                                      9.035e-03  5.764e-03
-## cover0_rate                                           -1.719e-03  5.658e-03
-## cover1_rate                                            9.067e-03  8.156e-03
-## cover2_rate                                           -7.595e-03  6.174e-03
-## cover3_rate                                            7.800e-05  7.829e-03
-## cover4_rate                                            1.022e-03  6.664e-03
-## cover6_rate                                           -5.567e-03  5.939e-03
-## two_man_rate                                           1.044e-02  5.191e-03
-## prevent_rate                                          -2.598e-03  5.057e-03
-## home_attendance                                       -3.624e-02  1.490e-02
-## roof_outdoors                                         -3.333e-03  1.437e-02
-## posteam_type_home                                      1.364e-03  1.285e-02
-## p_player_26_punting_grades_grades_punter_12w           2.133e-03  6.516e-03
-## p_player_26_punting_grades_grades_punter_2w           -3.648e-03  6.545e-03
-## k_player_25_field_goals_grades_grades_fgep_kicker_12w -1.013e-02  6.265e-03
-## k_player_25_field_goals_grades_grades_fgep_kicker_2w   8.340e-03  6.271e-03
-## is_first_half                                         -1.448e-01  8.904e-03
-## time_in_half                                          -4.291e-02  5.683e-03
-## interact_HxA                                           3.495e-02  1.787e-02
-##                                                       t value Pr(&gt;|t|)    
-## (Intercept)                                            20.795  &lt; 2e-16 ***
-## ydstogo                                               -24.188  &lt; 2e-16 ***
-## yardline_100                                          -11.565  &lt; 2e-16 ***
-## posteam_timeouts_remaining                             -6.745 1.66e-11 ***
-## defteam_timeouts_remaining                             -0.239 0.811015    
-## week                                                   -0.946 0.344187    
-## temp                                                   -0.559 0.576065    
-## wind                                                    0.008 0.993940    
-## vegas_wp                                               -7.022 2.39e-12 ***
-## vegas_wp_posteam                                        0.265 0.791171    
-## total_line                                              0.007 0.994637    
-## score_diff                                             -1.811 0.070199 .  
-## down1_pct                                               1.427 0.153497    
-## down2_pct                                              -2.813 0.004918 ** 
-## down3_pct                                              -0.555 0.578920    
-## down4_pct                                               0.770 0.441092    
-## prep_days                                              -0.795 0.426861    
-## overall_win_pct                                         0.938 0.348077    
-## team_win_pct                                            1.706 0.088047 .  
-## prev_shotgun_rate                                      -0.817 0.414108    
-## prev_singleback_rate                                   -2.140 0.032363 *  
-## prev_empty_rate                                        -2.762 0.005765 ** 
-## prev_shotgun_success                                   -0.389 0.697105    
-## prev_singleback_success                                 0.387 0.698880    
-## prev_empty_success                                      0.598 0.549901    
-## prev_stop_rate_run                                      0.581 0.561243    
-## prev_stop_rate_pass                                     0.483 0.628930    
-## prev_win_pct                                            0.826 0.408856    
-## shotgun_rate                                            3.835 0.000127 ***
-## singleback_rate                                         5.382 7.59e-08 ***
-## empty_rate                                              4.722 2.38e-06 ***
-## shotgun_success                                         5.068 4.11e-07 ***
-## singleback_success                                     -0.115 0.908068    
-## empty_success                                           1.080 0.280360    
-## def_stop_rate_run                                      -0.401 0.688533    
-## def_stop_rate_pass                                     -2.901 0.003732 ** 
-## avg_pass_rushers                                       -0.499 0.617634    
-## avg_box_defenders                                       1.567 0.117062    
-## cover0_rate                                            -0.304 0.761214    
-## cover1_rate                                             1.112 0.266320    
-## cover2_rate                                            -1.230 0.218646    
-## cover3_rate                                             0.010 0.992051    
-## cover4_rate                                             0.153 0.878096    
-## cover6_rate                                            -0.937 0.348642    
-## two_man_rate                                            2.012 0.044254 *  
-## prevent_rate                                           -0.514 0.607439    
-## home_attendance                                        -2.433 0.015012 *  
-## roof_outdoors                                          -0.232 0.816599    
-## posteam_type_home                                       0.106 0.915484    
-## p_player_26_punting_grades_grades_punter_12w            0.327 0.743466    
-## p_player_26_punting_grades_grades_punter_2w            -0.557 0.577289    
-## k_player_25_field_goals_grades_grades_fgep_kicker_12w  -1.617 0.105943    
-## k_player_25_field_goals_grades_grades_fgep_kicker_2w    1.330 0.183577    
-## is_first_half                                         -16.258  &lt; 2e-16 ***
-## time_in_half                                           -7.551 4.88e-14 ***
-## interact_HxA                                            1.956 0.050561 .  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.3698 on 7005 degrees of freedom
-## Multiple R-squared:  0.2255, Adjusted R-squared:  0.2194 
-## F-statistic: 37.09 on 55 and 7005 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code># probit
-probit &lt;- glm(attempt ~ ., data = attendance_data, family = binomial(link = &quot;probit&quot;))
-summary(probit)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = attempt ~ ., family = binomial(link = &quot;probit&quot;), 
-##     data = attendance_data)
-## 
-## Coefficients:
-##                                                         Estimate Std. Error
-## (Intercept)                                           -0.6420436  0.0626559
-## ydstogo                                               -0.5519303  0.0250923
-## yardline_100                                          -0.2233212  0.0200626
-## posteam_timeouts_remaining                            -0.1188446  0.0209518
-## defteam_timeouts_remaining                            -0.0052200  0.0218699
-## week                                                  -0.0177176  0.0230864
-## temp                                                  -0.0223176  0.0245033
-## wind                                                  -0.0068888  0.0262712
-## vegas_wp                                              -0.2789131  0.0434208
-## vegas_wp_posteam                                       0.0110670  0.0189411
-## total_line                                            -0.0049884  0.0256309
-## score_diff                                            -0.0511607  0.0385998
-## down1_pct                                              0.0360875  0.0255341
-## down2_pct                                             -0.0879857  0.0264672
-## down3_pct                                             -0.0035709  0.0259523
-## down4_pct                                              0.0120851  0.0242548
-## prep_days                                             -0.0123755  0.0191293
-## overall_win_pct                                        0.0161710  0.0373025
-## team_win_pct                                           0.0740698  0.0388649
-## prev_shotgun_rate                                     -0.0293363  0.0334556
-## prev_singleback_rate                                  -0.0626404  0.0299135
-## prev_empty_rate                                       -0.0685766  0.0232124
-## prev_shotgun_success                                  -0.0202862  0.0277112
-## prev_singleback_success                                0.0161013  0.0287995
-## prev_empty_success                                     0.0095858  0.0230042
-## prev_stop_rate_run                                     0.0124247  0.0229103
-## prev_stop_rate_pass                                    0.0151649  0.0222048
-## prev_win_pct                                           0.0188098  0.0267633
-## shotgun_rate                                           0.1176284  0.0266631
-## singleback_rate                                        0.1562852  0.0256692
-## empty_rate                                             0.1339958  0.0264341
-## shotgun_success                                        0.1045419  0.0228195
-## singleback_success                                    -0.0064901  0.0228051
-## empty_success                                          0.0271674  0.0235060
-## def_stop_rate_run                                     -0.0059690  0.0232680
-## def_stop_rate_pass                                    -0.0713950  0.0236376
-## avg_pass_rushers                                      -0.0007916  0.0251868
-## avg_box_defenders                                      0.0237898  0.0246185
-## cover0_rate                                           -0.0143325  0.0240737
-## cover1_rate                                            0.0236396  0.0344271
-## cover2_rate                                           -0.0274039  0.0265915
-## cover3_rate                                           -0.0130806  0.0334607
-## cover4_rate                                           -0.0078907  0.0282710
-## cover6_rate                                           -0.0282480  0.0255630
-## two_man_rate                                           0.0435249  0.0219802
-## prevent_rate                                          -0.0032654  0.0224649
-## home_attendance                                       -0.1561444  0.0632667
-## roof_outdoors                                         -0.0230183  0.0612472
-## posteam_type_home                                      0.0030511  0.0542382
-## p_player_26_punting_grades_grades_punter_12w           0.0104664  0.0263562
-## p_player_26_punting_grades_grades_punter_2w           -0.0243929  0.0271966
-## k_player_25_field_goals_grades_grades_fgep_kicker_12w -0.0416061  0.0261780
-## k_player_25_field_goals_grades_grades_fgep_kicker_2w   0.0325331  0.0264829
-## is_first_half                                         -0.5994292  0.0387882
-## time_in_half                                          -0.1888545  0.0247846
-## interact_HxA                                           0.1503756  0.0764558
-##                                                       z value Pr(&gt;|z|)    
-## (Intercept)                                           -10.247  &lt; 2e-16 ***
-## ydstogo                                               -21.996  &lt; 2e-16 ***
-## yardline_100                                          -11.131  &lt; 2e-16 ***
-## posteam_timeouts_remaining                             -5.672 1.41e-08 ***
-## defteam_timeouts_remaining                             -0.239 0.811350    
-## week                                                   -0.767 0.442817    
-## temp                                                   -0.911 0.362402    
-## wind                                                   -0.262 0.793153    
-## vegas_wp                                               -6.423 1.33e-10 ***
-## vegas_wp_posteam                                        0.584 0.559028    
-## total_line                                             -0.195 0.845688    
-## score_diff                                             -1.325 0.185033    
-## down1_pct                                               1.413 0.157565    
-## down2_pct                                              -3.324 0.000886 ***
-## down3_pct                                              -0.138 0.890560    
-## down4_pct                                               0.498 0.618304    
-## prep_days                                              -0.647 0.517670    
-## overall_win_pct                                         0.434 0.664644    
-## team_win_pct                                            1.906 0.056673 .  
-## prev_shotgun_rate                                      -0.877 0.380556    
-## prev_singleback_rate                                   -2.094 0.036255 *  
-## prev_empty_rate                                        -2.954 0.003134 ** 
-## prev_shotgun_success                                   -0.732 0.464132    
-## prev_singleback_success                                 0.559 0.576104    
-## prev_empty_success                                      0.417 0.676899    
-## prev_stop_rate_run                                      0.542 0.587598    
-## prev_stop_rate_pass                                     0.683 0.494634    
-## prev_win_pct                                            0.703 0.482166    
-## shotgun_rate                                            4.412 1.03e-05 ***
-## singleback_rate                                         6.088 1.14e-09 ***
-## empty_rate                                              5.069 4.00e-07 ***
-## shotgun_success                                         4.581 4.62e-06 ***
-## singleback_success                                     -0.285 0.775960    
-## empty_success                                           1.156 0.247778    
-## def_stop_rate_run                                      -0.257 0.797538    
-## def_stop_rate_pass                                     -3.020 0.002524 ** 
-## avg_pass_rushers                                       -0.031 0.974927    
-## avg_box_defenders                                       0.966 0.333875    
-## cover0_rate                                            -0.595 0.551603    
-## cover1_rate                                             0.687 0.492299    
-## cover2_rate                                            -1.031 0.302752    
-## cover3_rate                                            -0.391 0.695853    
-## cover4_rate                                            -0.279 0.780162    
-## cover6_rate                                            -1.105 0.269145    
-## two_man_rate                                            1.980 0.047682 *  
-## prevent_rate                                           -0.145 0.884431    
-## home_attendance                                        -2.468 0.013586 *  
-## roof_outdoors                                          -0.376 0.707046    
-## posteam_type_home                                       0.056 0.955139    
-## p_player_26_punting_grades_grades_punter_12w            0.397 0.691283    
-## p_player_26_punting_grades_grades_punter_2w            -0.897 0.369767    
-## k_player_25_field_goals_grades_grades_fgep_kicker_12w  -1.589 0.111981    
-## k_player_25_field_goals_grades_grades_fgep_kicker_2w    1.228 0.219275    
-## is_first_half                                         -15.454  &lt; 2e-16 ***
-## time_in_half                                           -7.620 2.54e-14 ***
-## interact_HxA                                            1.967 0.049203 *  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 7554.7  on 7060  degrees of freedom
-## Residual deviance: 5741.5  on 7005  degrees of freedom
-## AIC: 5853.5
-## 
-## Number of Fisher Scoring iterations: 6</code></pre>
+##     as.Date, as.Date.numeric</code></pre>
+<pre class="r"><code># Get HC0-adjusted t-values and p-values
+robust_test &lt;- coeftest(ols_model, vcov = vcovHC(ols_model, type = &quot;HC0&quot;))
+t_stats &lt;- robust_test[, &quot;t value&quot;]
+p_values &lt;- robust_test[, &quot;Pr(&gt;|t|)&quot;]
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgSW1wYWN0IEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KYXR0ZW5kYW5jZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X2F0dGVuZGFuY2UuY3N2Lmd6IikNCmBgYA0KDQpgYGB7cn0NCiMgaW50ZXJhY3QgaG9tZV9hdHRlbmRhbmNlIGFuZCBwb3N0ZWFtX3R5cGVfaG9tZQ0KYXR0ZW5kYW5jZV9kYXRhJGludGVyYWN0X0h4QSA8LSBhdHRlbmRhbmNlX2RhdGEkaG9tZV9hdHRlbmRhbmNlICogYXR0ZW5kYW5jZV9kYXRhJHBvc3RlYW1fdHlwZV9ob21lDQpgYGANCg0KYGBge3J9DQojIGtpbGwgbXlfaWQgICAgICAgICAgICAgICAgICAgICAgDQphdHRlbmRhbmNlX2RhdGEkbXlfaWQgPC0gTlVMTA0KYGBgDQoNCmBgYHtyfSANCiMgb2xzICAgICAgICAgICAgICAgICAgICAgDQpvbHMgPC0gbG0oYXR0ZW1wdCB+LiwgZGF0YSA9IGF0dGVuZGFuY2VfZGF0YSkNCnN1bW1hcnkob2xzKQ0KYGBgDQoNCmBgYHtyfSAgICAgICAgICAgICAgDQojIHByb2JpdA0KcHJvYml0IDwtIGdsbShhdHRlbXB0IH4gLiwgZGF0YSA9IGF0dGVuZGFuY2VfZGF0YSwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJwcm9iaXQiKSkNCnN1bW1hcnkocHJvYml0KQ0KYGBgDQoNCg0KDQo=</div>
+# Function to add significance stars
+get_stars &lt;- function(p) {
+    if (p &lt;= 0.01) return(&quot;***&quot;)
+    if (p &lt;= 0.05) return(&quot;**&quot;)
+    if (p &lt;= 0.1) return(&quot;*&quot;)
+    if (p &lt;= 0.15) return(&quot;.&quot;)
+    return(&quot;&quot;)
+}
+
+# Maximum width for variable names
+name_width &lt;- 20
+
+# Print header with alignment
+cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Variable&quot;, &quot;t-value&quot;, &quot;p-value&quot;, &quot;sig&quot;))</code></pre>
+<pre><code>## Variable                 t-value     p-value   sig</code></pre>
+<pre class="r"><code>cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;---------&quot;, &quot;-------&quot;, &quot;-------&quot;, &quot;----&quot;))</code></pre>
+<pre><code>## ---------                -------     -------  ----</code></pre>
+<pre class="r"><code># Loop through and print values
+for (i in 1:length(t_stats)) {
+    var_name &lt;- rownames(robust_test)[i]
+    # Truncate name if too long
+    if (nchar(var_name) &gt; name_width) {
+        var_name &lt;- paste0(substr(var_name, 1, name_width-3), &quot;...&quot;)
+    }
+    cat(sprintf(&quot;%-*s  %10.4f  %10.4f  %4s\n&quot;, 
+                name_width, var_name, 
+                t_stats[i], p_values[i],
+                get_stars(p_values[i])))
+}</code></pre>
+<pre><code>## (Intercept)              20.4752      0.0000   ***
+## ydstogo                 -24.4179      0.0000   ***
+## yardline_100            -12.0048      0.0000   ***
+## posteam_timeouts_...     -6.1153      0.0000   ***
+## defteam_timeouts_...     -0.2243      0.8225      
+## week                     -0.9495      0.3424      
+## temp                     -0.5601      0.5754      
+## wind                      0.0074      0.9941      
+## vegas_wp                 -6.7237      0.0000   ***
+## vegas_wp_posteam          0.2540      0.7995      
+## total_line                0.0068      0.9945      
+## score_diff               -1.7371      0.0824     *
+## down1_pct                 1.4395      0.1500      
+## down2_pct                -2.8041      0.0051   ***
+## down3_pct                -0.5705      0.5683      
+## down4_pct                 0.8049      0.4209      
+## prep_days                -0.8040      0.4214      
+## overall_win_pct           0.9547      0.3398      
+## team_win_pct              1.7211      0.0853     *
+## prev_shotgun_rate        -0.8176      0.4136      
+## prev_singleback_rate     -2.2171      0.0266    **
+## prev_empty_rate          -2.8362      0.0046   ***
+## prev_shotgun_success     -0.3867      0.6990      
+## prev_singleback_s...      0.3880      0.6980      
+## prev_empty_success        0.5941      0.5525      
+## prev_stop_rate_run        0.5910      0.5545      
+## prev_stop_rate_pass       0.4890      0.6249      
+## prev_win_pct              0.8207      0.4119      
+## shotgun_rate              3.7127      0.0002   ***
+## singleback_rate           5.1521      0.0000   ***
+## empty_rate                4.6307      0.0000   ***
+## shotgun_success           4.8673      0.0000   ***
+## singleback_success       -0.1099      0.9125      
+## empty_success             1.0134      0.3109      
+## def_stop_rate_run        -0.4038      0.6864      
+## def_stop_rate_pass       -2.9319      0.0034   ***
+## avg_pass_rushers         -0.4953      0.6204      
+## avg_box_defenders         1.5716      0.1161     .
+## cover0_rate              -0.2977      0.7659      
+## cover1_rate               1.1174      0.2639      
+## cover2_rate              -1.2263      0.2201      
+## cover3_rate               0.0103      0.9918      
+## cover4_rate               0.1564      0.8757      
+## cover6_rate              -0.9575      0.3384      
+## two_man_rate              2.0177      0.0437    **
+## prevent_rate             -0.4867      0.6265      
+## roof_outdoors            -0.2340      0.8150      
+## p_player_26_punti...      0.3148      0.7529      
+## p_player_26_punti...     -0.5387      0.5901      
+## k_player_25_field...     -1.6248      0.1043     .
+## k_player_25_field...      1.3223      0.1861      
+## is_first_half           -16.3381      0.0000   ***
+## time_in_half             -7.7369      0.0000   ***
+## home_attendance          -2.4225      0.0154    **
+## posteam_type_home         0.1052      0.9162      
+## interact_HxA              1.9734      0.0485    **</code></pre>
+<pre class="r"><code>cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15&quot;)</code></pre>
+<pre><code>## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgSW1wYWN0IEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KYXR0ZW5kYW5jZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X2F0dGVuZGFuY2UuY3N2Lmd6IikNCmBgYA0KDQpgYGB7cn0NCiMgaW50ZXJhY3QgaG9tZV9hdHRlbmRhbmNlIGFuZCBwb3N0ZWFtX3R5cGVfaG9tZQ0KYXR0ZW5kYW5jZV9kYXRhJGludGVyYWN0X0h4QSA8LSBhdHRlbmRhbmNlX2RhdGEkaG9tZV9hdHRlbmRhbmNlICogYXR0ZW5kYW5jZV9kYXRhJHBvc3RlYW1fdHlwZV9ob21lDQpgYGANCg0KYGBge3J9DQojIG1vdmUgdGhvc2UgdGhyZWUgY29scyBhbGwgdG8gdGhlIGVuZCBvZiB0aGUgZGF0YQ0KIyBHZXQgYWxsIGNvbHVtbiBuYW1lcyBleGNlcHQgdGhlIHRocmVlIHdlIHdhbnQgdG8gbW92ZQ0Kb3RoZXJfY29scyA8LSBzZXRkaWZmKG5hbWVzKGF0dGVuZGFuY2VfZGF0YSksIA0KICAgICAgICAgICAgICAgICAgICAgYygiaG9tZV9hdHRlbmRhbmNlIiwgInBvc3RlYW1fdHlwZV9ob21lIiwgImludGVyYWN0X0h4QSIpKQ0KDQojIFJlb3JkZXIgY29sdW1ucyBieSBwdXR0aW5nIHRoZSB0aHJlZSBjb2x1bW5zIGF0IHRoZSBlbmQNCnNldGNvbG9yZGVyKGF0dGVuZGFuY2VfZGF0YSwgYyhvdGhlcl9jb2xzLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImhvbWVfYXR0ZW5kYW5jZSIsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAicG9zdGVhbV90eXBlX2hvbWUiLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImludGVyYWN0X0h4QSIpKQ0KDQpzdHIoYXR0ZW5kYW5jZV9kYXRhKQ0KYGBgDQoNCg0KYGBge3J9DQojIGtpbGwgbXlfaWQgICAgICAgICAgICAgICAgICAgICAgDQphdHRlbmRhbmNlX2RhdGEkbXlfaWQgPC0gTlVMTA0KYGBgDQoNCmBgYHtyfSANCiMgb2xzICAgICAgICAgICAgICAgICAgICAgDQpvbHNfbW9kZWwgPC0gbG0oYXR0ZW1wdCB+LiwgZGF0YSA9IGF0dGVuZGFuY2VfZGF0YSkNCmBgYA0KDQpgYGB7cn0NCmxpYnJhcnkoc2FuZHdpY2gpDQpsaWJyYXJ5KGxtdGVzdCkNCg0KIyBHZXQgSEMwLWFkanVzdGVkIHQtdmFsdWVzIGFuZCBwLXZhbHVlcw0Kcm9idXN0X3Rlc3QgPC0gY29lZnRlc3Qob2xzX21vZGVsLCB2Y292ID0gdmNvdkhDKG9sc19tb2RlbCwgdHlwZSA9ICJIQzAiKSkNCnRfc3RhdHMgPC0gcm9idXN0X3Rlc3RbLCAidCB2YWx1ZSJdDQpwX3ZhbHVlcyA8LSByb2J1c3RfdGVzdFssICJQcig+fHR8KSJdDQoNCiMgRnVuY3Rpb24gdG8gYWRkIHNpZ25pZmljYW5jZSBzdGFycw0KZ2V0X3N0YXJzIDwtIGZ1bmN0aW9uKHApIHsNCiAgICBpZiAocCA8PSAwLjAxKSByZXR1cm4oIioqKiIpDQogICAgaWYgKHAgPD0gMC4wNSkgcmV0dXJuKCIqKiIpDQogICAgaWYgKHAgPD0gMC4xKSByZXR1cm4oIioiKQ0KICAgIGlmIChwIDw9IDAuMTUpIHJldHVybigiLiIpDQogICAgcmV0dXJuKCIiKQ0KfQ0KDQojIE1heGltdW0gd2lkdGggZm9yIHZhcmlhYmxlIG5hbWVzDQpuYW1lX3dpZHRoIDwtIDIwDQoNCiMgUHJpbnQgaGVhZGVyIHdpdGggYWxpZ25tZW50DQpjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiVmFyaWFibGUiLCAidC12YWx1ZSIsICJwLXZhbHVlIiwgInNpZyIpKQ0KY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIi0tLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLSIpKQ0KDQojIExvb3AgdGhyb3VnaCBhbmQgcHJpbnQgdmFsdWVzDQpmb3IgKGkgaW4gMTpsZW5ndGgodF9zdGF0cykpIHsNCiAgICB2YXJfbmFtZSA8LSByb3duYW1lcyhyb2J1c3RfdGVzdClbaV0NCiAgICAjIFRydW5jYXRlIG5hbWUgaWYgdG9vIGxvbmcNCiAgICBpZiAobmNoYXIodmFyX25hbWUpID4gbmFtZV93aWR0aCkgew0KICAgICAgICB2YXJfbmFtZSA8LSBwYXN0ZTAoc3Vic3RyKHZhcl9uYW1lLCAxLCBuYW1lX3dpZHRoLTMpLCAiLi4uIikNCiAgICB9DQogICAgY2F0KHNwcmludGYoIiUtKnMgICUxMC40ZiAgJTEwLjRmICAlNHNcbiIsIA0KICAgICAgICAgICAgICAgIG5hbWVfd2lkdGgsIHZhcl9uYW1lLCANCiAgICAgICAgICAgICAgICB0X3N0YXRzW2ldLCBwX3ZhbHVlc1tpXSwNCiAgICAgICAgICAgICAgICBnZXRfc3RhcnMocF92YWx1ZXNbaV0pKSkNCn0NCg0KY2F0KCJcblNpZ25pZmljYW5jZSBjb2RlczogMCAnKioqJyAwLjAxICcqKicgMC4wNSAnKicgMC4xICcuJyAwLjE1IikNCmBgYA0KDQo=</div>
 
 
 </div>

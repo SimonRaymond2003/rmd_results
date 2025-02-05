@@ -5,6 +5,4 @@ output: html_document
 
 In this tab I will discuss general notes and results from the analysis.
 
-Code to render this site: 
-
-The next step is to get the 3rd down models in here.
+My next major step needs to be spending alot more time on the attendance data/model.
