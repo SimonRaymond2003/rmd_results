@@ -6,3 +6,5 @@ output: html_document
 In this tab I will discuss general notes and results from the analysis.
 
 My next major step needs to be spending alot more time on the attendance data/model.
+
+small update
