@@ -14,6 +14,29 @@ select_data <- fread("predict_select.csv.gz")
 ```
 
 ```{r}
+cols_to_remove <- c(
+    "offense_player_3_present",
+    "offense_player_7_present",
+    "offense_player_13_present",
+    "offense_player_18_present",
+    "offense_player_19_present",
+    "offense_player_21_present",
+    "defense_player_7_present",
+    "defense_player_8_present",
+    "offense_player_10_weeks_found_2w",
+    "offense_player_9_weeks_found_12w"
+)
+
+# Remove these columns from outcome_data
+for (col in cols_to_remove) {
+    if (col %in% names(outcome_data)) {
+        outcome_data[, (col) := NULL]
+    }
+}
+```
+
+
+```{r}
 select_data[, attempt := as.numeric(as.character(attempt))]
 ```
 
@@ -298,6 +321,46 @@ cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 
 ```{r}
 # get vifs
-#library(car)
-#vif(ols_model)
+library(car)
+vif(ols_model)
 ```
+
+```{r}
+# Create a copy of outcome_data without GIMR
+outcome_data_no_gimr <- copy(outcome_data)
+outcome_data_no_gimr[, GIMR := NULL]
+
+# Run OLS without GIMR correction
+ols_model_no_gimr <- lm(conversion ~ ., data = outcome_data_no_gimr)
+
+# Get HC0-adjusted t-values and p-values for model without GIMR
+robust_test_no_gimr <- coeftest(ols_model_no_gimr, vcov = vcovHC(ols_model_no_gimr, type = "HC0"))
+t_stats_no_gimr <- robust_test_no_gimr[, "t value"]
+p_values_no_gimr <- robust_test_no_gimr[, "Pr(>|t|)"]
+coefficients_no_gimr <- coef(ols_model_no_gimr)
+
+# Print results for model without GIMR
+cat("\nModel Results WITHOUT GIMR:\n")
+cat(sprintf("%-*s  %10s  %10s  %10s  %4s\n", name_width, "Variable", "Coef", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %10s  %4s\n", name_width, "---------", "----", "-------", "-------", "---"))
+
+for (i in 1:length(t_stats_no_gimr)) {
+    var_name <- rownames(robust_test_no_gimr)[i]
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name,
+                coefficients_no_gimr[i],
+                t_stats_no_gimr[i], 
+                p_values_no_gimr[i],
+                get_stars(p_values_no_gimr[i])))
+}
+
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
+
+vif(ols_model_no_gimr)
+
+```
+
+
