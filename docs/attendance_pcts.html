@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Attendance Pcts</title>
+
+<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">4th Downs in the NFL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="heckman.html">Heckman Selection</a>
+</li>
+<li>
+  <a href="xgboost.html">XGBoost Prediction</a>
+</li>
+<li>
+  <a href="attendance_binary.html">Attendance Impact Binary</a>
+</li>
+<li>
+  <a href="attendance_pcts.html">Attendance Impact Percentages</a>
+</li>
+<li>
+  <a href="attendance_totals.html">Attendance Impact Totals</a>
+</li>
+<li>
+  <a href="thirddown.html">Third Down Analysis</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Attendance Pcts</h1>
+
+</div>
+
+
+<pre class="r"><code>run_attendance_analysis_v2 &lt;- function(file_path, year) {
+    cat(&quot;\n\n========================================&quot;)
+    cat(sprintf(&quot;\nAnalyzing %s vs 2020\n&quot;, year))
+    cat(&quot;========================================\n\n&quot;)
+    
+    # Read data
+    attendance_data &lt;- fread(file_path)
+    
+    # Remove home_attendance and attendance_raw
+    attendance_data$home_attendance &lt;- NULL
+    attendance_data$attendance_raw &lt;- NULL
+    
+    # Create interaction term
+    attendance_data$interact_HxA &lt;- attendance_data$attendance_pct * attendance_data$posteam_type_home
+    
+    # Reorder columns
+    other_cols &lt;- setdiff(names(attendance_data), 
+                         c(&quot;attendance_pct&quot;, &quot;posteam_type_home&quot;, &quot;interact_HxA&quot;))
+    setcolorder(attendance_data, c(other_cols, 
+                                 &quot;attendance_pct&quot;, 
+                                 &quot;posteam_type_home&quot;, 
+                                 &quot;interact_HxA&quot;))
+    
+    # Remove my_id
+    attendance_data$my_id &lt;- NULL
+    
+    # Run OLS
+    ols_model &lt;- lm(attempt ~ ., data = attendance_data)
+
+    
+    # Get robust statistics
+    robust_test &lt;- coeftest(ols_model, vcov = vcovHC(ols_model, type = &quot;HC0&quot;))
+    t_stats &lt;- robust_test[, &quot;t value&quot;]
+    p_values &lt;- robust_test[, &quot;Pr(&gt;|t|)&quot;]
+    
+    # Function to add significance stars
+    get_stars &lt;- function(p) {
+        if (p &lt;= 0.01) return(&quot;***&quot;)
+        if (p &lt;= 0.05) return(&quot;**&quot;)
+        if (p &lt;= 0.1) return(&quot;*&quot;)
+        if (p &lt;= 0.15) return(&quot;.&quot;)
+        return(&quot;&quot;)
+    }
+    
+    # Print results
+    name_width &lt;- 20
+    cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Variable&quot;, &quot;t-value&quot;, &quot;p-value&quot;, &quot;sig&quot;))
+    cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;---------&quot;, &quot;-------&quot;, &quot;-------&quot;, &quot;----&quot;))
+    
+    for (i in 1:length(t_stats)) {
+        var_name &lt;- rownames(robust_test)[i]
+        if (nchar(var_name) &gt; name_width) {
+            var_name &lt;- paste0(substr(var_name, 1, name_width-3), &quot;...&quot;)
+        }
+        cat(sprintf(&quot;%-*s  %10.4f  %10.4f  %4s\n&quot;, 
+                    name_width, var_name, 
+                    t_stats[i], p_values[i],
+                    get_stars(p_values[i])))
+    }
+    cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15\n&quot;)
+    
+    # Return key statistics for potential further analysis
+    return(list(
+        year = year,
+        model = ols_model,
+        robust_test = robust_test
+    ))
+}</code></pre>
+<pre class="r"><code># Years to analyze
+years &lt;- c(2017, 2018, 2019, 2021, 2022, 2023)
+
+# Store results for all years
+results_list_v2 &lt;- list()
+
+
+# Run analysis for each year using Version 2
+for (year in years) {
+    file_path &lt;- sprintf(&quot;predict_attendance_%s_vs_2020.csv.gz&quot;, year)
+    if (file.exists(file_path)) {
+        results_list_v2[[as.character(year)]] &lt;- run_attendance_analysis_v2(file_path, year)
+    } else {
+        cat(sprintf(&quot;\nWarning: File for year %s not found\n&quot;, year))
+    }
+}</code></pre>
+<pre><code>## 
+## 
+## ========================================
+## Analyzing 2017 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)               1.1542      0.2485      
+## ydstogo                 -21.1278      0.0000   ***
+## posteam_timeouts_...     -6.9329      0.0000   ***
+## defteam_timeouts_...     -0.3329      0.7392      
+## week                     -0.4042      0.6861      
+## temp                     -0.2239      0.8228      
+## wind                     -1.3485      0.1775      
+## vegas_wp                 -9.0526      0.0000   ***
+## vegas_wp_posteam          0.5812      0.5612      
+## total_line               -2.6712      0.0076   ***
+## score_diff               -0.4281      0.6686      
+## down1_pct                -0.8147      0.4153      
+## down2_pct                -0.6145      0.5389      
+## down3_pct                 0.0409      0.9674      
+## down4_pct                -3.0087      0.0026   ***
+## prep_days                -1.1080      0.2679      
+## overall_win_pct           0.5382      0.5905      
+## team_win_pct             -0.4618      0.6442      
+## prev_shotgun_rate        -0.9213      0.3569      
+## prev_singleback_rate     -0.4693      0.6389      
+## prev_empty_rate           1.0124      0.3114      
+## prev_shotgun_success      0.3575      0.7207      
+## prev_singleback_s...     -0.5841      0.5592      
+## prev_empty_success        1.1251      0.2606      
+## prev_stop_rate_run        0.5468      0.5845      
+## prev_stop_rate_pass      -1.1022      0.2704      
+## prev_win_pct             -1.1851      0.2360      
+## shotgun_rate             -7.6968      0.0000   ***
+## singleback_rate          -4.6678      0.0000   ***
+## empty_rate               -4.9754      0.0000   ***
+## shotgun_success           1.5568      0.1196     .
+## singleback_success       -1.5341      0.1251     .
+## empty_success             0.5562      0.5781      
+## def_stop_rate_run         0.1552      0.8767      
+## def_stop_rate_pass       -3.4833      0.0005   ***
+## avg_pass_rushers         -0.7819      0.4343      
+## avg_box_defenders         0.2272      0.8203      
+## cover0_rate               0.6122      0.5404      
+## cover1_rate               2.0844      0.0372    **
+## cover2_rate               0.5326      0.5944      
+## cover3_rate               0.6313      0.5279      
+## cover4_rate               1.0259      0.3050      
+## cover6_rate              -1.5348      0.1249     .
+## two_man_rate             -0.4713      0.6374      
+## prevent_rate              0.6855      0.4931      
+## p_player_26_punti...      0.6216      0.5342      
+## p_player_26_punti...     -0.7384      0.4603      
+## p_player_26_punti...     -0.2270      0.8204      
+## p_player_26_kicko...      0.5687      0.5696      
+## p_player_26_speci...     -0.0595      0.9525      
+## p_player_26_speci...     -0.0482      0.9616      
+## p_player_26_kicko...      1.5541      0.1202     .
+## p_player_26_punti...     -1.0878      0.2767      
+## k_player_25_kicko...      0.7094      0.4781      
+## k_player_25_field...      0.5984      0.5496      
+## k_player_25_kicko...      0.6196      0.5356      
+## k_player_25_speci...      0.3027      0.7621      
+## k_player_25_speci...      0.8519      0.3943      
+## k_player_25_field...     -0.8452      0.3980      
+## k_player_25_speci...     -1.0664      0.2863      
+## k_player_25_speci...      1.5295      0.1262     .
+## k_player_25_kicko...     -1.3148      0.1886      
+## k_player_25_field...     -0.6061      0.5444      
+## k_player_25_speci...     -0.6810      0.4959      
+## k_player_25_kicko...     -0.0183      0.9854      
+## roof_outdoors             0.6223      0.5338      
+## Chuck_Pagano              0.0762      0.9392      
+## Bruce_Arians             -0.5178      0.6046      
+## Sean_McDermott            0.8803      0.3787      
+## Ron_Rivera                0.5865      0.5575      
+## John_Fox                  0.4448      0.6565      
+## Dirk_Koetter             -0.6054      0.5449      
+## Hue_Jackson              -0.0894      0.9287      
+## John_Harbaugh             0.8767      0.3807      
+## Jason_Garrett             1.2187      0.2230      
+## Vance_Joseph              0.4619      0.6442      
+## Ben_McAdoo                1.2030      0.2290      
+## Jim_Caldwell              0.5298      0.5962      
+## Mike_McCarthy             0.9573      0.3385      
+## Dan_Quinn                 0.3756      0.7072      
+## Marvin_Lewis              0.8118      0.4169      
+## Bill_OBrien               0.1682      0.8664      
+## Adam_Gase                -0.0060      0.9952      
+## Anthony_Lynn              0.5746      0.5656      
+## Mike_Zimmer               0.7087      0.4785      
+## Mike_Tomlin               0.7077      0.4792      
+## Bill_Belichick            0.2780      0.7810      
+## Sean_Payton               0.2270      0.8205      
+## Jack_Del_Rio              1.2420      0.2143      
+## Todd_Bowles              -0.3114      0.7555      
+## Doug_Pederson             1.8315      0.0671     *
+## Andy_Reid                 1.2909      0.1968      
+## Kyle_Shanahan            -0.2155      0.8294      
+## Pete_Carroll              1.1610      0.2457      
+## Mike_Mularkey             0.2939      0.7688      
+## Doug_Marrone              0.0576      0.9541      
+## Jay_Gruden                0.6860      0.4927      
+## Sean_McVay                0.8832      0.3772      
+## Steve_Spagnuolo           1.6028      0.1090     .
+## Matt_Patricia             0.8788      0.3795      
+## Mike_Vrabel               1.0748      0.2825      
+## Frank_Reich               1.4530      0.1463     .
+## Jon_Gruden                0.4561      0.6483      
+## Matt_Nagy                 0.9807      0.3268      
+## Kliff_Kingsbury           0.8423      0.3997      
+## Vic_Fangio                0.3402      0.7337      
+## Matt_LaFleur              2.2921      0.0219    **
+## Brian_Flores              0.1581      0.8744      
+## Zac_Taylor                0.3625      0.7170      
+## Matt_Rhule                1.4109      0.1583      
+## Kevin_Stefanski           1.3616      0.1734      
+## Joe_Judge                 0.3318      0.7401      
+## Romeo_Crennel            -0.0814      0.9351      
+## Raheem_Morris             0.5931      0.5531      
+## yardline_1_10             5.1191      0.0000   ***
+## yardline_11_20            2.7151      0.0066   ***
+## yardline_21_30            2.5229      0.0117    **
+## yardline_31_40            9.8898      0.0000   ***
+## yardline_41_50            6.6667      0.0000   ***
+## yardline_51_60            1.8329      0.0669     *
+## yardline_61_70           -0.1299      0.8966      
+## yardline_71_80           -1.6798      0.0930     *
+## yardline_81_90           -0.0552      0.9560      
+## is_first_half           -14.2880      0.0000   ***
+## time_in_half             -6.9280      0.0000   ***
+## attendance_pct            0.0744      0.9407      
+## posteam_type_home         0.9636      0.3353      
+## interact_HxA              1.3930      0.1637      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2018 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)               1.1054      0.2690      
+## ydstogo                 -24.4205      0.0000   ***
+## posteam_timeouts_...     -5.5046      0.0000   ***
+## defteam_timeouts_...      0.7284      0.4664      
+## week                      1.4066      0.1596      
+## temp                     -1.9758      0.0482    **
+## wind                     -0.1180      0.9061      
+## vegas_wp                 -8.4973      0.0000   ***
+## vegas_wp_posteam          0.5844      0.5590      
+## total_line               -2.0483      0.0406    **
+## score_diff               -0.6473      0.5175      
+## down1_pct                -1.4916      0.1359     .
+## down2_pct                 0.3705      0.7110      
+## down3_pct                 0.9518      0.3412      
+## down4_pct                -0.8982      0.3691      
+## prep_days                -0.5121      0.6086      
+## overall_win_pct          -0.6068      0.5440      
+## team_win_pct              0.0331      0.9736      
+## prev_shotgun_rate        -0.3531      0.7240      
+## prev_singleback_rate     -0.1866      0.8519      
+## prev_empty_rate          -1.8312      0.0671     *
+## prev_shotgun_success     -1.0406      0.2981      
+## prev_singleback_s...      1.6114      0.1071     .
+## prev_empty_success        1.6478      0.0994     *
+## prev_stop_rate_run        1.5402      0.1236     .
+## prev_stop_rate_pass      -0.9057      0.3651      
+## prev_win_pct             -1.3486      0.1775      
+## shotgun_rate             -6.2870      0.0000   ***
+## singleback_rate          -4.4694      0.0000   ***
+## empty_rate               -5.2971      0.0000   ***
+## shotgun_success           0.4606      0.6451      
+## singleback_success       -1.3895      0.1647      
+## empty_success             0.7401      0.4593      
+## def_stop_rate_run        -0.4474      0.6546      
+## def_stop_rate_pass       -3.6588      0.0003   ***
+## avg_pass_rushers         -0.3301      0.7414      
+## avg_box_defenders         0.6007      0.5481      
+## cover0_rate               0.8565      0.3917      
+## cover1_rate               1.5119      0.1306     .
+## cover2_rate               1.0894      0.2760      
+## cover3_rate               0.4097      0.6821      
+## cover4_rate               1.4689      0.1419     .
+## cover6_rate              -0.8416      0.4001      
+## two_man_rate              0.0592      0.9528      
+## prevent_rate             -0.5004      0.6168      
+## p_player_26_punti...      0.7669      0.4432      
+## p_player_26_punti...      0.1884      0.8506      
+## p_player_26_punti...     -1.2350      0.2169      
+## p_player_26_kicko...     -0.1153      0.9082      
+## p_player_26_speci...     -0.9457      0.3443      
+## p_player_26_speci...      0.4794      0.6317      
+## p_player_26_kicko...      1.2915      0.1966      
+## p_player_26_punti...     -0.8808      0.3784      
+## k_player_25_kicko...      0.8480      0.3965      
+## k_player_25_field...      0.1818      0.8558      
+## k_player_25_kicko...      0.2129      0.8314      
+## k_player_25_speci...      0.5057      0.6131      
+## k_player_25_speci...      0.5869      0.5573      
+## k_player_25_field...     -0.0375      0.9701      
+## k_player_25_speci...     -1.0776      0.2813      
+## k_player_25_speci...      0.9669      0.3336      
+## k_player_25_kicko...     -0.2870      0.7741      
+## k_player_25_field...     -2.3932      0.0167    **
+## k_player_25_speci...      1.5181      0.1290     .
+## k_player_25_kicko...     -0.2498      0.8027      
+## roof_outdoors             1.0329      0.3017      
+## Bruce_Arians              1.4801      0.1389     .
+## Sean_McDermott            0.1455      0.8843      
+## Ron_Rivera                1.1032      0.2700      
+## Dirk_Koetter              1.7878      0.0738     *
+## Hue_Jackson              -0.5332      0.5939      
+## John_Harbaugh            -0.1129      0.9101      
+## Jason_Garrett             1.1808      0.2377      
+## Vance_Joseph              0.8399      0.4010      
+## Mike_McCarthy             0.5808      0.5614      
+## Dan_Quinn                 0.1491      0.8815      
+## Marvin_Lewis              0.5450      0.5858      
+## Bill_OBrien               0.8870      0.3751      
+## Adam_Gase                 0.2838      0.7766      
+## Anthony_Lynn              2.2202      0.0264    **
+## Mike_Zimmer               0.9383      0.3481      
+## Mike_Tomlin               1.6727      0.0944     *
+## Bill_Belichick            0.6427      0.5204      
+## Sean_Payton               1.0786      0.2808      
+## Todd_Bowles              -0.1344      0.8931      
+## Doug_Pederson             1.7922      0.0731     *
+## Andy_Reid                 1.1840      0.2365      
+## Kyle_Shanahan             0.7115      0.4768      
+## Pete_Carroll              1.7963      0.0725     *
+## Doug_Marrone              0.4146      0.6785      
+## Jay_Gruden                0.6139      0.5393      
+## Sean_McVay                1.8279      0.0676     *
+## Steve_Wilks               0.0414      0.9670      
+## Matt_Patricia             1.1600      0.2461      
+## Mike_Vrabel               1.8351      0.0665     *
+## Frank_Reich               1.2305      0.2185      
+## Pat_Shurmur               0.6017      0.5474      
+## Jon_Gruden                0.7011      0.4833      
+## Matt_Nagy                 0.4896      0.6244      
+## Gregg_Williams            0.1521      0.8791      
+## Joe_Philbin               0.1612      0.8720      
+## Kliff_Kingsbury           1.7069      0.0879     *
+## Vic_Fangio                0.3475      0.7282      
+## Matt_LaFleur              2.5512      0.0108    **
+## Brian_Flores              0.2525      0.8007      
+## Zac_Taylor               -0.0094      0.9925      
+## Matt_Rhule                0.2627      0.7928      
+## Kevin_Stefanski           1.0796      0.2803      
+## Joe_Judge                 0.5299      0.5962      
+## Romeo_Crennel             1.2575      0.2086      
+## Raheem_Morris             0.1028      0.9182      
+## yardline_1_10             5.0804      0.0000   ***
+## yardline_11_20            1.6054      0.1085     .
+## yardline_21_30            1.5767      0.1149     .
+## yardline_31_40            8.5808      0.0000   ***
+## yardline_41_50            6.1905      0.0000   ***
+## yardline_51_60            1.5284      0.1265     .
+## yardline_61_70           -0.9446      0.3449      
+## yardline_71_80           -2.0589      0.0395    **
+## yardline_81_90           -0.0367      0.9708      
+## is_first_half           -15.0170      0.0000   ***
+## time_in_half             -8.7070      0.0000   ***
+## attendance_pct            0.0138      0.9890      
+## posteam_type_home         1.4001      0.1615      
+## interact_HxA              1.4100      0.1586      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2019 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)               1.5435      0.1228     .
+## ydstogo                 -25.1460      0.0000   ***
+## posteam_timeouts_...     -6.3586      0.0000   ***
+## defteam_timeouts_...      0.2373      0.8124      
+## week                      0.4303      0.6670      
+## temp                     -0.6562      0.5117      
+## wind                     -0.1944      0.8459      
+## vegas_wp                 -7.9480      0.0000   ***
+## vegas_wp_posteam         -0.7025      0.4824      
+## total_line               -1.6240      0.1044     .
+## score_diff               -1.7359      0.0826     *
+## down1_pct                -1.3280      0.1842      
+## down2_pct                -1.3543      0.1757      
+## down3_pct                -0.8758      0.3812      
+## down4_pct                -1.8144      0.0697     *
+## prep_days                -1.1460      0.2518      
+## overall_win_pct          -0.6500      0.5157      
+## team_win_pct              1.3799      0.1677      
+## prev_shotgun_rate        -1.4378      0.1505      
+## prev_singleback_rate     -0.8338      0.4044      
+## prev_empty_rate           0.7290      0.4660      
+## prev_shotgun_success     -0.0602      0.9520      
+## prev_singleback_s...     -1.6712      0.0947     *
+## prev_empty_success       -0.8040      0.4214      
+## prev_stop_rate_run       -0.1148      0.9086      
+## prev_stop_rate_pass      -0.4595      0.6459      
+## prev_win_pct             -0.0458      0.9634      
+## shotgun_rate             -7.2766      0.0000   ***
+## singleback_rate          -4.8271      0.0000   ***
+## empty_rate               -5.0947      0.0000   ***
+## shotgun_success           1.2747      0.2024      
+## singleback_success        0.5467      0.5846      
+## empty_success             0.0344      0.9726      
+## def_stop_rate_run        -0.8627      0.3883      
+## def_stop_rate_pass       -2.9181      0.0035   ***
+## avg_pass_rushers         -0.7687      0.4421      
+## avg_box_defenders         0.6713      0.5020      
+## cover0_rate               0.5830      0.5599      
+## cover1_rate               0.9638      0.3352      
+## cover2_rate               0.2749      0.7834      
+## cover3_rate               0.1837      0.8543      
+## cover4_rate               1.3093      0.1905      
+## cover6_rate              -1.7381      0.0822     *
+## two_man_rate              0.9826      0.3259      
+## prevent_rate             -0.1314      0.8955      
+## p_player_26_punti...      0.3473      0.7284      
+## p_player_26_punti...     -0.4326      0.6653      
+## p_player_26_punti...     -1.7653      0.0776     *
+## p_player_26_kicko...     -0.1232      0.9019      
+## p_player_26_speci...     -0.2096      0.8340      
+## p_player_26_speci...      1.3533      0.1760      
+## p_player_26_kicko...      1.3891      0.1648      
+## p_player_26_punti...     -0.4274      0.6691      
+## k_player_25_kicko...      1.0529      0.2924      
+## k_player_25_field...     -0.0674      0.9462      
+## k_player_25_kicko...      0.1958      0.8448      
+## k_player_25_speci...     -0.1009      0.9197      
+## k_player_25_speci...      1.4942      0.1352     .
+## k_player_25_field...     -0.6776      0.4981      
+## k_player_25_speci...     -0.4151      0.6781      
+## k_player_25_speci...      1.6301      0.1031     .
+## k_player_25_kicko...     -0.9722      0.3310      
+## k_player_25_field...     -0.8260      0.4088      
+## k_player_25_speci...     -0.7939      0.4273      
+## k_player_25_kicko...     -0.4973      0.6190      
+## roof_outdoors            -0.2668      0.7896      
+## Bruce_Arians             -0.6658      0.5055      
+## Sean_McDermott            0.0710      0.9434      
+## Ron_Rivera               -0.1255      0.9002      
+## John_Harbaugh             0.8974      0.3695      
+## Jason_Garrett             1.2416      0.2144      
+## Mike_McCarthy             1.2599      0.2077      
+## Dan_Quinn                 0.7031      0.4820      
+## Bill_OBrien               1.0285      0.3038      
+## Adam_Gase                -0.3313      0.7404      
+## Anthony_Lynn              0.9198      0.3577      
+## Mike_Zimmer               0.9683      0.3329      
+## Mike_Tomlin              -0.3983      0.6904      
+## Bill_Belichick           -0.0987      0.9213      
+## Sean_Payton               0.5745      0.5656      
+## Doug_Pederson             1.9978      0.0458    **
+## Andy_Reid                 0.5754      0.5650      
+## Kyle_Shanahan            -0.6346      0.5257      
+## Pete_Carroll              1.0504      0.2936      
+## Doug_Marrone              0.5983      0.5497      
+## Jay_Gruden               -0.9090      0.3634      
+## Sean_McVay                0.7422      0.4580      
+## Matt_Patricia             0.3439      0.7309      
+## Mike_Vrabel              -0.0990      0.9211      
+## Frank_Reich               1.5220      0.1281     .
+## Pat_Shurmur               0.9376      0.3485      
+## Jon_Gruden               -0.7359      0.4618      
+## Matt_Nagy                 0.5651      0.5721      
+## Kliff_Kingsbury           0.7368      0.4613      
+## Vic_Fangio                0.1476      0.8826      
+## Freddie_Kitchens          0.2717      0.7859      
+## Matt_LaFleur              1.5835      0.1134     .
+## Brian_Flores              0.3954      0.6926      
+## Zac_Taylor                0.9188      0.3582      
+## Bill_Callahan            -0.9257      0.3547      
+## Matt_Rhule                1.4556      0.1455     .
+## Kevin_Stefanski           1.7425      0.0815     *
+## Joe_Judge                -0.2480      0.8042      
+## Romeo_Crennel             0.2478      0.8043      
+## Raheem_Morris             0.4798      0.6314      
+## yardline_1_10             5.9128      0.0000   ***
+## yardline_11_20            2.0352      0.0419    **
+## yardline_21_30            2.8857      0.0039   ***
+## yardline_31_40           10.6693      0.0000   ***
+## yardline_41_50            7.7473      0.0000   ***
+## yardline_51_60            2.0382      0.0416    **
+## yardline_61_70            0.0313      0.9750      
+## yardline_71_80           -0.6062      0.5444      
+## yardline_81_90            1.3728      0.1699      
+## is_first_half           -16.0622      0.0000   ***
+## time_in_half             -7.9398      0.0000   ***
+## attendance_pct           -0.3613      0.7179      
+## posteam_type_home         1.7399      0.0819     *
+## interact_HxA              2.3908      0.0168    **
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2021 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)               3.4468      0.0006   ***
+## ydstogo                 -26.6774      0.0000   ***
+## posteam_timeouts_...     -6.2216      0.0000   ***
+## defteam_timeouts_...     -0.2921      0.7703      
+## week                      2.0008      0.0455    **
+## temp                     -0.6331      0.5267      
+## wind                     -0.4682      0.6397      
+## vegas_wp                 -6.6670      0.0000   ***
+## vegas_wp_posteam         -0.7418      0.4582      
+## total_line               -0.7337      0.4632      
+## score_diff               -3.3398      0.0008   ***
+## down1_pct                -0.4135      0.6792      
+## down2_pct                -1.6356      0.1020     .
+## down3_pct                 0.8422      0.3997      
+## down4_pct                -2.4887      0.0128    **
+## prep_days                -0.2536      0.7998      
+## overall_win_pct           0.6520      0.5145      
+## team_win_pct              2.8903      0.0039   ***
+## prev_shotgun_rate         1.2669      0.2052      
+## prev_singleback_rate      1.5748      0.1153     .
+## prev_empty_rate          -0.4568      0.6478      
+## prev_shotgun_success      0.5292      0.5967      
+## prev_singleback_s...      1.9754      0.0483    **
+## prev_empty_success        1.4910      0.1360     .
+## prev_stop_rate_run        0.3187      0.7500      
+## prev_stop_rate_pass      -0.6950      0.4871      
+## prev_win_pct              1.0027      0.3160      
+## shotgun_rate             -8.0411      0.0000   ***
+## singleback_rate          -5.6245      0.0000   ***
+## empty_rate               -5.6612      0.0000   ***
+## shotgun_success          -0.7654      0.4440      
+## singleback_success       -1.1781      0.2388      
+## empty_success             0.9077      0.3641      
+## def_stop_rate_run         0.4188      0.6754      
+## def_stop_rate_pass       -1.6466      0.0997     *
+## avg_pass_rushers         -0.2249      0.8221      
+## avg_box_defenders        -0.4036      0.6865      
+## cover0_rate              -0.0524      0.9582      
+## cover1_rate               0.4439      0.6571      
+## cover2_rate              -0.6538      0.5132      
+## cover3_rate              -1.0803      0.2800      
+## cover4_rate              -0.0647      0.9484      
+## cover6_rate              -1.9058      0.0567     *
+## two_man_rate             -0.5065      0.6125      
+## prevent_rate             -0.2833      0.7769      
+## p_player_26_punti...      1.5311      0.1258     .
+## p_player_26_punti...     -1.2060      0.2279      
+## p_player_26_punti...      0.6744      0.5001      
+## p_player_26_kicko...      1.0534      0.2922      
+## p_player_26_speci...     -0.4007      0.6886      
+## p_player_26_speci...     -1.0533      0.2923      
+## p_player_26_kicko...      2.1397      0.0324    **
+## p_player_26_punti...      0.0487      0.9612      
+## k_player_25_kicko...      0.2039      0.8385      
+## k_player_25_field...      0.0968      0.9229      
+## k_player_25_kicko...     -1.4504      0.1470     .
+## k_player_25_speci...     -1.5077      0.1317     .
+## k_player_25_speci...     -1.5625      0.1182     .
+## k_player_25_field...     -0.6958      0.4866      
+## k_player_25_speci...     -0.1473      0.8829      
+## k_player_25_speci...      0.5288      0.5969      
+## k_player_25_kicko...     -0.0427      0.9659      
+## k_player_25_field...      1.2589      0.2081      
+## k_player_25_speci...      1.7474      0.0806     *
+## k_player_25_kicko...      0.3154      0.7525      
+## roof_outdoors             1.6786      0.0933     *
+## Bruce_Arians             -2.1503      0.0316    **
+## Sean_McDermott           -1.2345      0.2171      
+## Ron_Rivera                1.9719      0.0487    **
+## John_Harbaugh             0.0825      0.9343      
+## Mike_McCarthy             0.3507      0.7259      
+## Dan_Quinn                -0.0544      0.9566      
+## Bill_OBrien               1.0528      0.2925      
+## Adam_Gase                -0.1959      0.8447      
+## Anthony_Lynn              0.3229      0.7468      
+## Mike_Zimmer               0.6173      0.5371      
+## Mike_Tomlin               0.2733      0.7846      
+## Bill_Belichick           -0.4335      0.6647      
+## Sean_Payton              -0.7217      0.4705      
+## Doug_Pederson             0.9383      0.3481      
+## Andy_Reid                -1.5360      0.1246     .
+## Kyle_Shanahan            -0.9306      0.3521      
+## Pete_Carroll             -0.6773      0.4982      
+## Doug_Marrone              0.9492      0.3425      
+## Sean_McVay               -0.4359      0.6629      
+## Matt_Patricia             1.3797      0.1677      
+## Mike_Vrabel               0.3299      0.7415      
+## Frank_Reich              -0.9637      0.3352      
+## Jon_Gruden                0.8051      0.4208      
+## Matt_Nagy                 0.8100      0.4180      
+## Kliff_Kingsbury           1.2591      0.2080      
+## Vic_Fangio                1.2060      0.2278      
+## Matt_LaFleur             -0.2209      0.8252      
+## Brian_Flores              0.1183      0.9058      
+## Zac_Taylor               -0.0424      0.9661      
+## Matt_Rhule                1.0872      0.2770      
+## Kevin_Stefanski          -0.2330      0.8158      
+## Joe_Judge                 0.0775      0.9382      
+## Romeo_Crennel             0.4730      0.6363      
+## Raheem_Morris            -0.4941      0.6212      
+## Darrell_Bevell            0.2388      0.8113      
+## Arthur_Smith              0.9073      0.3643      
+## Brandon_Staley            3.1632      0.0016   ***
+## Urban_Meyer               1.3948      0.1631      
+## Dan_Campbell              1.7245      0.0847     *
+## David_Culley              0.6216      0.5342      
+## Robert_Saleh              0.3978      0.6908      
+## Nick_Sirianni             0.7175      0.4731      
+## yardline_1_10             4.9295      0.0000   ***
+## yardline_11_20            1.2623      0.2069      
+## yardline_21_30            2.1330      0.0330    **
+## yardline_31_40            8.7097      0.0000   ***
+## yardline_41_50            7.2473      0.0000   ***
+## yardline_51_60            1.2848      0.1989      
+## yardline_61_70           -0.9546      0.3398      
+## yardline_71_80           -2.2161      0.0267    **
+## yardline_81_90            0.2876      0.7737      
+## is_first_half           -15.1184      0.0000   ***
+## time_in_half             -7.2179      0.0000   ***
+## attendance_pct           -0.1940      0.8462      
+## posteam_type_home         0.6904      0.4899      
+## interact_HxA              1.3194      0.1871      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2022 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)               1.3880      0.1652      
+## ydstogo                 -27.7064      0.0000   ***
+## posteam_timeouts_...     -5.8707      0.0000   ***
+## defteam_timeouts_...     -1.1243      0.2609      
+## week                      0.2139      0.8306      
+## temp                     -0.2534      0.8000      
+## wind                     -1.2585      0.2083      
+## vegas_wp                 -8.4916      0.0000   ***
+## vegas_wp_posteam          0.2989      0.7651      
+## total_line               -0.5622      0.5740      
+## score_diff               -1.5182      0.1290     .
+## down1_pct                -0.7339      0.4630      
+## down2_pct                -0.9289      0.3530      
+## down3_pct                 0.9836      0.3254      
+## down4_pct                -3.2401      0.0012   ***
+## prep_days                 0.0504      0.9598      
+## overall_win_pct           0.4169      0.6767      
+## team_win_pct              1.0579      0.2901      
+## prev_shotgun_rate         0.8786      0.3797      
+## prev_singleback_rate      0.8904      0.3733      
+## prev_empty_rate           0.2545      0.7991      
+## prev_shotgun_success      1.2311      0.2183      
+## prev_singleback_s...      0.0381      0.9696      
+## prev_empty_success        1.8074      0.0707     *
+## prev_stop_rate_run        2.0980      0.0359    **
+## prev_stop_rate_pass      -1.4458      0.1483     .
+## prev_win_pct             -1.1867      0.2354      
+## shotgun_rate             -7.2231      0.0000   ***
+## singleback_rate          -4.1191      0.0000   ***
+## empty_rate               -5.7944      0.0000   ***
+## shotgun_success           0.7232      0.4696      
+## singleback_success       -1.1510      0.2498      
+## empty_success            -0.0822      0.9345      
+## def_stop_rate_run         0.2284      0.8193      
+## def_stop_rate_pass       -3.7205      0.0002   ***
+## avg_pass_rushers         -0.3496      0.7266      
+## avg_box_defenders         0.0902      0.9281      
+## cover0_rate              -0.8226      0.4108      
+## cover1_rate              -0.3270      0.7437      
+## cover2_rate              -0.4370      0.6622      
+## cover3_rate              -0.7025      0.4824      
+## cover4_rate              -0.4742      0.6354      
+## cover6_rate              -1.9555      0.0506     *
+## two_man_rate             -1.3218      0.1863      
+## prevent_rate              0.3779      0.7055      
+## p_player_26_punti...      0.3045      0.7607      
+## p_player_26_punti...     -0.2530      0.8003      
+## p_player_26_punti...     -0.1672      0.8672      
+## p_player_26_kicko...      1.1698      0.2421      
+## p_player_26_speci...      0.2949      0.7680      
+## p_player_26_speci...     -0.6711      0.5022      
+## p_player_26_kicko...      2.1915      0.0284    **
+## p_player_26_punti...     -0.4659      0.6413      
+## k_player_25_kicko...      0.4357      0.6631      
+## k_player_25_field...      0.2300      0.8181      
+## k_player_25_kicko...      1.4394      0.1501      
+## k_player_25_speci...      0.1212      0.9036      
+## k_player_25_speci...      1.6774      0.0935     *
+## k_player_25_field...     -0.1709      0.8643      
+## k_player_25_speci...     -1.4815      0.1385     .
+## k_player_25_speci...      0.0519      0.9586      
+## k_player_25_kicko...     -0.1908      0.8487      
+## k_player_25_field...     -1.3310      0.1832      
+## k_player_25_speci...     -0.3075      0.7585      
+## k_player_25_kicko...     -0.0008      0.9994      
+## roof_outdoors             2.1071      0.0351    **
+## Bruce_Arians             -1.1673      0.2431      
+## Sean_McDermott            0.2863      0.7746      
+## Ron_Rivera                0.0491      0.9609      
+## John_Harbaugh             0.2770      0.7818      
+## Mike_McCarthy            -0.1798      0.8573      
+## Dan_Quinn                 0.1170      0.9069      
+## Bill_OBrien               0.1203      0.9042      
+## Adam_Gase                -0.1906      0.8488      
+## Anthony_Lynn             -0.2933      0.7693      
+## Mike_Zimmer               0.6098      0.5420      
+## Mike_Tomlin               0.1503      0.8805      
+## Bill_Belichick            0.1062      0.9155      
+## Sean_Payton              -0.4957      0.6201      
+## Todd_Bowles              -0.0719      0.9427      
+## Doug_Pederson             0.6485      0.5167      
+## Andy_Reid                -0.4507      0.6522      
+## Kyle_Shanahan            -0.0057      0.9955      
+## Pete_Carroll             -0.0564      0.9551      
+## Doug_Marrone              0.2011      0.8406      
+## Sean_McVay               -0.3875      0.6984      
+## Steve_Wilks               0.4088      0.6827      
+## Matt_Patricia             0.6525      0.5141      
+## Mike_Vrabel               0.1127      0.9103      
+## Frank_Reich              -0.0834      0.9335      
+## Jon_Gruden                0.0973      0.9225      
+## Matt_Nagy                 0.6322      0.5272      
+## Kliff_Kingsbury           0.9698      0.3322      
+## Vic_Fangio                0.6740      0.5003      
+## Matt_LaFleur              0.9685      0.3328      
+## Brian_Flores             -0.5732      0.5665      
+## Zac_Taylor               -0.1584      0.8741      
+## Matt_Rhule                0.8177      0.4136      
+## Kevin_Stefanski           0.6303      0.5285      
+## Joe_Judge                -0.4456      0.6559      
+## Romeo_Crennel            -0.2947      0.7682      
+## Raheem_Morris             0.0521      0.9584      
+## Darrell_Bevell            0.4083      0.6831      
+## Arthur_Smith              0.4340      0.6643      
+## Brandon_Staley           -0.4759      0.6341      
+## Dan_Campbell              0.7111      0.4770      
+## Robert_Saleh              0.2361      0.8134      
+## Nick_Sirianni             0.4641      0.6426      
+## Josh_McDaniels            0.1279      0.8982      
+## Brian_Daboll              0.5815      0.5609      
+## Matt_Eberflus             0.9778      0.3282      
+## Lovie_Smith               0.8269      0.4083      
+## Nathaniel_Hackett         0.0226      0.9820      
+## Mike_McDaniel             0.6178      0.5367      
+## Kevin_OConnell            0.5919      0.5539      
+## Dennis_Allen             -0.3868      0.6989      
+## Jeff_Saturday             0.5597      0.5757      
+## yardline_1_10             5.4558      0.0000   ***
+## yardline_11_20            2.6257      0.0087   ***
+## yardline_21_30            3.0213      0.0025   ***
+## yardline_31_40            9.3803      0.0000   ***
+## yardline_41_50            7.3600      0.0000   ***
+## yardline_51_60            1.8597      0.0630     *
+## yardline_61_70           -0.4208      0.6739      
+## yardline_71_80           -1.5586      0.1191     .
+## yardline_81_90            0.4556      0.6487      
+## is_first_half           -14.2153      0.0000   ***
+## time_in_half             -7.0654      0.0000   ***
+## attendance_pct           -1.3419      0.1797      
+## posteam_type_home         1.9805      0.0477    **
+## interact_HxA              1.7482      0.0805     *
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2023 vs 2020
+## ========================================
+## 
+## Variable                 t-value     p-value   sig
+## ---------                -------     -------  ----
+## (Intercept)              -0.0798      0.9364      
+## ydstogo                 -27.1235      0.0000   ***
+## posteam_timeouts_...     -6.6222      0.0000   ***
+## defteam_timeouts_...      2.0096      0.0445    **
+## week                      1.1489      0.2506      
+## temp                     -1.4130      0.1577      
+## wind                      0.9058      0.3651      
+## vegas_wp                 -8.7392      0.0000   ***
+## vegas_wp_posteam          0.2931      0.7695      
+## total_line               -0.7231      0.4696      
+## score_diff               -0.4525      0.6509      
+## down1_pct                 0.6532      0.5137      
+## down2_pct                -1.6186      0.1056     .
+## down3_pct                 0.1258      0.8999      
+## down4_pct                -2.1615      0.0307    **
+## prep_days                -1.0624      0.2881      
+## overall_win_pct           0.1168      0.9071      
+## team_win_pct             -0.2987      0.7652      
+## prev_shotgun_rate         1.7674      0.0772     *
+## prev_singleback_rate      1.5070      0.1319     .
+## prev_empty_rate           1.1455      0.2521      
+## prev_shotgun_success     -0.9993      0.3177      
+## prev_singleback_s...     -0.1304      0.8963      
+## prev_empty_success        1.4675      0.1423     .
+## prev_stop_rate_run        1.7213      0.0852     *
+## prev_stop_rate_pass      -0.0214      0.9829      
+## prev_win_pct              1.1788      0.2385      
+## shotgun_rate             -5.3660      0.0000   ***
+## singleback_rate          -4.0950      0.0000   ***
+## empty_rate               -6.1777      0.0000   ***
+## shotgun_success           0.2272      0.8203      
+## singleback_success        1.0769      0.2816      
+## empty_success            -0.8827      0.3774      
+## def_stop_rate_run        -0.4751      0.6347      
+## def_stop_rate_pass       -4.8355      0.0000   ***
+## avg_pass_rushers         -0.3522      0.7247      
+## avg_box_defenders         0.5346      0.5930      
+## cover0_rate               0.0643      0.9487      
+## cover1_rate               1.0404      0.2982      
+## cover2_rate              -1.5238      0.1276     .
+## cover3_rate               1.0731      0.2833      
+## cover4_rate              -0.0232      0.9815      
+## cover6_rate              -0.7014      0.4831      
+## two_man_rate             -1.0992      0.2717      
+## prevent_rate              0.7646      0.4445      
+## p_player_26_punti...      0.9292      0.3528      
+## p_player_26_punti...     -0.7015      0.4830      
+## p_player_26_punti...      0.4010      0.6884      
+## p_player_26_kicko...      0.2085      0.8348      
+## p_player_26_speci...     -0.2779      0.7811      
+## p_player_26_speci...     -0.6464      0.5180      
+## p_player_26_kicko...      0.4402      0.6598      
+## p_player_26_punti...     -0.6134      0.5396      
+## k_player_25_kicko...     -0.4133      0.6794      
+## k_player_25_field...      0.3452      0.7299      
+## k_player_25_kicko...      0.6235      0.5330      
+## k_player_25_speci...     -0.2868      0.7742      
+## k_player_25_speci...      1.0739      0.2829      
+## k_player_25_field...     -1.2056      0.2280      
+## k_player_25_speci...     -1.1981      0.2309      
+## k_player_25_speci...      1.2623      0.2069      
+## k_player_25_kicko...     -1.0056      0.3147      
+## k_player_25_field...     -1.7861      0.0741     *
+## k_player_25_speci...      0.3729      0.7092      
+## k_player_25_kicko...      1.0271      0.3044      
+## roof_outdoors            -1.0613      0.2886      
+## Bruce_Arians              1.3553      0.1754      
+## Sean_McDermott            1.3846      0.1662      
+## Ron_Rivera                2.2778      0.0228    **
+## John_Harbaugh             2.2509      0.0244    **
+## Mike_McCarthy             1.8768      0.0606     *
+## Dan_Quinn                 1.8858      0.0594     *
+## Bill_OBrien               1.2317      0.2181      
+## Adam_Gase                 0.7460      0.4557      
+## Anthony_Lynn              2.2940      0.0218    **
+## Mike_Zimmer               2.6443      0.0082   ***
+## Mike_Tomlin               1.7192      0.0856     *
+## Bill_Belichick            1.6719      0.0946     *
+## Sean_Payton               2.6113      0.0090   ***
+## Todd_Bowles               2.8763      0.0040   ***
+## Doug_Pederson             2.7833      0.0054   ***
+## Andy_Reid                 1.9986      0.0457    **
+## Kyle_Shanahan             2.4960      0.0126    **
+## Pete_Carroll              2.6444      0.0082   ***
+## Doug_Marrone              1.2605      0.2075      
+## Sean_McVay                1.3329      0.1826      
+## Matt_Patricia             2.9851      0.0028   ***
+## Mike_Vrabel               2.7748      0.0055   ***
+## Frank_Reich               2.2721      0.0231    **
+## Jon_Gruden                1.8204      0.0687     *
+## Matt_Nagy                 1.1800      0.2380      
+## Kliff_Kingsbury           1.4503      0.1470     .
+## Vic_Fangio                1.6770      0.0936     *
+## Matt_LaFleur              2.6421      0.0083   ***
+## Brian_Flores              1.2155      0.2242      
+## Zac_Taylor                1.2935      0.1959      
+## Matt_Rhule                2.1845      0.0290    **
+## Kevin_Stefanski           1.1744      0.2403      
+## Joe_Judge                 1.8932      0.0584     *
+## Romeo_Crennel             1.0364      0.3001      
+## Raheem_Morris             1.4983      0.1341     .
+## Darrell_Bevell            1.7825      0.0747     *
+## Arthur_Smith              3.1509      0.0016   ***
+## Brandon_Staley            2.2495      0.0245    **
+## Dan_Campbell              3.2733      0.0011   ***
+## Robert_Saleh              1.5206      0.1284     .
+## Nick_Sirianni             2.2008      0.0278    **
+## Josh_McDaniels            1.8048      0.0712     *
+## Brian_Daboll              2.5873      0.0097   ***
+## Matt_Eberflus             1.7582      0.0788     *
+## Mike_McDaniel             2.5506      0.0108    **
+## Kevin_OConnell            2.5782      0.0100   ***
+## Dennis_Allen              1.5230      0.1278     .
+## DeMeco_Ryans              2.1673      0.0302    **
+## Shane_Steichen            1.5596      0.1189     .
+## Jonathan_Gannon           2.6490      0.0081   ***
+## Antonio_Pierce            2.0185      0.0436    **
+## Chris_Tabor               2.0339      0.0420    **
+## yardline_1_10             4.8702      0.0000   ***
+## yardline_11_20            1.4777      0.1395     .
+## yardline_21_30            2.5190      0.0118    **
+## yardline_31_40            8.5078      0.0000   ***
+## yardline_41_50            6.4555      0.0000   ***
+## yardline_51_60            2.0767      0.0379    **
+## yardline_61_70           -0.7347      0.4625      
+## yardline_71_80           -1.6033      0.1089     .
+## yardline_81_90           -0.3707      0.7108      
+## is_first_half           -14.3921      0.0000   ***
+## time_in_half             -8.5493      0.0000   ***
+## attendance_pct            0.1459      0.8840      
+## posteam_type_home         0.7779      0.4367      
+## interact_HxA              1.0944      0.2738      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgUGN0cyINCm91dHB1dDogaHRtbF9kb2N1bWVudA0KLS0tDQoNCmBgYHtyIG9wdGlvbnMsIGluY2x1ZGU9RkFMU0V9DQpvcHRpb25zKG1heC5wcmludD0xMDAwMCkNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkoc2FuZHdpY2gpDQpsaWJyYXJ5KGxtdGVzdCkNCg0KYGBgDQoNCmBgYHtyfQ0KcnVuX2F0dGVuZGFuY2VfYW5hbHlzaXNfdjIgPC0gZnVuY3Rpb24oZmlsZV9wYXRoLCB5ZWFyKSB7DQogICAgY2F0KCJcblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSIpDQogICAgY2F0KHNwcmludGYoIlxuQW5hbHl6aW5nICVzIHZzIDIwMjBcbiIsIHllYXIpKQ0KICAgIGNhdCgiPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG4iKQ0KICAgIA0KICAgICMgUmVhZCBkYXRhDQogICAgYXR0ZW5kYW5jZV9kYXRhIDwtIGZyZWFkKGZpbGVfcGF0aCkNCiAgICANCiAgICAjIFJlbW92ZSBob21lX2F0dGVuZGFuY2UgYW5kIGF0dGVuZGFuY2VfcmF3DQogICAgYXR0ZW5kYW5jZV9kYXRhJGhvbWVfYXR0ZW5kYW5jZSA8LSBOVUxMDQogICAgYXR0ZW5kYW5jZV9kYXRhJGF0dGVuZGFuY2VfcmF3IDwtIE5VTEwNCiAgICANCiAgICAjIENyZWF0ZSBpbnRlcmFjdGlvbiB0ZXJtDQogICAgYXR0ZW5kYW5jZV9kYXRhJGludGVyYWN0X0h4QSA8LSBhdHRlbmRhbmNlX2RhdGEkYXR0ZW5kYW5jZV9wY3QgKiBhdHRlbmRhbmNlX2RhdGEkcG9zdGVhbV90eXBlX2hvbWUNCiAgICANCiAgICAjIFJlb3JkZXIgY29sdW1ucw0KICAgIG90aGVyX2NvbHMgPC0gc2V0ZGlmZihuYW1lcyhhdHRlbmRhbmNlX2RhdGEpLCANCiAgICAgICAgICAgICAgICAgICAgICAgICBjKCJhdHRlbmRhbmNlX3BjdCIsICJwb3N0ZWFtX3R5cGVfaG9tZSIsICJpbnRlcmFjdF9IeEEiKSkNCiAgICBzZXRjb2xvcmRlcihhdHRlbmRhbmNlX2RhdGEsIGMob3RoZXJfY29scywgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYXR0ZW5kYW5jZV9wY3QiLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJwb3N0ZWFtX3R5cGVfaG9tZSIsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImludGVyYWN0X0h4QSIpKQ0KICAgIA0KICAgICMgUmVtb3ZlIG15X2lkDQogICAgYXR0ZW5kYW5jZV9kYXRhJG15X2lkIDwtIE5VTEwNCiAgICANCiAgICAjIFJ1biBPTFMNCiAgICBvbHNfbW9kZWwgPC0gbG0oYXR0ZW1wdCB+IC4sIGRhdGEgPSBhdHRlbmRhbmNlX2RhdGEpDQoNCiAgICANCiAgICAjIEdldCByb2J1c3Qgc3RhdGlzdGljcw0KICAgIHJvYnVzdF90ZXN0IDwtIGNvZWZ0ZXN0KG9sc19tb2RlbCwgdmNvdiA9IHZjb3ZIQyhvbHNfbW9kZWwsIHR5cGUgPSAiSEMwIikpDQogICAgdF9zdGF0cyA8LSByb2J1c3RfdGVzdFssICJ0IHZhbHVlIl0NCiAgICBwX3ZhbHVlcyA8LSByb2J1c3RfdGVzdFssICJQcig+fHR8KSJdDQogICAgDQogICAgIyBGdW5jdGlvbiB0byBhZGQgc2lnbmlmaWNhbmNlIHN0YXJzDQogICAgZ2V0X3N0YXJzIDwtIGZ1bmN0aW9uKHApIHsNCiAgICAgICAgaWYgKHAgPD0gMC4wMSkgcmV0dXJuKCIqKioiKQ0KICAgICAgICBpZiAocCA8PSAwLjA1KSByZXR1cm4oIioqIikNCiAgICAgICAgaWYgKHAgPD0gMC4xKSByZXR1cm4oIioiKQ0KICAgICAgICBpZiAocCA8PSAwLjE1KSByZXR1cm4oIi4iKQ0KICAgICAgICByZXR1cm4oIiIpDQogICAgfQ0KICAgIA0KICAgICMgUHJpbnQgcmVzdWx0cw0KICAgIG5hbWVfd2lkdGggPC0gMjANCiAgICBjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiVmFyaWFibGUiLCAidC12YWx1ZSIsICJwLXZhbHVlIiwgInNpZyIpKQ0KICAgIGNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICItLS0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0iKSkNCiAgICANCiAgICBmb3IgKGkgaW4gMTpsZW5ndGgodF9zdGF0cykpIHsNCiAgICAgICAgdmFyX25hbWUgPC0gcm93bmFtZXMocm9idXN0X3Rlc3QpW2ldDQogICAgICAgIGlmIChuY2hhcih2YXJfbmFtZSkgPiBuYW1lX3dpZHRoKSB7DQogICAgICAgICAgICB2YXJfbmFtZSA8LSBwYXN0ZTAoc3Vic3RyKHZhcl9uYW1lLCAxLCBuYW1lX3dpZHRoLTMpLCAiLi4uIikNCiAgICAgICAgfQ0KICAgICAgICBjYXQoc3ByaW50ZigiJS0qcyAgJTEwLjRmICAlMTAuNGYgICU0c1xuIiwgDQogICAgICAgICAgICAgICAgICAgIG5hbWVfd2lkdGgsIHZhcl9uYW1lLCANCiAgICAgICAgICAgICAgICAgICAgdF9zdGF0c1tpXSwgcF92YWx1ZXNbaV0sDQogICAgICAgICAgICAgICAgICAgIGdldF9zdGFycyhwX3ZhbHVlc1tpXSkpKQ0KICAgIH0NCiAgICBjYXQoIlxuU2lnbmlmaWNhbmNlIGNvZGVzOiAwICcqKionIDAuMDEgJyoqJyAwLjA1ICcqJyAwLjEgJy4nIDAuMTVcbiIpDQogICAgDQogICAgIyBSZXR1cm4ga2V5IHN0YXRpc3RpY3MgZm9yIHBvdGVudGlhbCBmdXJ0aGVyIGFuYWx5c2lzDQogICAgcmV0dXJuKGxpc3QoDQogICAgICAgIHllYXIgPSB5ZWFyLA0KICAgICAgICBtb2RlbCA9IG9sc19tb2RlbCwNCiAgICAgICAgcm9idXN0X3Rlc3QgPSByb2J1c3RfdGVzdA0KICAgICkpDQp9DQpgYGANCg0KYGBge3J9DQojIFllYXJzIHRvIGFuYWx5emUNCnllYXJzIDwtIGMoMjAxNywgMjAxOCwgMjAxOSwgMjAyMSwgMjAyMiwgMjAyMykNCg0KIyBTdG9yZSByZXN1bHRzIGZvciBhbGwgeWVhcnMNCnJlc3VsdHNfbGlzdF92MiA8LSBsaXN0KCkNCg0KDQojIFJ1biBhbmFseXNpcyBmb3IgZWFjaCB5ZWFyIHVzaW5nIFZlcnNpb24gMg0KZm9yICh5ZWFyIGluIHllYXJzKSB7DQogICAgZmlsZV9wYXRoIDwtIHNwcmludGYoInByZWRpY3RfYXR0ZW5kYW5jZV8lc192c18yMDIwLmNzdi5neiIsIHllYXIpDQogICAgaWYgKGZpbGUuZXhpc3RzKGZpbGVfcGF0aCkpIHsNCiAgICAgICAgcmVzdWx0c19saXN0X3YyW1thcy5jaGFyYWN0ZXIoeWVhcildXSA8LSBydW5fYXR0ZW5kYW5jZV9hbmFseXNpc192MihmaWxlX3BhdGgsIHllYXIpDQogICAgfSBlbHNlIHsNCiAgICAgICAgY2F0KHNwcmludGYoIlxuV2FybmluZzogRmlsZSBmb3IgeWVhciAlcyBub3QgZm91bmRcbiIsIHllYXIpKQ0KICAgIH0NCn0NCg0KDQpgYGANCg0KDQo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("attendance_pcts.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

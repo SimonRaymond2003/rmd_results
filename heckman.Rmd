@@ -14,34 +14,198 @@ select_data <- fread("predict_select.csv.gz")
 ```
 
 ```{r}
-cols_to_remove <- c(
-    "offense_player_3_present",
-    "offense_player_7_present",
-    "offense_player_13_present",
-    "offense_player_18_present",
-    "offense_player_19_present",
-    "offense_player_21_present",
-    "defense_player_7_present",
-    "defense_player_8_present",
-    "offense_player_10_weeks_found_2w",
-    "offense_player_9_weeks_found_12w"
-)
-
-# Remove these columns from outcome_data
-for (col in cols_to_remove) {
-    if (col %in% names(outcome_data)) {
-        outcome_data[, (col) := NULL]
-    }
-}
-```
-
-
-```{r}
 select_data[, attempt := as.numeric(as.character(attempt))]
 ```
 
+
+
 ```{r}
-# Load required libraries
+# Commented out original version
+# # Load required libraries
+# library(data.table)
+# library(xgboost)
+# library(ROCR)
+# library(parallel)
+# 
+# # Prepare the XGBoost matrices
+# xs <- model.matrix(~ . - 1 - attempt - my_id, data = select_data)
+# y <- as.numeric(as.character(select_data$attempt))
+# 
+# # Create parameter grid
+# grid <- expand.grid(
+#   eta = seq(0.001, 0.1, by = 0.02),
+#   max_depth = seq(5, 7, by = 2),
+#   min_child_weight = seq(1, 1, by = 1),        
+#   subsample = seq(0.8, 0.8, by = 0.2),
+#   colsample_bytree = seq(0.8, 0.8, by = 0.2),
+#   lambda = seq(1, 1, by = 1),                
+#   alpha = seq(0, 0, by = 1),                  
+#   gamma = seq(0, 0, by = 0.1),               
+#   nrounds = seq(100, 500, by = 500)
+# )
+# 
+# # Sample grid points
+# conf_lev <- .95
+# num_max <- 5
+# n <- ceiling(log(1-conf_lev)/log(1-num_max/nrow(grid)))
+# ind <- sample(nrow(grid), n, replace = FALSE)
+# rgrid <- grid[ind, ]
+# 
+# # Set up parallel processing
+# nc <- detectCores() - 1
+# 
+# # Validation phase
+# cat("\nPhase 1: Validation Phase\n")
+# n_validations <- 2
+# validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
+# 
+# for (j in 1:nrow(rgrid)) {
+#   cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
+#   
+#   for (i in 1:n_validations) {
+#     # Create validation split
+#     idx <- unique(sample(nrow(xs), nrow(xs), TRUE))
+#     train_x <- xs[idx, ]
+#     train_y <- y[idx]
+#     val_x <- xs[-idx, ]
+#     val_y <- y[-idx]
+#     
+#     # Undersample majority class in training data
+#     train_idx_0 <- which(train_y == 0)
+#     train_idx_1 <- which(train_y == 1)
+#     
+#     # Get number of minority class samples
+#     n_minority <- length(train_idx_1)
+#     
+#     # Randomly sample from majority class
+#     train_idx_0_sampled <- sample(train_idx_0, n_minority)
+#     
+#     # Combine indices for balanced dataset
+#     balanced_idx <- c(train_idx_0_sampled, train_idx_1)
+#     
+#     # Create balanced training dataset
+#     train_x_balanced <- train_x[balanced_idx, ]
+#     train_y_balanced <- train_y[balanced_idx]
+#     
+#     prm <- list(
+#       booster = "gbtree",
+#       objective = "binary:logistic",
+#       max_depth = rgrid[j, "max_depth"],
+#       eta = rgrid[j, "eta"],
+#       subsample = rgrid[j, "subsample"],
+#       colsample_bytree = rgrid[j, "colsample_bytree"],
+#       gamma = rgrid[j, "gamma"],
+#       min_child_weight = rgrid[j, "min_child_weight"],
+#       alpha = rgrid[j, "alpha"],
+#       lambda = rgrid[j, "lambda"],
+#       nthread = nc
+#     )
+#     
+#     dm_train <- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+#     mdl <- xgb.train(
+#       params = prm,
+#       data = dm_train,
+#       nrounds = rgrid[j, "nrounds"],
+#       verbose = FALSE
+#     )
+#     
+#     p <- predict(mdl, xgb.DMatrix(data = val_x))
+#     pred <- prediction(p, val_y)
+#     validation_results[j, i] <- performance(pred, "auc")@y.values[[1]]
+#   }
+# }
+# 
+# # Run 100 tests with best parameters
+# cat("\nRunning X test iterations with best parameters...\n")
+# test_aucs <- c()
+# 
+# best_params_idx <- which.max(rowMeans(validation_results))
+# best_params <- rgrid[best_params_idx,]
+# 
+# # Train final model with best parameters
+# best_params_list <- as.list(best_params[-which(names(best_params) == "nrounds")])
+# best_params_list$booster <- "gbtree"
+# best_params_list$objective <- "binary:logistic"
+# best_params_list$nthread <- nc
+# 
+# for(i in 1:100) {
+#   # Create test split
+#   idx <- unique(sample(nrow(xs), nrow(xs), T))
+#   train_x <- xs[idx, ]
+#   train_y <- y[idx]
+#   test_x <- xs[-idx, ]
+#   test_y <- y[-idx]
+#   
+#   # Undersample training data
+#   train_idx_0 <- which(train_y == 0)
+#   train_idx_1 <- which(train_y == 1)
+#   n_minority <- length(train_idx_1)
+#   train_idx_0_sampled <- sample(train_idx_0, n_minority)
+#   balanced_idx <- c(train_idx_0_sampled, train_idx_1)
+#   
+#   # Create balanced training dataset
+#   train_x_balanced <- train_x[balanced_idx, ]
+#   train_y_balanced <- train_y[balanced_idx]
+#   
+#   # Train model
+#   dm_train <- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+#   mdl <- xgb.train(
+#     params = best_params_list,
+#     data = dm_train,
+#     nrounds = best_params[["nrounds"]],
+#     verbose = FALSE
+#   )
+#   
+#   # Test on unbalanced test set
+#   p <- predict(mdl, xgb.DMatrix(data = test_x))
+#   pred <- prediction(p, test_y)
+#   test_aucs[i] <- performance(pred, "auc")@y.values[[1]]
+# }
+# 
+# # Print results
+# cat("\nTest Results over 100 iterations:\n")
+# cat("Mean AUC:", mean(test_aucs), "\n")
+# cat("SD AUC:", sd(test_aucs), "\n")
+# cat("95% CI:", mean(test_aucs) - 1.96 * sd(test_aucs), 
+#     "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
+# 
+# # Plotting AUC distribution
+# plot(test_aucs, col="red", pch=20,
+#      main="AUC Test Distribution",
+#      xlab="Iteration", ylab="AUC")
+# abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)
+# abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+# abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
+# legend("bottomright", 
+#        legend=c("AUC Values", "Mean", "95% CI Bounds"),
+#        col=c("red", "blue", "green"),
+#        lty=c(NA, 2, 3),
+#        pch=c(20, NA, NA))
+# 
+# # Now train final model on full data for z scores
+# final_idx_0 <- which(y == 0)
+# final_idx_1 <- which(y == 1)
+# n_minority_final <- length(final_idx_1)
+# final_idx_0_sampled <- sample(final_idx_0, n_minority_final)
+# final_balanced_idx <- c(final_idx_0_sampled, final_idx_1)
+# 
+# # Create balanced final dataset
+# xs_balanced <- xs[final_balanced_idx, ]
+# y_balanced <- y[final_balanced_idx]
+# 
+# dm_full <- xgb.DMatrix(data = xs_balanced, label = y_balanced)
+# final_model <- xgb.train(
+#   params = best_params_list,
+#   data = dm_full,
+#   nrounds = best_params[["nrounds"]],
+#   verbose = FALSE
+# )
+# 
+# # Get probability predictions (z) for ALL data
+# z <- predict(final_model, xgb.DMatrix(data = xs))
+```
+
+```{r}
 library(data.table)
 library(xgboost)
 library(ROCR)
@@ -74,38 +238,24 @@ rgrid <- grid[ind, ]
 # Set up parallel processing
 nc <- detectCores() - 1
 
+# Calculate scale_pos_weight for imbalanced dataset
+scale_pos_weight <- sum(y == 0) / sum(y == 1)
+
 # Validation phase
 cat("\nPhase 1: Validation Phase\n")
-n_validations <- 20
+n_validations <- 2
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
-  #cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
+  cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
   
   for (i in 1:n_validations) {
     # Create validation split
-    idx <- unique(sample(nrow(xs), nrow(xs), T))
+    idx <- unique(sample(nrow(xs), nrow(xs), TRUE))
     train_x <- xs[idx, ]
     train_y <- y[idx]
     val_x <- xs[-idx, ]
     val_y <- y[-idx]
-    
-    # Undersample majority class in training data
-    train_idx_0 <- which(train_y == 0)
-    train_idx_1 <- which(train_y == 1)
-    
-    # Get number of minority class samples
-    n_minority <- length(train_idx_1)
-    
-    # Randomly sample from majority class
-    train_idx_0_sampled <- sample(train_idx_0, n_minority)
-    
-    # Combine indices for balanced dataset
-    balanced_idx <- c(train_idx_0_sampled, train_idx_1)
-    
-    # Create balanced training dataset
-    train_x_balanced <- train_x[balanced_idx, ]
-    train_y_balanced <- train_y[balanced_idx]
     
     prm <- list(
       booster = "gbtree",
@@ -118,10 +268,11 @@ for (j in 1:nrow(rgrid)) {
       min_child_weight = rgrid[j, "min_child_weight"],
       alpha = rgrid[j, "alpha"],
       lambda = rgrid[j, "lambda"],
+      scale_pos_weight = scale_pos_weight,
       nthread = nc
     )
     
-    dm_train <- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+    dm_train <- xgb.DMatrix(data = train_x, label = train_y)
     mdl <- xgb.train(
       params = prm,
       data = dm_train,
@@ -133,9 +284,6 @@ for (j in 1:nrow(rgrid)) {
     pred <- prediction(p, val_y)
     validation_results[j, i] <- performance(pred, "auc")@y.values[[1]]
   }
-  
-  #cat("Mean AUC:", mean(validation_results[j,]), "\n")
-  #cat("SD AUC:", sd(validation_results[j,]), "\n")
 }
 
 # Run 100 tests with best parameters
@@ -149,10 +297,10 @@ best_params <- rgrid[best_params_idx,]
 best_params_list <- as.list(best_params[-which(names(best_params) == "nrounds")])
 best_params_list$booster <- "gbtree"
 best_params_list$objective <- "binary:logistic"
+best_params_list$scale_pos_weight <- scale_pos_weight
 best_params_list$nthread <- nc
 
-for(i in 1:100) {
-  #cat("\nIteration", i, "of 100\n")       
+for(i in 1:10) {
   # Create test split
   idx <- unique(sample(nrow(xs), nrow(xs), T))
   train_x <- xs[idx, ]
@@ -160,19 +308,8 @@ for(i in 1:100) {
   test_x <- xs[-idx, ]
   test_y <- y[-idx]
   
-  # Undersample training data
-  train_idx_0 <- which(train_y == 0)
-  train_idx_1 <- which(train_y == 1)
-  n_minority <- length(train_idx_1)
-  train_idx_0_sampled <- sample(train_idx_0, n_minority)
-  balanced_idx <- c(train_idx_0_sampled, train_idx_1)
-  
-  # Create balanced training dataset
-  train_x_balanced <- train_x[balanced_idx, ]
-  train_y_balanced <- train_y[balanced_idx]
-  
-  # Train model
-  dm_train <- xgb.DMatrix(data = train_x_balanced, label = train_y_balanced)
+  # Train model on full unbalanced dataset
+  dm_train <- xgb.DMatrix(data = train_x, label = train_y)
   mdl <- xgb.train(
     params = best_params_list,
     data = dm_train,
@@ -193,11 +330,10 @@ cat("SD AUC:", sd(test_aucs), "\n")
 cat("95% CI:", mean(test_aucs) - 1.96 * sd(test_aucs), 
     "to", mean(test_aucs) + 1.96 * sd(test_aucs), "\n")
 
-# Plotting AUC distribution - removed type="o" to not connect dots
+# Plotting AUC distribution
 plot(test_aucs, col="red", pch=20,
      main="AUC Test Distribution",
      xlab="Iteration", ylab="AUC")
-abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)
 abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
 abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
 legend("bottomright", 
@@ -206,19 +342,8 @@ legend("bottomright",
        lty=c(NA, 2, 3),
        pch=c(20, NA, NA))
 
-
 # Now train final model on full data for z scores
-final_idx_0 <- which(y == 0)
-final_idx_1 <- which(y == 1)
-n_minority_final <- length(final_idx_1)
-final_idx_0_sampled <- sample(final_idx_0, n_minority_final)
-final_balanced_idx <- c(final_idx_0_sampled, final_idx_1)
-
-# Create balanced final dataset
-xs_balanced <- xs[final_balanced_idx, ]
-y_balanced <- y[final_balanced_idx]
-
-dm_full <- xgb.DMatrix(data = xs_balanced, label = y_balanced)
+dm_full <- xgb.DMatrix(data = xs, label = y)
 final_model <- xgb.train(
   params = best_params_list,
   data = dm_full,
@@ -229,6 +354,7 @@ final_model <- xgb.train(
 # Get probability predictions (z) for ALL data
 z <- predict(final_model, xgb.DMatrix(data = xs))
 ```
+
 
 ```{r}
 # Calculate residuals for XGBoost predictions

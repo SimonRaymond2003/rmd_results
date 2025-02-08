@@ -1,19 +1,17 @@
 ---
-title: "Attendance Impact Analysis"
+title: "Attendance Totals"
 output: html_document
 ---
 
 ```{r options, include=FALSE}
 options(max.print=10000)
-```
-
-```{r}
 library(data.table)
 library(sandwich)
 library(lmtest)
+```
 
-# Function to run analysis for a single file
-run_attendance_analysis <- function(file_path, year) {
+```{r}
+run_attendance_analysis_v3 <- function(file_path, year) {
     cat("\n\n========================================")
     cat(sprintf("\nAnalyzing %s vs 2020\n", year))
     cat("========================================\n\n")
@@ -21,14 +19,18 @@ run_attendance_analysis <- function(file_path, year) {
     # Read data
     attendance_data <- fread(file_path)
     
+    # Remove home_attendance and attendance_pct
+    attendance_data$home_attendance <- NULL
+    attendance_data$attendance_pct <- NULL
+    
     # Create interaction term
-    attendance_data$interact_HxA <- attendance_data$home_attendance * attendance_data$posteam_type_home
+    attendance_data$interact_HxA <- attendance_data$attendance_raw * attendance_data$posteam_type_home
     
     # Reorder columns
     other_cols <- setdiff(names(attendance_data), 
-                         c("home_attendance", "posteam_type_home", "interact_HxA"))
+                         c("attendance_raw", "posteam_type_home", "interact_HxA"))
     setcolorder(attendance_data, c(other_cols, 
-                                 "home_attendance", 
+                                 "attendance_raw", 
                                  "posteam_type_home", 
                                  "interact_HxA"))
     
@@ -76,44 +78,22 @@ run_attendance_analysis <- function(file_path, year) {
         robust_test = robust_test
     ))
 }
+```
 
+```{r}
 # Years to analyze
 years <- c(2017, 2018, 2019, 2021, 2022, 2023)
+results_list_v3 <- list()
 
-# Store results for all years
-results_list <- list()
 
-# Run analysis for each year
+
+# Run analysis for each year using Version 3
 for (year in years) {
     file_path <- sprintf("predict_attendance_%s_vs_2020.csv.gz", year)
     if (file.exists(file_path)) {
-        results_list[[as.character(year)]] <- run_attendance_analysis(file_path, year)
+        results_list_v3[[as.character(year)]] <- run_attendance_analysis_v3(file_path, year)
     } else {
         cat(sprintf("\nWarning: File for year %s not found\n", year))
-    }
-}
-
-# Optional: Add summary comparison across years
-cat("\n\n========================================")
-cat("\nComparison of Key Coefficients Across Years")
-cat("\n========================================\n\n")
-
-# Extract and compare key coefficients (home_attendance, posteam_type_home, interact_HxA)
-key_vars <- c("home_attendance", "posteam_type_home", "interact_HxA")
-for (var in key_vars) {
-    cat(sprintf("\n%s coefficients by year:\n", var))
-    cat("Year\tCoefficient\tt-value\tp-value\n")
-    for (year in years) {
-        if (!is.null(results_list[[as.character(year)]])) {
-            coef_idx <- which(rownames(results_list[[as.character(year)]]$robust_test) == var)
-            if (length(coef_idx) > 0) {
-                result <- results_list[[as.character(year)]]$robust_test[coef_idx, ]
-                cat(sprintf("%s\t%.4f\t%.4f\t%.4f\n", 
-                          year, result["Estimate"], 
-                          result["t value"], 
-                          result["Pr(>|t|)"]))
-            }
-        }
     }
 }
 ```

@@ -341,7 +341,13 @@ div.tocify {
   <a href="xgboost.html">XGBoost Prediction</a>
 </li>
 <li>
-  <a href="attendance.html">Attendance Impact</a>
+  <a href="attendance_binary.html">Attendance Impact Binary</a>
+</li>
+<li>
+  <a href="attendance_pcts.html">Attendance Impact Percentages</a>
+</li>
+<li>
+  <a href="attendance_totals.html">Attendance Impact Totals</a>
 </li>
 <li>
   <a href="thirddown.html">Third Down Analysis</a>
@@ -450,18 +456,15 @@ cat(&quot;Found the following issues:\n&quot;)</code></pre>
 }
 if(length(issues$zero_var) &gt; 0) {
   cat(&quot;\nZero variance columns:&quot;, paste(issues$zero_var, collapse=&quot;, &quot;))
-}</code></pre>
-<pre><code>## 
-## Zero variance columns: offense_player_3_present, offense_player_7_present, offense_player_13_present, defense_player_7_present, defense_player_8_present</code></pre>
-<pre class="r"><code>if(length(issues$all_na) &gt; 0) {
+}
+if(length(issues$all_na) &gt; 0) {
   cat(&quot;\nAll NA columns:&quot;, paste(issues$all_na, collapse=&quot;, &quot;))
 }
 if(length(issues$perfect_cor) &gt; 0) {
   cat(&quot;\nPerfectly correlated columns:&quot;, paste(unique(issues$perfect_cor), collapse=&quot;, &quot;))
-}</code></pre>
-<pre><code>## 
-## Perfectly correlated columns: offense_player_9_weeks_found_12w, offense_player_10_weeks_found_2w, offense_player_18_present, offense_player_19_present, offense_player_21_present</code></pre>
-<pre class="r"><code># Combine all problematic columns
+}
+
+# Combine all problematic columns
 problem_cols &lt;- unique(c(issues$zero_var, issues$all_na, 
                         issues$perfect_cor, issues$character_cols))
 
@@ -474,10 +477,10 @@ if(length(problem_cols) &gt; 0) {
 cat(&quot;\n\nRemoved&quot;, length(problem_cols), &quot;problematic columns&quot;)</code></pre>
 <pre><code>## 
 ## 
-## Removed 10 problematic columns</code></pre>
+## Removed 0 problematic columns</code></pre>
 <pre class="r"><code>cat(&quot;\nRemaining columns:&quot;, ncol(outcome_data))</code></pre>
 <pre><code>## 
-## Remaining columns: 145</code></pre>
+## Remaining columns: 148</code></pre>
 <pre class="r"><code># Load library and prepare data
 #library(randomForest)
 #rf_data &lt;- copy(outcome_data)[, my_id := NULL]
@@ -540,9 +543,8 @@ while(TRUE) {
     rf_data[, conversion := as.factor(conversion)]
 }</code></pre>
 <pre><code>## 
-## Current AUC: 0.6356 with 143 variables
-## Current AUC: 0.6498 with 86 variables
-## Current AUC: 0.6474 with 68 variables
+## Current AUC: 0.6427 with 146 variables
+## Current AUC: 0.6357 with 97 variables
 ## AUC dropped, reverting to previous state</code></pre>
 <pre class="r"><code>#kill my id
 outcome_data$my_id &lt;- NULL</code></pre>
@@ -640,26 +642,26 @@ cat(&quot;\nTest Results over 100 iterations:\n&quot;)</code></pre>
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <pre class="r"><code>cat(&quot;Mean AUC:&quot;, mean(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean AUC: 0.6789847</code></pre>
+<pre><code>## Mean AUC: 0.6758671</code></pre>
 <pre class="r"><code>cat(&quot;SD AUC:&quot;, sd(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## SD AUC: 0.01163105</code></pre>
+<pre><code>## SD AUC: 0.01177745</code></pre>
 <pre class="r"><code>cat(&quot;Mean Youden&#39;s J:&quot;, mean(test_j_stats), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean Youden&#39;s J: 0.2839668</code></pre>
+<pre><code>## Mean Youden&#39;s J: 0.2772423</code></pre>
 <pre class="r"><code>cat(&quot;SD Youden&#39;s J:&quot;, sd(test_j_stats), &quot;\n&quot;)</code></pre>
-<pre><code>## SD Youden&#39;s J: 0.01972967</code></pre>
+<pre><code>## SD Youden&#39;s J: 0.02170208</code></pre>
 <pre class="r"><code>cat(&quot;Mean Optimal Threshold:&quot;, mean(all_thresholds), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean Optimal Threshold: 0.5066896</code></pre>
+<pre><code>## Mean Optimal Threshold: 0.5179986</code></pre>
 <pre class="r"><code>cat(&quot;95% CI for AUC:&quot;, mean(test_aucs) - 1.96 * sd(test_aucs), 
     &quot;to&quot;, mean(test_aucs) + 1.96 * sd(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## 95% CI for AUC: 0.6561879 to 0.7017816</code></pre>
+<pre><code>## 95% CI for AUC: 0.6527833 to 0.6989509</code></pre>
 <pre class="r"><code>cat(&quot;\nAverage Confusion Matrix:\n&quot;)</code></pre>
 <pre><code>## 
 ## Average Confusion Matrix:</code></pre>
 <pre class="r"><code>print(avg_cm)</code></pre>
 <pre><code>##         
 ##          Pred 1 Pred 0
-##   True 1 432.09 197.51
-##   True 0 232.11 344.29</code></pre>
+##   True 1 412.36 214.10
+##   True 0 220.96 358.58</code></pre>
 <pre class="r"><code># Plotting AUC distribution - removed type=&quot;o&quot; to not connect dots
 plot(test_aucs, col=&quot;red&quot;, pch=20,
      main=&quot;AUC Test Distribution&quot;,
@@ -816,9 +818,9 @@ cat(&quot;\nBest parameters:\n&quot;)</code></pre>
 ## Best parameters:</code></pre>
 <pre class="r"><code>print(best_params)</code></pre>
 <pre><code>##      eta max_depth min_child_weight subsample colsample_bytree lambda alpha
-## 61 0.001         5                1       0.8              0.8      1     0
+## 81 0.001         5                1       0.8              0.8      1     0
 ##    gamma nrounds
-## 61     0     400</code></pre>
+## 81     0     500</code></pre>
 <pre class="r"><code># Run 100 tests with best parameters
 cat(&quot;\nRunning 100 test iterations with best parameters...\n&quot;)</code></pre>
 <pre><code>## 
@@ -890,26 +892,26 @@ cat(&quot;\nTest Results over 100 iterations:\n&quot;)</code></pre>
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <pre class="r"><code>cat(&quot;Mean AUC:&quot;, mean(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean AUC: 0.68325</code></pre>
+<pre><code>## Mean AUC: 0.6835399</code></pre>
 <pre class="r"><code>cat(&quot;SD AUC:&quot;, sd(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## SD AUC: 0.01007799</code></pre>
+<pre><code>## SD AUC: 0.01119108</code></pre>
 <pre class="r"><code>cat(&quot;Mean Youden&#39;s J:&quot;, mean(test_j_stats), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean Youden&#39;s J: 0.2946268</code></pre>
+<pre><code>## Mean Youden&#39;s J: 0.2889727</code></pre>
 <pre class="r"><code>cat(&quot;SD Youden&#39;s J:&quot;, sd(test_j_stats), &quot;\n&quot;)</code></pre>
-<pre><code>## SD Youden&#39;s J: 0.01603948</code></pre>
+<pre><code>## SD Youden&#39;s J: 0.02046454</code></pre>
 <pre class="r"><code>cat(&quot;Mean Optimal Threshold:&quot;, mean(all_thresholds), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean Optimal Threshold: 0.5009779</code></pre>
+<pre><code>## Mean Optimal Threshold: 0.5051466</code></pre>
 <pre class="r"><code>cat(&quot;95% CI for AUC:&quot;, mean(test_aucs) - 1.96 * sd(test_aucs), 
     &quot;to&quot;, mean(test_aucs) + 1.96 * sd(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## 95% CI for AUC: 0.6634971 to 0.7030029</code></pre>
+<pre><code>## 95% CI for AUC: 0.6616054 to 0.7054745</code></pre>
 <pre class="r"><code>cat(&quot;\nAverage Confusion Matrix:\n&quot;)</code></pre>
 <pre><code>## 
 ## Average Confusion Matrix:</code></pre>
 <pre class="r"><code>print(avg_cm)</code></pre>
 <pre><code>##         
 ##          Pred 1 Pred 0
-##   True 1 540.73 229.94
-##   True 0 287.05 418.16</code></pre>
+##   True 1 522.00 250.70
+##   True 0 272.20 432.14</code></pre>
 <pre class="r"><code># Plotting AUC distribution - removed type=&quot;o&quot; to not connect dots
 plot(test_aucs, col=&quot;red&quot;, pch=20,
      main=&quot;AUC Test Distribution&quot;,
@@ -1049,8 +1051,8 @@ cat(&quot;\nBest parameters:\n&quot;)</code></pre>
 <pre><code>## 
 ## Best parameters:</code></pre>
 <pre class="r"><code>print(best_params)</code></pre>
-<pre><code>##      eta nrounds
-## 18 0.071     100</code></pre>
+<pre><code>##     eta nrounds
+## 6 0.051      50</code></pre>
 <pre class="r"><code># Run X tests with best parameters
 cat(&quot;\nRunning X test iterations with best parameters...\n&quot;)</code></pre>
 <pre><code>## 
@@ -1122,26 +1124,26 @@ cat(&quot;\nTest Results over 100 iterations:\n&quot;)</code></pre>
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <pre class="r"><code>cat(&quot;Mean AUC:&quot;, mean(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean AUC: 0.6809057</code></pre>
+<pre><code>## Mean AUC: 0.6761777</code></pre>
 <pre class="r"><code>cat(&quot;SD AUC:&quot;, sd(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## SD AUC: 0.01037873</code></pre>
+<pre><code>## SD AUC: 0.01137036</code></pre>
 <pre class="r"><code>cat(&quot;Mean Youden&#39;s J:&quot;, mean(test_j_stats), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean Youden&#39;s J: 0.2813032</code></pre>
+<pre><code>## Mean Youden&#39;s J: 0.2732992</code></pre>
 <pre class="r"><code>cat(&quot;SD Youden&#39;s J:&quot;, sd(test_j_stats), &quot;\n&quot;)</code></pre>
-<pre><code>## SD Youden&#39;s J: 0.0196541</code></pre>
+<pre><code>## SD Youden&#39;s J: 0.01940444</code></pre>
 <pre class="r"><code>cat(&quot;Mean Optimal Threshold:&quot;, mean(all_thresholds), &quot;\n&quot;)</code></pre>
-<pre><code>## Mean Optimal Threshold: 0.5043071</code></pre>
+<pre><code>## Mean Optimal Threshold: 0.5093711</code></pre>
 <pre class="r"><code>cat(&quot;95% CI for AUC:&quot;, mean(test_aucs) - 1.96 * sd(test_aucs), 
     &quot;to&quot;, mean(test_aucs) + 1.96 * sd(test_aucs), &quot;\n&quot;)</code></pre>
-<pre><code>## 95% CI for AUC: 0.6605634 to 0.7012481</code></pre>
+<pre><code>## 95% CI for AUC: 0.6538918 to 0.6984636</code></pre>
 <pre class="r"><code>cat(&quot;\nAverage Confusion Matrix:\n&quot;)</code></pre>
 <pre><code>## 
 ## Average Confusion Matrix:</code></pre>
 <pre class="r"><code>print(avg_cm)</code></pre>
 <pre><code>##         
 ##          Pred 1 Pred 0
-##   True 1 537.58 233.38
-##   True 0 293.70 412.11</code></pre>
+##   True 1 520.77 248.71
+##   True 0 286.02 423.24</code></pre>
 <pre class="r"><code># Plotting AUC distribution - removed type=&quot;o&quot; to not connect dots
 plot(test_aucs, col=&quot;red&quot;, pch=20,
      main=&quot;AUC Test Distribution&quot;,

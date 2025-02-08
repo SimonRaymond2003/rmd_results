@@ -3,6 +3,5 @@ title: "Results of 4th Down Predictive and Causal 4th Down Analysis"
 output: html_document
 ---
 
-In this tab I will discuss general notes and results from the analysis.
 
-M
+This section is for notes. The interpretation will be as I go but I want this to be a general outline.

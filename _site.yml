@@ -9,8 +9,12 @@ navbar:
       href: heckman.html
     - text: "XGBoost Prediction"
       href: xgboost.html
-    - text: "Attendance Impact"
-      href: attendance.html
+    - text: "Attendance Impact Binary"
+      href: attendance_binary.html                                                                                
+    - text: "Attendance Impact Percentages"
+      href: attendance_pcts.html
+    - text: "Attendance Impact Totals"
+      href: attendance_totals.html
     - text: "Third Down Analysis"
       href: thirddown.html
 output:
