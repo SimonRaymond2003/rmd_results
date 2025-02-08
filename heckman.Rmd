@@ -220,8 +220,8 @@ grid <- expand.grid(
   eta = seq(0.001, 0.1, by = 0.02),
   max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
-  subsample = seq(0.8, 0.8, by = 0.2),
-  colsample_bytree = seq(0.8, 0.8, by = 0.2),
+  subsample = seq(0.8, 1, by = 0.2),
+  colsample_bytree = seq(0.8, 1, by = 0.2),
   lambda = seq(1, 1, by = 1),                
   alpha = seq(0, 0, by = 1),                  
   gamma = seq(0, 0, by = 0.1),               
@@ -243,11 +243,11 @@ scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
 cat("\nPhase 1: Validation Phase\n")
-n_validations <- 2
+n_validations <- 20
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
-  cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
+  #cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
   
   for (i in 1:n_validations) {
     # Create validation split
@@ -445,11 +445,6 @@ for (i in 1:length(t_stats)) {
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 ```
 
-```{r}
-# get vifs
-library(car)
-vif(ols_model)
-```
 
 ```{r}
 # Create a copy of outcome_data without GIMR
@@ -485,8 +480,5 @@ for (i in 1:length(t_stats_no_gimr)) {
 
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
 
-vif(ols_model_no_gimr)
 
 ```
-
-
