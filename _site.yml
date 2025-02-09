@@ -17,6 +17,8 @@ navbar:
       href: attendance_totals.html
     - text: "Third Down Analysis"
       href: thirddown.html
+    - text: "Attempts OLS"
+      href: attempt_ols.html
 output:
   html_document:
     css: styles.css

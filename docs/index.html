@@ -352,6 +352,9 @@ div.tocify {
 <li>
   <a href="thirddown.html">Third Down Analysis</a>
 </li>
+<li>
+  <a href="attempt_ols.html">Attempts OLS</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -382,8 +385,158 @@ div.tocify {
 
 <p>This section is for notes. The interpretation will be as I go but I
 want this to be a general outline.</p>
+<p>PLAYERS ARE PUT INTO THEIR SLOTS BASED ON SNAP COUNT</p>
+<ul>
+<li><p><strong>QB (Slots 1-3):</strong> Quarterbacks. Most plays will
+only have one QB on the field (slot 1)</p></li>
+<li><p><strong>BACKS (Slots 4-7):</strong> Running backs (RB) and
+fullbacks (FB).</p></li>
+<li><p><strong>WR (Slots 8-13):</strong> Wide receivers. Teams typically
+use 2-4 WRs on a given play.</p></li>
+<li><p><strong>TE (Slots 14-16):</strong> Tight ends. These players can
+act as both receivers and blockers.</p></li>
+<li><p><strong>OL (Slots 17-24):</strong> Offensive line. This includes
+the center (C), guards (G), and tackles (T). There are usually 5 OL on
+the field.</p></li>
+<li><p><strong>DL (Slots 1-8):</strong> Defensive line. This includes
+defensive ends (DE), defensive tackles (DT), and nose tackles
+(NT).</p></li>
+<li><p><strong>LB (Slots 9-14):</strong> Linebackers. This can include
+middle linebackers (MLB), inside linebackers (ILB), and outside
+linebackers (OLB).</p></li>
+<li><p><strong>CB (Slots 15-19):</strong> Cornerbacks. T</p></li>
+<li><p><strong>S (Slots 20-23):</strong> Safeties. This includes free
+safeties (FS) and strong safeties (SS).</p></li>
+</ul>
+<p>I am gonna place a few experiments here.</p>
+<p>Lets run just the vegas number on the conversion and attempt</p>
+<pre class="r"><code># Run OLS models for select_data
+model1_select &lt;- lm(attempt ~ vegas_wp, data = select_vegas)
+model2_select &lt;- lm(attempt ~ vegas_wp_posteam, data = select_vegas)
+model3_select &lt;- lm(attempt ~ total_line, data = select_vegas)
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJlc3VsdHMgb2YgNHRoIERvd24gUHJlZGljdGl2ZSBhbmQgQ2F1c2FsIDR0aCBEb3duIEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KDQpUaGlzIHNlY3Rpb24gaXMgZm9yIG5vdGVzLiBUaGUgaW50ZXJwcmV0YXRpb24gd2lsbCBiZSBhcyBJIGdvIGJ1dCBJIHdhbnQgdGhpcyB0byBiZSBhIGdlbmVyYWwgb3V0bGluZS4=</div>
+# Run OLS models for outcome_data
+model1_outcome &lt;- lm(conversion ~ vegas_wp, data = outcome_vegas)
+model2_outcome &lt;- lm(conversion ~ vegas_wp_posteam, data = outcome_vegas)
+model3_outcome &lt;- lm(conversion ~ total_line, data = outcome_vegas)
+
+# Display summaries
+summary(model1_select)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = attempt ~ vegas_wp, data = select_vegas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.3111 -0.2546 -0.1873 -0.1189  0.8817 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.22017    0.00256   86.01   &lt;2e-16 ***
+## vegas_wp    -0.06251    0.00256  -24.42   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4096 on 25606 degrees of freedom
+## Multiple R-squared:  0.02276,    Adjusted R-squared:  0.02272 
+## F-statistic: 596.4 on 1 and 25606 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>summary(model2_select)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = attempt ~ vegas_wp_posteam, data = select_vegas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.2233 -0.2216 -0.2192 -0.2165  0.7836 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      0.220166   0.002589  85.026   &lt;2e-16 ***
+## vegas_wp_posteam 0.002245   0.002589   0.867    0.386    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4144 on 25606 degrees of freedom
+## Multiple R-squared:  2.935e-05,  Adjusted R-squared:  -9.703e-06 
+## F-statistic: 0.7515 on 1 and 25606 DF,  p-value: 0.386</code></pre>
+<pre class="r"><code>summary(model3_select)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = attempt ~ total_line, data = select_vegas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.2905 -0.2277 -0.2125 -0.1916  0.8370 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 0.220166   0.002587  85.099  &lt; 2e-16 ***
+## total_line  0.017351   0.002587   6.706 2.04e-11 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.414 on 25606 degrees of freedom
+## Multiple R-squared:  0.001753,   Adjusted R-squared:  0.001714 
+## F-statistic: 44.98 on 1 and 25606 DF,  p-value: 2.036e-11</code></pre>
+<pre class="r"><code>summary(model1_outcome)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = conversion ~ vegas_wp, data = outcome_vegas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.6598 -0.4751  0.3419  0.4908  0.5467 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 0.521523   0.007805  66.816   &lt;2e-16 ***
+## vegas_wp    0.069340   0.007806   8.882   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4948 on 4017 degrees of freedom
+## Multiple R-squared:  0.01926,    Adjusted R-squared:  0.01902 
+## F-statistic:  78.9 on 1 and 4017 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>summary(model2_outcome)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = conversion ~ vegas_wp_posteam, data = outcome_vegas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.5305 -0.5221  0.4695  0.4778  0.4899 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      0.521523   0.007881   66.18   &lt;2e-16 ***
+## vegas_wp_posteam 0.007565   0.007882    0.96    0.337    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4996 on 4017 degrees of freedom
+## Multiple R-squared:  0.0002293,  Adjusted R-squared:  -1.959e-05 
+## F-statistic: 0.9213 on 1 and 4017 DF,  p-value: 0.3372</code></pre>
+<pre class="r"><code>summary(model3_outcome)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = conversion ~ total_line, data = outcome_vegas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.6353 -0.5148  0.4158  0.4816  0.5912 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 0.521523   0.007864  66.316  &lt; 2e-16 ***
+## total_line  0.033227   0.007865   4.225 2.45e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4986 on 4017 degrees of freedom
+## Multiple R-squared:  0.004423,   Adjusted R-squared:  0.004175 
+## F-statistic: 17.85 on 1 and 4017 DF,  p-value: 2.447e-05</code></pre>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJlc3VsdHMgb2YgNHRoIERvd24gUHJlZGljdGl2ZSBhbmQgQ2F1c2FsIDR0aCBEb3duIEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KDQpUaGlzIHNlY3Rpb24gaXMgZm9yIG5vdGVzLiBUaGUgaW50ZXJwcmV0YXRpb24gd2lsbCBiZSBhcyBJIGdvIGJ1dCBJIHdhbnQgdGhpcyB0byBiZSBhIGdlbmVyYWwgb3V0bGluZS4NCg0KUExBWUVSUyBBUkUgUFVUIElOVE8gVEhFSVIgU0xPVFMgQkFTRUQgT04gU05BUCBDT1VOVA0KDQoNCiogKipRQiAoU2xvdHMgMS0zKToqKiBRdWFydGVyYmFja3MuIE1vc3QgcGxheXMgd2lsbCBvbmx5IGhhdmUgb25lIFFCIG9uIHRoZSBmaWVsZCAoc2xvdCAxKQ0KKiAqKkJBQ0tTIChTbG90cyA0LTcpOioqIFJ1bm5pbmcgYmFja3MgKFJCKSBhbmQgZnVsbGJhY2tzIChGQikuDQoqICoqV1IgKFNsb3RzIDgtMTMpOioqIFdpZGUgcmVjZWl2ZXJzLiBUZWFtcyB0eXBpY2FsbHkgdXNlIDItNCBXUnMgb24gYSBnaXZlbiBwbGF5Lg0KKiAqKlRFIChTbG90cyAxNC0xNik6KiogVGlnaHQgZW5kcy4gVGhlc2UgcGxheWVycyBjYW4gYWN0IGFzIGJvdGggcmVjZWl2ZXJzIGFuZCBibG9ja2Vycy4NCiogKipPTCAoU2xvdHMgMTctMjQpOioqIE9mZmVuc2l2ZSBsaW5lLiBUaGlzIGluY2x1ZGVzIHRoZSBjZW50ZXIgKEMpLCBndWFyZHMgKEcpLCBhbmQgdGFja2xlcyAoVCkuIFRoZXJlIGFyZSB1c3VhbGx5IDUgT0wgb24gdGhlIGZpZWxkLg0KDQoNCiogKipETCAoU2xvdHMgMS04KToqKiBEZWZlbnNpdmUgbGluZS4gVGhpcyBpbmNsdWRlcyBkZWZlbnNpdmUgZW5kcyAoREUpLCBkZWZlbnNpdmUgdGFja2xlcyAoRFQpLCBhbmQgbm9zZSB0YWNrbGVzIChOVCkuIA0KKiAqKkxCIChTbG90cyA5LTE0KToqKiBMaW5lYmFja2Vycy4gVGhpcyBjYW4gaW5jbHVkZSBtaWRkbGUgbGluZWJhY2tlcnMgKE1MQiksIGluc2lkZSBsaW5lYmFja2VycyAoSUxCKSwgYW5kIG91dHNpZGUgbGluZWJhY2tlcnMgKE9MQikuDQoqICoqQ0IgKFNsb3RzIDE1LTE5KToqKiBDb3JuZXJiYWNrcy4gVA0KKiAqKlMgKFNsb3RzIDIwLTIzKToqKiBTYWZldGllcy4gVGhpcyBpbmNsdWRlcyBmcmVlIHNhZmV0aWVzIChGUykgYW5kIHN0cm9uZyBzYWZldGllcyAoU1MpLg0KDQpJIGFtIGdvbm5hIHBsYWNlIGEgZmV3IGV4cGVyaW1lbnRzIGhlcmUuDQoNCkxldHMgcnVuIGp1c3QgdGhlIHZlZ2FzIG51bWJlciBvbiB0aGUgY29udmVyc2lvbiBhbmQgYXR0ZW1wdA0KDQpgYGB7ciwgaW5jbHVkZT1GQUxTRX0NCiMgTG9hZCByZXF1aXJlZCBsaWJyYXJ5DQpsaWJyYXJ5KGRhdGEudGFibGUpDQoNCiMgUmVhZCB0aGUgZGF0YSBmaWxlcw0Kb3V0Y29tZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X291dGNvbWUuY3N2Lmd6IikNCnNlbGVjdF9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X3NlbGVjdC5jc3YuZ3oiKQ0KDQojIENyZWF0ZSBuZXcgZGF0YS50YWJsZXMgd2l0aCBzcGVjaWZpYyB2YXJpYWJsZXMNCnNlbGVjdF92ZWdhcyA8LSBzZWxlY3RfZGF0YVssIC4oYXR0ZW1wdCwgdmVnYXNfd3AsIHZlZ2FzX3dwX3Bvc3RlYW0sIHRvdGFsX2xpbmUpXQ0Kb3V0Y29tZV92ZWdhcyA8LSBvdXRjb21lX2RhdGFbLCAuKGNvbnZlcnNpb24sIHZlZ2FzX3dwLCB2ZWdhc193cF9wb3N0ZWFtLCB0b3RhbF9saW5lKV0NCmBgYA0KDQpgYGB7cn0NCiMgUnVuIE9MUyBtb2RlbHMgZm9yIHNlbGVjdF9kYXRhDQptb2RlbDFfc2VsZWN0IDwtIGxtKGF0dGVtcHQgfiB2ZWdhc193cCwgZGF0YSA9IHNlbGVjdF92ZWdhcykNCm1vZGVsMl9zZWxlY3QgPC0gbG0oYXR0ZW1wdCB+IHZlZ2FzX3dwX3Bvc3RlYW0sIGRhdGEgPSBzZWxlY3RfdmVnYXMpDQptb2RlbDNfc2VsZWN0IDwtIGxtKGF0dGVtcHQgfiB0b3RhbF9saW5lLCBkYXRhID0gc2VsZWN0X3ZlZ2FzKQ0KDQojIFJ1biBPTFMgbW9kZWxzIGZvciBvdXRjb21lX2RhdGENCm1vZGVsMV9vdXRjb21lIDwtIGxtKGNvbnZlcnNpb24gfiB2ZWdhc193cCwgZGF0YSA9IG91dGNvbWVfdmVnYXMpDQptb2RlbDJfb3V0Y29tZSA8LSBsbShjb252ZXJzaW9uIH4gdmVnYXNfd3BfcG9zdGVhbSwgZGF0YSA9IG91dGNvbWVfdmVnYXMpDQptb2RlbDNfb3V0Y29tZSA8LSBsbShjb252ZXJzaW9uIH4gdG90YWxfbGluZSwgZGF0YSA9IG91dGNvbWVfdmVnYXMpDQoNCiMgRGlzcGxheSBzdW1tYXJpZXMNCnN1bW1hcnkobW9kZWwxX3NlbGVjdCkNCnN1bW1hcnkobW9kZWwyX3NlbGVjdCkNCnN1bW1hcnkobW9kZWwzX3NlbGVjdCkNCnN1bW1hcnkobW9kZWwxX291dGNvbWUpDQpzdW1tYXJ5KG1vZGVsMl9vdXRjb21lKQ0Kc3VtbWFyeShtb2RlbDNfb3V0Y29tZSkNCmBgYA0KDQo=</div>
 
 
 </div>
