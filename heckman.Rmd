@@ -217,10 +217,10 @@ y <- as.numeric(as.character(select_data$attempt))
 
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.1, by = 0.02),
+  eta = seq(0.001, 0.1, by = 0.01),
   max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
-  subsample = seq(0.8, 1, by = 0.2),
+  subsample = seq(1, 1, by = 0.2),
   colsample_bytree = seq(0.8, 1, by = 0.2),
   lambda = seq(1, 1, by = 1),                
   alpha = seq(0, 0, by = 1),                  
@@ -242,14 +242,15 @@ nc <- detectCores() - 1
 scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
-cat("\nPhase 1: Validation Phase\n")
-n_validations <- 20
+#cat("\nPhase 1: Validation Phase\n")
+n_validations <- 10
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
   #cat("\nTesting parameter set", j, "of", nrow(rgrid), "\n")
   
   for (i in 1:n_validations) {
+    #cat("\nValidation iteration", i, "of", n_validations, "\n")             
     # Create validation split
     idx <- unique(sample(nrow(xs), nrow(xs), TRUE))
     train_x <- xs[idx, ]
@@ -300,7 +301,7 @@ best_params_list$objective <- "binary:logistic"
 best_params_list$scale_pos_weight <- scale_pos_weight
 best_params_list$nthread <- nc
 
-for(i in 1:10) {
+for(i in 1:25) {
   # Create test split
   idx <- unique(sample(nrow(xs), nrow(xs), T))
   train_x <- xs[idx, ]
@@ -322,7 +323,6 @@ for(i in 1:10) {
   pred <- prediction(p, test_y)
   test_aucs[i] <- performance(pred, "auc")@y.values[[1]]
 }
-
 # Print results
 cat("\nTest Results over 100 iterations:\n")
 cat("Mean AUC:", mean(test_aucs), "\n")
@@ -334,6 +334,7 @@ cat("95% CI:", mean(test_aucs) - 1.96 * sd(test_aucs),
 plot(test_aucs, col="red", pch=20,
      main="AUC Test Distribution",
      xlab="Iteration", ylab="AUC")
+abline(h=mean(test_aucs), col="blue", lwd=2, lty=2)  # Add this line to show mean
 abline(h=mean(test_aucs) - 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
 abline(h=mean(test_aucs) + 1.96 * sd(test_aucs), col="green", lwd=2, lty=3)
 legend("bottomright", 
@@ -392,10 +393,10 @@ outcome_data[GIMR_dt, GIMR := i.GIMR, on = "my_id"]
 ```
 
 ```{r}
-#kill - my_id
+#remove columns to prevent perfect colinearity
 outcome_data <- outcome_data[, my_id := NULL]
-outcome_data[, year2017_team_ARI := NULL]
-outcome_data <- outcome_data[, yardline_1_10:= NULL]
+outcome_data[, yardline_31_40 := NULL]
+outcome_data[, year2022_team_CLE := NULL] # tied for most attempts with 31
 ```
 
 ```{r}
@@ -423,7 +424,7 @@ get_stars <- function(p) {
 }
 
 # Maximum width for variable names
-name_width <- 20
+name_width <- 60
 
 # Print header with alignment
 cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
@@ -450,35 +451,33 @@ cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 # Create a copy of outcome_data without GIMR
 outcome_data_no_gimr <- copy(outcome_data)
 outcome_data_no_gimr[, GIMR := NULL]
+outcome_data_no_gimr[, my_id := NULL]
 
 # Run OLS without GIMR correction
 ols_model_no_gimr <- lm(conversion ~ ., data = outcome_data_no_gimr)
 
-# Get HC0-adjusted t-values and p-values for model without GIMR
+# Get HC0-adjusted t-values and p-values
 robust_test_no_gimr <- coeftest(ols_model_no_gimr, vcov = vcovHC(ols_model_no_gimr, type = "HC0"))
 t_stats_no_gimr <- robust_test_no_gimr[, "t value"]
 p_values_no_gimr <- robust_test_no_gimr[, "Pr(>|t|)"]
-coefficients_no_gimr <- coef(ols_model_no_gimr)
 
-# Print results for model without GIMR
-cat("\nModel Results WITHOUT GIMR:\n")
-cat(sprintf("%-*s  %10s  %10s  %10s  %4s\n", name_width, "Variable", "Coef", "t-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %10s  %4s\n", name_width, "---------", "----", "-------", "-------", "---"))
+# Print header with alignment
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
 
+# Loop through and print values
 for (i in 1:length(t_stats_no_gimr)) {
     var_name <- rownames(robust_test_no_gimr)[i]
+    # Truncate name if too long
     if (nchar(var_name) > name_width) {
         var_name <- paste0(substr(var_name, 1, name_width-3), "...")
     }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name,
-                coefficients_no_gimr[i],
-                t_stats_no_gimr[i], 
-                p_values_no_gimr[i],
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                t_stats_no_gimr[i], p_values_no_gimr[i],
                 get_stars(p_values_no_gimr[i])))
 }
 
-cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
-
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 
 ```

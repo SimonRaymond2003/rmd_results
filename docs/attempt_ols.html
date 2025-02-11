@@ -356,6 +356,18 @@ div.tocify {
 <li>
   <a href="attempt_ols.html">Attempts OLS</a>
 </li>
+<li>
+  <a href="Introduction.html">Writing Introduction</a>
+</li>
+<li>
+  <a href="Data.html">Writing Data</a>
+</li>
+<li>
+  <a href="Methodology.html">Writing Methodology</a>
+</li>
+<li>
+  <a href="Results.html">Writing Results</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -436,163 +448,167 @@ format_results(ols_robust, &quot;OLS&quot;)</code></pre>
 ## OLS Model Results (Robust Statistics)
 ## Variable                        Coefficient      t-value    Sig
 ## ----------------------------------------------------------------- 
-## (Intercept)                          0.0064       0.0918       
-## ydstogo                             -0.1094     -44.9559    ***
-## posteam_timeouts_remaining          -0.0356     -11.7518    ***
-## defteam_timeouts_remaining          -0.0007      -0.2493       
-## week                                 0.0039       1.3743       
-## temp                                -0.0028      -0.9181       
-## wind                                -0.0045      -1.4593      .
-## vegas_wp                            -0.0827     -14.9947    ***
-## vegas_wp_posteam                     0.0016       0.6553       
-## total_line                          -0.0045      -1.3850       
-## score_diff                          -0.0174      -3.4783    ***
-## down1_pct                           -0.0052      -1.4921      .
-## down2_pct                           -0.0012      -0.3682       
-## down3_pct                           -0.0009      -0.2626       
-## down4_pct                           -0.0167      -5.2173    ***
-## prep_days                            0.0019       0.8060       
-## overall_win_pct                     -0.0048      -1.1123       
-## team_win_pct                         0.0150       3.2098    ***
-## prev_shotgun_rate                    0.0032       0.5770       
-## prev_singleback_rate                 0.0040       0.7286       
-## prev_empty_rate                     -0.0064      -1.7392      *
-## prev_shotgun_success                 0.0053       1.3766       
-## prev_singleback_success              0.0048       1.3543       
-## prev_empty_success                   0.0075       2.2565     **
-## prev_stop_rate_run                  -0.0018      -0.6534       
-## prev_stop_rate_pass                 -0.0040      -1.5334      .
-## prev_win_pct                         0.0085       2.0627     **
-## shotgun_rate                        -0.0436     -12.1747    ***
-## singleback_rate                     -0.0236      -7.1963    ***
-## empty_rate                          -0.0295      -9.6844    ***
-## shotgun_success                      0.0072       2.5499     **
-## singleback_success                   0.0015       0.4712       
-## empty_success                        0.0059       1.9069      *
-## def_stop_rate_run                   -0.0027      -1.0626       
-## def_stop_rate_pass                  -0.0131      -5.0787    ***
-## avg_pass_rushers                     0.0014       0.5143       
-## avg_box_defenders                    0.0007       0.2550       
-## cover0_rate                         -0.0008      -0.2801       
-## cover1_rate                          0.0072       2.2882     **
-## cover2_rate                          0.0021       0.8019       
-## cover3_rate                          0.0016       0.5828       
-## cover4_rate                          0.0058       2.1164     **
-## cover6_rate                         -0.0010      -0.3738       
-## two_man_rate                        -0.0018      -0.6885       
-## prevent_rate                         0.0001       0.0235       
-## p_player_26_punting_grades_tot      -0.0312      -1.9585      *
-## p_player_26_punting_grades_yar      -0.0019      -0.1417       
-## p_player_26_punting_grades_per       0.0006       0.1795       
-## p_player_26_kickoff_grades_ave       0.0047       1.5384      .
-## p_player_26_special_teams_grad       0.0237       1.8653      *
-## p_player_26_special_teams_grad       0.0058       1.7934      *
-## p_player_26_kickoff_grades_kic       0.0109       2.6283    ***
-## p_player_26_punting_grades_yar       0.0008       0.2818       
-## k_player_25_kickoff_grades_tot      -0.0037      -0.2859       
-## k_player_25_field_goal_summary       0.0104       2.0982     **
-## k_player_25_kickoff_grades_tot       0.0116       1.8838      *
-## k_player_25_special_teams_grad      -0.0073      -1.5765      .
-## k_player_25_special_teams_grad       0.0116       0.8352       
-## k_player_25_field_goal_summary      -0.0173      -3.3385    ***
-## k_player_25_special_teams_grad      -0.0029      -0.7099       
-## k_player_25_special_teams_grad       0.0117       1.4033       
-## k_player_25_kickoff_grades_ave      -0.0197      -1.8936      *
-## k_player_25_field_goals_grades      -0.0100      -0.7854       
-## k_player_25_special_teams_grad       0.0064       1.6828      *
-## k_player_25_kickoff_grades_kic       0.0115       0.8756       
-## roof_outdoors                        0.0042       0.5810       
-## posteam_type_home                    0.0209       4.5272    ***
-## Chuck_Pagano                         0.1546       2.0392     **
-## Bruce_Arians                         0.1271       1.7701      *
-## Sean_McDermott                       0.1928       2.7157    ***
-## Ron_Rivera                           0.2214       3.2011    ***
-## John_Fox                             0.2081       2.7126    ***
-## Dirk_Koetter                         0.1500       2.0803     **
-## Hue_Jackson                          0.2212       2.9813    ***
-## John_Harbaugh                        0.2125       2.9335    ***
-## Jason_Garrett                        0.2162       3.0075    ***
-## Vance_Joseph                         0.2604       3.5827    ***
-## Ben_McAdoo                           0.2125       2.7453    ***
-## Jim_Caldwell                         0.1940       2.5363     **
-## Mike_McCarthy                        0.2221       3.1565    ***
-## Dan_Quinn                            0.1624       2.2192     **
-## Marvin_Lewis                         0.2050       2.8157    ***
-## Bill_OBrien                          0.1933       2.7357    ***
-## Adam_Gase                            0.1787       2.5489     **
-## Anthony_Lynn                         0.1920       2.6963    ***
-## Mike_Zimmer                          0.1770       2.5358     **
-## Mike_Tomlin                          0.1658       2.3994     **
-## Bill_Belichick                       0.1380       1.9860     **
-## Sean_Payton                          0.1744       2.4960     **
-## Jack_Del_Rio                         0.2612       3.3515    ***
-## Todd_Bowles                          0.1570       2.2462     **
-## Doug_Pederson                        0.2312       3.2863    ***
-## Andy_Reid                            0.1755       2.4929     **
-## Kyle_Shanahan                        0.1613       2.3127     **
-## Pete_Carroll                         0.2032       2.9276    ***
-## Mike_Mularkey                        0.1563       2.0906     **
-## Doug_Marrone                         0.1871       2.6634    ***
-## Jay_Gruden                           0.1633       2.2991     **
-## Sean_McVay                           0.2008       2.8612    ***
-## Steve_Spagnuolo                      0.2371       2.5557     **
-## Steve_Wilks                          0.1803       2.4435     **
-## Matt_Patricia                        0.1691       2.3304     **
-## Mike_Vrabel                          0.1839       2.6397    ***
-## Frank_Reich                          0.2006       2.8370    ***
-## Pat_Shurmur                          0.2080       2.8799    ***
-## Jon_Gruden                           0.1141       1.6138      .
-## Matt_Nagy                            0.2065       2.8850    ***
-## Gregg_Williams                       0.2860       3.2649    ***
-## Joe_Philbin                          0.2320       2.7358    ***
-## Kliff_Kingsbury                      0.2609       3.6104    ***
-## Vic_Fangio                           0.2146       2.9764    ***
-## Freddie_Kitchens                     0.2330       2.9987    ***
-## Matt_LaFleur                         0.2629       3.6992    ***
-## Brian_Flores                         0.1986       2.7975    ***
-## Zac_Taylor                           0.2102       2.9476    ***
-## Bill_Callahan                        0.1171       1.5425      .
-## Matt_Rhule                           0.2631       3.5626    ***
-## Kevin_Stefanski                      0.2330       3.2442    ***
-## Joe_Judge                            0.1436       1.9865     **
-## Romeo_Crennel                        0.1639       2.0347     **
-## Raheem_Morris                        0.1733       2.1167     **
-## Darrell_Bevell                       0.1611       1.9008      *
-## Arthur_Smith                         0.2283       3.1021    ***
-## Brandon_Staley                       0.2551       3.6309    ***
-## Urban_Meyer                          0.2399       2.9505    ***
-## Dan_Campbell                         0.3033       4.1820    ***
-## David_Culley                         0.1699       2.1894     **
-## Robert_Saleh                         0.2438       3.4520    ***
-## Nick_Sirianni                        0.2638       3.6472    ***
-## Rich_Bisaccia                        0.1377       1.7298      *
-## Josh_McDaniels                       0.1671       2.2523     **
-## Brian_Daboll                         0.2299       3.1952    ***
-## Matt_Eberflus                        0.2290       3.0990    ***
-## Lovie_Smith                          0.2064       2.7372    ***
-## Nathaniel_Hackett                    0.2313       3.0707    ***
-## Mike_McDaniel                        0.2406       3.2375    ***
-## Kevin_OConnell                       0.2302       3.1552    ***
-## Dennis_Allen                         0.1493       2.0780     **
-## Jeff_Saturday                        0.2167       2.6134    ***
-## Jay_Rosburg                          0.2816       2.6853    ***
-## DeMeco_Ryans                         0.2417       3.1003    ***
-## Shane_Steichen                       0.2111       2.6837    ***
-## Jonathan_Gannon                      0.3946       4.8924    ***
-## Antonio_Pierce                       0.1537       1.8467      *
-## Chris_Tabor                          0.3132       3.2877    ***
-## yardline_1_10                        0.1467       9.3149    ***
-## yardline_11_20                       0.0375       2.6118    ***
-## yardline_21_30                       0.0678       4.7325    ***
-## yardline_31_40                       0.2402      16.0840    ***
-## yardline_41_50                       0.1726      12.1905    ***
-## yardline_51_60                       0.0299       2.2185     **
-## yardline_61_70                      -0.0274      -2.0908     **
-## yardline_71_80                      -0.0551      -4.3036    ***
-## yardline_81_90                      -0.0183      -1.3329       
-## is_first_half                       -0.1228     -27.0745    ***
-## time_in_half                        -0.0389     -13.5574    ***
-## home_attendance                      0.0055       0.6759       
+## (Intercept)                          0.0142       0.2037       
+## ydstogo                             -0.1093     -44.9531    ***
+## posteam_timeouts_remaining          -0.0355     -11.7275    ***
+## defteam_timeouts_remaining          -0.0007      -0.2261       
+## week                                 0.0035       1.2327       
+## temp                                -0.0022      -0.7059       
+## wind                                -0.0048      -1.5550      .
+## vegas_wp                            -0.0816     -14.7970    ***
+## vegas_wp_posteam                     0.0012       0.4941       
+## total_line                          -0.0045      -1.3889       
+## score_diff                          -0.0176      -3.5236    ***
+## down1_pct                           -0.0060      -1.7038      *
+## down2_pct                           -0.0015      -0.4428       
+## down3_pct                           -0.0002      -0.0553       
+## down4_pct                           -0.0167      -5.1715    ***
+## prep_days                            0.0017       0.7489       
+## overall_win_pct                     -0.0040      -0.9416       
+## team_win_pct                         0.0147       3.1069    ***
+## prev_win_pct                         0.0058       1.4029       
+## prev_shotgun_rate                    0.0069       0.8862       
+## prev_singleback_rate                 0.0051       0.8265       
+## prev_empty_rate                     -0.0052      -1.2567       
+## prev_iform_rate                      0.0045       0.8741       
+## prev_shotgun_success                 0.0056       1.4371       
+## prev_singleback_success              0.0062       1.6208      .
+## prev_empty_success                   0.0062       1.8241      *
+## prev_iform_success                  -0.0046      -1.4239       
+## prev_stop_rate_run                  -0.0018      -0.6826       
+## prev_stop_rate_pass                 -0.0040      -1.5315      .
+## shotgun_rate                        -0.0554     -13.2063    ***
+## singleback_rate                     -0.0338      -8.9222    ***
+## empty_rate                          -0.0354     -10.9147    ***
+## iform_rate                          -0.0181      -5.3491    ***
+## shotgun_success                      0.0072       2.5285     **
+## singleback_success                   0.0014       0.4462       
+## empty_success                        0.0054       1.7020      *
+## iform_success                        0.0072       2.3912     **
+## def_stop_rate_run                   -0.0030      -1.1622       
+## def_stop_rate_pass                  -0.0124      -4.8192    ***
+## avg_pass_rushers                     0.0020       0.7243       
+## avg_box_defenders                   -0.0002      -0.0659       
+## cover0_rate                         -0.0007      -0.2220       
+## cover1_rate                          0.0065       2.0768     **
+## cover2_rate                          0.0019       0.7215       
+## cover3_rate                          0.0007       0.2607       
+## cover4_rate                          0.0055       2.0181     **
+## cover6_rate                         -0.0013      -0.4807       
+## two_man_rate                        -0.0023      -0.8956       
+## prevent_rate                        -0.0003      -0.1151       
+## p_player_26_punting_grades_tot      -0.0273      -1.7148      *
+## p_player_26_punting_grades_yar      -0.0046      -0.3414       
+## p_player_26_punting_grades_per       0.0023       0.7076       
+## p_player_26_kickoff_grades_ave       0.0039       1.2698       
+## p_player_26_special_teams_grad       0.0217       1.7040      *
+## p_player_26_special_teams_grad       0.0058       1.7746      *
+## p_player_26_kickoff_grades_kic       0.0112       2.7064    ***
+## p_player_26_punting_grades_yar       0.0013       0.4448       
+## k_player_25_kickoff_grades_tot      -0.0003      -0.0266       
+## k_player_25_field_goal_summary       0.0095       1.9057      *
+## k_player_25_kickoff_grades_tot       0.0111       1.7758      *
+## k_player_25_special_teams_grad      -0.0071      -1.5224      .
+## k_player_25_special_teams_grad       0.0079       0.5629       
+## k_player_25_field_goal_summary      -0.0162      -3.0982    ***
+## k_player_25_special_teams_grad      -0.0027      -0.6457       
+## k_player_25_special_teams_grad       0.0099       1.1788       
+## k_player_25_kickoff_grades_ave      -0.0197      -1.8813      *
+## k_player_25_field_goals_grades      -0.0076      -0.5935       
+## k_player_25_special_teams_grad       0.0065       1.7094      *
+## k_player_25_kickoff_grades_kic       0.0091       0.6944       
+## roof_outdoors                        0.0047       0.6454       
+## posteam_type_home                    0.0209       4.5265    ***
+## Chuck_Pagano                         0.1584       2.0892     **
+## Bruce_Arians                         0.1289       1.7982      *
+## Sean_McDermott                       0.1826       2.5721     **
+## Ron_Rivera                           0.2007       2.9048    ***
+## John_Fox                             0.1879       2.4510     **
+## Dirk_Koetter                         0.1401       1.9474      *
+## Hue_Jackson                          0.1915       2.5801    ***
+## John_Harbaugh                        0.1994       2.7445    ***
+## Jason_Garrett                        0.2019       2.8138    ***
+## Vance_Joseph                         0.2363       3.2474    ***
+## Ben_McAdoo                           0.1862       2.4080     **
+## Jim_Caldwell                         0.2000       2.6131    ***
+## Mike_McCarthy                        0.2069       2.9455    ***
+## Dan_Quinn                            0.1584       2.1677     **
+## Marvin_Lewis                         0.1951       2.6835    ***
+## Bill_OBrien                          0.1811       2.5663     **
+## Adam_Gase                            0.1757       2.5119     **
+## Anthony_Lynn                         0.1805       2.5389     **
+## Mike_Zimmer                          0.1758       2.5235     **
+## Mike_Tomlin                          0.1529       2.2154     **
+## Bill_Belichick                       0.1259       1.8140      *
+## Sean_Payton                          0.1688       2.4204     **
+## Jack_Del_Rio                         0.2494       3.2095    ***
+## Todd_Bowles                          0.1495       2.1429     **
+## Doug_Pederson                        0.2268       3.2247    ***
+## Andy_Reid                            0.1733       2.4644     **
+## Kyle_Shanahan                        0.1578       2.2636     **
+## Pete_Carroll                         0.1984       2.8619    ***
+## Mike_Mularkey                        0.1569       2.0998     **
+## Doug_Marrone                         0.1770       2.5246     **
+## Jay_Gruden                           0.1502       2.1158     **
+## Sean_McVay                           0.1975       2.8207    ***
+## Steve_Spagnuolo                      0.2158       2.3323     **
+## Steve_Wilks                          0.1653       2.2445     **
+## Matt_Patricia                        0.1638       2.2540     **
+## Mike_Vrabel                          0.1727       2.4841     **
+## Frank_Reich                          0.1903       2.6985    ***
+## Pat_Shurmur                          0.1945       2.6948    ***
+## Jon_Gruden                           0.1231       1.7404      *
+## Matt_Nagy                            0.1948       2.7262    ***
+## Gregg_Williams                       0.2632       3.0057    ***
+## Joe_Philbin                          0.2172       2.5646     **
+## Kliff_Kingsbury                      0.2414       3.3419    ***
+## Vic_Fangio                           0.2017       2.8023    ***
+## Freddie_Kitchens                     0.2141       2.7589    ***
+## Matt_LaFleur                         0.2616       3.6860    ***
+## Brian_Flores                         0.1863       2.6283    ***
+## Zac_Taylor                           0.2027       2.8436    ***
+## Bill_Callahan                        0.1059       1.3972       
+## Matt_Rhule                           0.2495       3.3823    ***
+## Kevin_Stefanski                      0.2341       3.2645    ***
+## Joe_Judge                            0.1291       1.7869      *
+## Romeo_Crennel                        0.1559       1.9382      *
+## Raheem_Morris                        0.1752       2.1377     **
+## Darrell_Bevell                       0.1613       1.9019      *
+## Arthur_Smith                         0.2114       2.8704    ***
+## Brandon_Staley                       0.2485       3.5461    ***
+## Urban_Meyer                          0.2333       2.8687    ***
+## Dan_Campbell                         0.2919       4.0327    ***
+## David_Culley                         0.1631       2.0916     **
+## Robert_Saleh                         0.2305       3.2705    ***
+## Nick_Sirianni                        0.2585       3.5468    ***
+## Rich_Bisaccia                        0.1467       1.8402      *
+## Josh_McDaniels                       0.1592       2.1483     **
+## Brian_Daboll                         0.2271       3.1534    ***
+## Matt_Eberflus                        0.2111       2.8605    ***
+## Lovie_Smith                          0.2040       2.7065    ***
+## Nathaniel_Hackett                    0.2253       2.9908    ***
+## Mike_McDaniel                        0.2433       3.2721    ***
+## Kevin_OConnell                       0.2227       3.0568    ***
+## Dennis_Allen                         0.1414       1.9704     **
+## Jeff_Saturday                        0.2414       2.9001    ***
+## Jay_Rosburg                          0.2703       2.5762    ***
+## DeMeco_Ryans                         0.2352       3.0126    ***
+## Shane_Steichen                       0.2277       2.8902    ***
+## Jonathan_Gannon                      0.3780       4.6876    ***
+## Antonio_Pierce                       0.1379       1.6533      *
+## Chris_Tabor                          0.2898       3.0424    ***
+## yardline_1_10                        0.1462       9.2912    ***
+## yardline_11_20                       0.0368       2.5707     **
+## yardline_21_30                       0.0671       4.6909    ***
+## yardline_31_40                       0.2401      16.0876    ***
+## yardline_41_50                       0.1718      12.1415    ***
+## yardline_51_60                       0.0296       2.1971     **
+## yardline_61_70                      -0.0276      -2.1020     **
+## yardline_71_80                      -0.0547      -4.2735    ***
+## yardline_81_90                      -0.0181      -1.3215       
+## is_first_half                       -0.1226     -27.0461    ***
+## time_in_half                        -0.0389     -13.5765    ***
+## home_attendance                      0.0064       0.7746       
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
 <pre class="r"><code># Add model fit statistics
@@ -600,9 +616,9 @@ cat(&quot;\nModel Fit Statistics:\n&quot;)</code></pre>
 <pre><code>## 
 ## Model Fit Statistics:</code></pre>
 <pre class="r"><code>cat(&quot;OLS R-squared:&quot;, round(summary(ols_model)$r.squared, 4), &quot;\n&quot;)</code></pre>
-<pre><code>## OLS R-squared: 0.2442</code></pre>
+<pre><code>## OLS R-squared: 0.2453</code></pre>
 <pre class="r"><code>cat(&quot;OLS Adj R-squared:&quot;, round(summary(ols_model)$adj.r.squared, 4), &quot;\n&quot;)</code></pre>
-<pre><code>## OLS Adj R-squared: 0.2396</code></pre>
+<pre><code>## OLS Adj R-squared: 0.2405</code></pre>
 
 <div id="rmd-source-code">LS0tDQp0aXRsZTogImF0dGVtcHRfb2xzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQpkYXRlOiAiMjAyNS0wMi0wOCINCi0tLQ0KDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKSAgIA0Kc2VsZWN0X2RhdGEgPC0gZnJlYWQoInByZWRpY3Rfc2VsZWN0X3YyLmNzdi5neiIpDQoNCiMgUmVtb3ZlIHVud2FudGVkIGNvbHVtbnMNCnNlbGVjdF9kYXRhWywgYygiYXR0ZW5kYW5jZV9yYXciLCAiYXR0ZW5kYW5jZV9wY3QiLCAibXlfaWQiKSA6PSBOVUxMXQ0KYGBgDQoNCg0KYGBge3J9DQojIExvYWQgcmVxdWlyZWQgcGFja2FnZXMNCmxpYnJhcnkoc2FuZHdpY2gpDQpsaWJyYXJ5KGxtdGVzdCkNCg0KIyBPTFMgTW9kZWwNCm9sc19tb2RlbCA8LSBsbShhdHRlbXB0IH4gLiwgZGF0YSA9IHNlbGVjdF9kYXRhKQ0KDQojIEdldCByb2J1c3Qgc3RhdGlzdGljcyBmb3IgT0xTDQpvbHNfcm9idXN0IDwtIGNvZWZ0ZXN0KG9sc19tb2RlbCwgdmNvdiA9IHZjb3ZIQyhvbHNfbW9kZWwsIHR5cGUgPSAiSEMwIikpDQoNCg0KIyBGdW5jdGlvbiB0byBmb3JtYXQgcmVzdWx0cyBuaWNlbHkNCmZvcm1hdF9yZXN1bHRzIDwtIGZ1bmN0aW9uKG1vZGVsX3Jlc3VsdHMsIG1vZGVsX25hbWUpIHsNCiAgICBjYXQoc3ByaW50ZigiXG4lcyBNb2RlbCBSZXN1bHRzIChSb2J1c3QgU3RhdGlzdGljcylcbiIsIG1vZGVsX25hbWUpKQ0KICAgIGNhdChzcHJpbnRmKCIlLTMwcyAlMTJzICUxMnMgJTZzXG4iLCAiVmFyaWFibGUiLCAiQ29lZmZpY2llbnQiLCAidC12YWx1ZSIsICJTaWciKSkNCiAgICBjYXQocGFzdGUocmVwKCItIiwgNjUpLCBjb2xsYXBzZSA9ICIiKSwgIlxuIikNCiAgICANCiAgICBmb3IoaSBpbiAxOm5yb3cobW9kZWxfcmVzdWx0cykpIHsNCiAgICAgICAgcF92YWwgPC0gbW9kZWxfcmVzdWx0c1tpLCAiUHIoPnx0fCkiXQ0KICAgICAgICBzdGFycyA8LSBpZmVsc2UocF92YWwgPCAwLjAxLCAiKioqIiwNCiAgICAgICAgICAgICAgICBpZmVsc2UocF92YWwgPCAwLjA1LCAiKioiLA0KICAgICAgICAgICAgICAgIGlmZWxzZShwX3ZhbCA8IDAuMSwgIioiLA0KICAgICAgICAgICAgICAgIGlmZWxzZShwX3ZhbCA8IDAuMTUsICIuIiwgIiIpKSkpDQogICAgICAgIA0KICAgICAgICBjYXQoc3ByaW50ZigiJS0zMHMgJTEyLjRmICUxMi40ZiAlNnNcbiIsDQogICAgICAgICAgICBzdWJzdHIocm93bmFtZXMobW9kZWxfcmVzdWx0cylbaV0sIDEsIDMwKSwNCiAgICAgICAgICAgIG1vZGVsX3Jlc3VsdHNbaSwgIkVzdGltYXRlIl0sDQogICAgICAgICAgICBtb2RlbF9yZXN1bHRzW2ksICJ0IHZhbHVlIl0sDQogICAgICAgICAgICBzdGFycykpDQogICAgfQ0KICAgIGNhdCgiXG5TaWduaWZpY2FuY2UgY29kZXM6IDAgJyoqKicgMC4wMSAnKionIDAuMDUgJyonIDAuMSAnLicgMC4xNVxuIikNCn0NCg0KIyBQcmludCByZXN1bHRzDQpmb3JtYXRfcmVzdWx0cyhvbHNfcm9idXN0LCAiT0xTIikNCg0KIyBBZGQgbW9kZWwgZml0IHN0YXRpc3RpY3MNCmNhdCgiXG5Nb2RlbCBGaXQgU3RhdGlzdGljczpcbiIpDQpjYXQoIk9MUyBSLXNxdWFyZWQ6Iiwgcm91bmQoc3VtbWFyeShvbHNfbW9kZWwpJHIuc3F1YXJlZCwgNCksICJcbiIpDQpjYXQoIk9MUyBBZGogUi1zcXVhcmVkOiIsIHJvdW5kKHN1bW1hcnkob2xzX21vZGVsKSRhZGouci5zcXVhcmVkLCA0KSwgIlxuIikNCmBgYA0KDQoNCg0K</div>
 

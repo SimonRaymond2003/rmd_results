@@ -1,0 +1,71 @@
+---
+title: "Introduction"
+output: html_document
+date: "2025-02-09"
+---
+
+# hook and context
+
+The NFL is a multi-billion dollar industry that has seen rapid growth within the American and International. This growth has placed more and more importance on the performance of NFL teams as they fight to win games to increase the popularity of their team as Davis and End (2010) argue that successful NFL franchises have measurable economic impacts on their local areas. This revelation has given rise to a age of data analytics in the NFL as teams seek to gain competitive advantages over their rivals. This had led GMs and coaches to explore different avenues of strategies.
+
+For many years in the NFL there seemed to be a consistent standard that when faced with a fourth down your team will kick a field goal or punt the ball for better field position. The only exception being the dying moments in a game when teams are desperate for a miracle. Many diverse data display tools have let us see an increase in the overall attempt percentage of teams on fourth down (Raymond, 2024). This is signalling a change in culture.
+
+In the NFL teams are realizing a need to be more aggressive on fourth downs. We have seen teams adopt this strategy. Most famously are the Detroit Lions. Since the arrival of their current head coach Dan Campbell, the lions adopted a aggressive strategy to match their aggressive “biting off knee caps” mentality (Birkett, 2023). While the lions have seen success for the first time in years, they have also been criticized for their aggressive play calling. This was highlighted in the 2023-24 playoff divisional round game in which the Lions failed a fourth down attempt that was painted as unnecessary (Sporting News, 2024). After this mid-game failure there seemed to be a shift in momentum and the lions lost the game
+
+# research problem 
+
+A result like this causes one ask the question “Did the Lions make the right call?”. This question seems to be getting answered as “yes” by the current literature. However, we need to know if different teams should "go-for-it" or not "go-for-it" depending on their situation and team make up. For example, it could be argued that the lions should have attempted the crucial fourth down in the 2023-24 playoff divisional round game. However, if the Panthers (which were a significantly worse team) were is that situation it could be argued that they should not have been as aggressive. This is because the panthers could have had a worse chance of being able to convert on fourth down.
+
+On top of this, we must be weary of any recommendation that is given to a head coach. The truth is that we are not on the field, in the locker rooms, or in team meeting. This means coaches may know more then us in certain game time decision. We must approach this topic with the idea of being more practical and clear to coaches. If we are simply pointing our algorithms and giving black-box predictions we lose all credibility as one would be oblivous to the true depth of decision making in the NFL.
+
+# research question 
+
+This leads us to have a need to answer some key questions about fourth downs in the NFL. First, is are there certain key predictable signals that can be used to decide if a given team should attempt a fourth down? Second, is what key variables about players have predictive power in fourth down attempts? In other words, are there players that are more important in fourth down situations when compared to other situations. Finally, do these key variables about players have a causal effect on the outcome of fourth down attempts? Answering these questions will allow coaches to look for key signals in fourth down situations and to know which players to start on that fourth down if it is decided to attempt. This also can be applied in discovering specialty players that are overlooked due to poor performances in situations that are not similar to fourth down.
+
+# liturature review 
+
+Much discourse revolves around the idea that NFL coaches are acting overly averse to risk, which is lowering their expected wins. Romer (2006) found that teams had begun to move towards a more conservative or safe strategy in the NFL. He argues that teams value successful gambles more then the expected win percentage in a game. He theorizes that the poor decision making is either due to risk aversion or it is due to poor information.
+
+To further this point using matching analysis, Yam and Lopez (2018) quantified this conservative decision-making, finding that teams could gain approximately 0.4 wins per year by being more aggressive on fourth downs.
+
+Goff and Locke (2019) found when revisiting Romer’s framework that Romer’s core findings are still held to be true. However, they argue that overly conservative calls are not due to poor decision making. Instead they point to risk aversion as they estimate that coaches are willing to give up two-thirds of a expected point to avoid the uncertainty of fourth down attempts.
+
+On top of this, there seems to be evidence that coaches are more cautious when their job is on the line. Owens and Roach (2018) found that in the NCAA coaches are relatively more conservative when they are more likely to be fired. At the same time they found when a coach was likely to be promoted they behave more aggressive then normal.
+
+
+If a team feels to be “on fire” should they be more aggressive since they feel they have momentum? A important area of literature is the fallacy of the “hot hand”. The hot hand is a cognitive bias that leads people to believe that a person who has a successful outcome is more likely to have a successful outcome in future attempts. Gilovich et al. (1985) investigated the “hot hand” and “shooting streaks” in basketball. They found that both players and fans believed in the fallacy despite shots being independent of each other. Losak et al. (2023) similarly discovered that fantasy baseball users gravitated towards “hot” players. At the same time they were unable to identify a viable hot hand strategy in DraftKings DFS baseball.
+
+Despite these common findings in other sports there does seem to be some evidence of momentum existing in the NFL. Roebber et al.(2022, p. 2) defined momentum in the NFL as “the sustained increase in win probability by a single team over the course of at least 2 successive changes in possession”. With this definition, they found that streaks of win probability in football are non-random and are in fact predictable with Artificial Neural Network Models.
+
+Lehman & Hahn (2013) looked to identify momentum across and within games in the NFL. Within-period momentum was found to encourage teams to take more risks. Negative within-period momentum was in turn found to encourage teams to take less risks. It was also discovered that across-period momentum has an effect only until a within-period momentum was established in a game
+
+# gap in the research
+
+The gap in the current research revolves around the lack in quality data. Currently we observe many studies include team-aggregated grades or summary statistics about teams that are playing against each other. This type of generalization is needed for econometric models that cannot handle large amounts of variables. However, our non-parametric models will be able to handle data with thousands of different variables. To take advantage of this, we will have information about every single player that is on the field when the ball is snapped. This will allow us to have better prediction power then previous researchers. These non-parametric models will also allow us to discover key player specific variables that can allow for further causal inference with specific on-field positions. We hope to find how different player and non-player variables impact the conversion of fourth down attempts.
+
+
+
+# motivation 
+
+# roadmap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

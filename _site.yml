@@ -19,6 +19,15 @@ navbar:
       href: thirddown.html
     - text: "Attempts OLS"
       href: attempt_ols.html
+    - text: "Writing Introduction"
+      href: Introduction.html
+    - text: "Writing Data"
+      href: Data.html
+    - text: "Writing Methodology"
+      href: Methodology.html
+    - text: "Writing Results"
+      href: Results.html
+      
 output:
   html_document:
     css: styles.css

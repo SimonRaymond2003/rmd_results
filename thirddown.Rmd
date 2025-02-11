@@ -41,7 +41,7 @@ get_stars <- function(p) {
 }
 
 # Maximum width for variable names
-name_width <- 20
+name_width <- 60
 
 # Print header with alignment
 cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))

@@ -353,13 +353,12 @@ library(parallel)
 xs <- model.matrix(~ . - 1 - conversion, data = outcome_data)
 y <- as.numeric(as.character(outcome_data$conversion))
 
-
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.1, by = 0.02),
+  eta = seq(0.001, 0.1, by = 0.01),
   max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
-  subsample = seq(0.8, 1, by = 0.2),
+  subsample = seq(1, 1, by = 0.2),
   colsample_bytree = seq(0.8, 1, by = 0.2),
   lambda = seq(1, 1, by = 1),                
   alpha = seq(0, 0, by = 1),                  
@@ -379,7 +378,7 @@ nc <- detectCores() - 1
 
 # Validation phase
 cat("\nPhase 1: Validation Phase\n")
-n_validations <- 20
+n_validations <- 10
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 validation_j_stats <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
@@ -602,7 +601,7 @@ nc <- detectCores() - 1
 
 # Validation phase
 cat("\nPhase 1: Validation Phase\n")
-n_validations <- 20
+n_validations <- 10
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 validation_j_stats <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
