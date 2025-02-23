@@ -367,6 +367,9 @@ div.tocify {
 <li>
   <a href="Results.html">Writing Results</a>
 </li>
+<li>
+  <a href="robustness_checks.html">Robustness Checks</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -459,18 +462,18 @@ summary(model1_select)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -0.2233 -0.2216 -0.2192 -0.2165  0.7836 
+## -0.3111 -0.2546 -0.1873 -0.1189  0.8817 
 ## 
 ## Coefficients:
 ##                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)      0.220166   0.002589  85.026   &lt;2e-16 ***
-## vegas_wp_posteam 0.002245   0.002589   0.867    0.386    
+## (Intercept)       0.22017    0.00256   86.01   &lt;2e-16 ***
+## vegas_wp_posteam -0.06251    0.00256  -24.42   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4144 on 25606 degrees of freedom
-## Multiple R-squared:  2.935e-05,  Adjusted R-squared:  -9.703e-06 
-## F-statistic: 0.7515 on 1 and 25606 DF,  p-value: 0.386</code></pre>
+## Residual standard error: 0.4096 on 25606 degrees of freedom
+## Multiple R-squared:  0.02276,    Adjusted R-squared:  0.02272 
+## F-statistic: 596.4 on 1 and 25606 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>summary(model3_select)</code></pre>
 <pre><code>## 
 ## Call:
@@ -516,18 +519,18 @@ summary(model1_select)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -0.5305 -0.5221  0.4695  0.4778  0.4899 
+## -0.6598 -0.4751  0.3419  0.4908  0.5467 
 ## 
 ## Coefficients:
 ##                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)      0.521523   0.007881   66.18   &lt;2e-16 ***
-## vegas_wp_posteam 0.007565   0.007882    0.96    0.337    
+## (Intercept)      0.521523   0.007805  66.816   &lt;2e-16 ***
+## vegas_wp_posteam 0.069340   0.007806   8.882   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4996 on 4017 degrees of freedom
-## Multiple R-squared:  0.0002293,  Adjusted R-squared:  -1.959e-05 
-## F-statistic: 0.9213 on 1 and 4017 DF,  p-value: 0.3372</code></pre>
+## Residual standard error: 0.4948 on 4017 degrees of freedom
+## Multiple R-squared:  0.01926,    Adjusted R-squared:  0.01902 
+## F-statistic:  78.9 on 1 and 4017 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>summary(model3_outcome)</code></pre>
 <pre><code>## 
 ## Call:

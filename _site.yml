@@ -27,6 +27,8 @@ navbar:
       href: Methodology.html
     - text: "Writing Results"
       href: Results.html
+    - text: "Robustness Checks"
+      href: robustness_checks.html
       
 output:
   html_document:

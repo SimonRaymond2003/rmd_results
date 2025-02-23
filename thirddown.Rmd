@@ -62,3 +62,9 @@ for (i in 1:length(t_stats)) {
 
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 ```
+
+```{r}
+# now a probit model
+# probit_model <- glm(conversion ~  ., data = ctd1, family = binomial(link = "probit"))
+```
+

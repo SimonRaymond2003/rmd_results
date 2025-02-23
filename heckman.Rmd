@@ -215,18 +215,20 @@ library(parallel)
 xs <- model.matrix(~ . - 1 - attempt - my_id, data = select_data)
 y <- as.numeric(as.character(select_data$attempt))
 
+
 # Create parameter grid
 grid <- expand.grid(
   eta = seq(0.001, 0.1, by = 0.01),
   max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
   subsample = seq(1, 1, by = 0.2),
-  colsample_bytree = seq(0.8, 1, by = 0.2),
+  colsample_bytree = seq(01, 1, by = 0.2),
   lambda = seq(1, 1, by = 1),                
   alpha = seq(0, 0, by = 1),                  
   gamma = seq(0, 0, by = 0.1),               
-  nrounds = seq(100, 500, by = 50)
+  nrounds = seq(100, 200, by = 100)
 )
+
 
 # Sample grid points
 conf_lev <- .95
@@ -243,7 +245,7 @@ scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
 #cat("\nPhase 1: Validation Phase\n")
-n_validations <- 10
+n_validations <- 5
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {

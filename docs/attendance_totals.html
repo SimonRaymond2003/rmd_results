@@ -367,6 +367,9 @@ div.tocify {
 <li>
   <a href="Results.html">Writing Results</a>
 </li>
+<li>
+  <a href="robustness_checks.html">Robustness Checks</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -484,138 +487,477 @@ for (year in years) {
 ## 
 ## Variable                 t-value     p-value   sig
 ## ---------                -------     -------  ----
-## (Intercept)               1.0385      0.2991      
-## ydstogo                 -21.1093      0.0000   ***
-## posteam_timeouts_...     -6.9386      0.0000   ***
-## defteam_timeouts_...     -0.3275      0.7433      
-## week                     -0.3293      0.7419      
-## temp                     -0.0939      0.9252      
-## wind                     -1.1886      0.2347      
-## vegas_wp                 -8.9271      0.0000   ***
-## vegas_wp_posteam          0.5528      0.5804      
-## total_line               -2.4811      0.0131    **
-## score_diff               -0.5166      0.6055      
-## down1_pct                -0.7820      0.4342      
-## down2_pct                -0.5745      0.5656      
-## down3_pct                 0.2550      0.7987      
-## down4_pct                -2.8123      0.0049   ***
-## prep_days                -1.1276      0.2595      
-## overall_win_pct           0.1451      0.8847      
-## team_win_pct             -0.2292      0.8187      
-## prev_win_pct             -0.6221      0.5339      
-## prev_shotgun_rate        -0.4790      0.6320      
-## prev_singleback_rate     -0.4332      0.6649      
-## prev_empty_rate           0.8881      0.3745      
-## prev_iform_rate          -0.0198      0.9842      
-## prev_shotgun_success      0.5710      0.5680      
-## prev_singleback_s...     -0.3958      0.6922      
-## prev_empty_success        0.3852      0.7001      
-## prev_iform_success        0.2330      0.8158      
-## prev_stop_rate_run        0.6212      0.5345      
-## prev_stop_rate_pass      -1.1943      0.2324      
-## shotgun_rate             -7.3311      0.0000   ***
-## singleback_rate          -4.9403      0.0000   ***
-## empty_rate               -5.2766      0.0000   ***
-## iform_rate               -1.8408      0.0657     *
-## shotgun_success           1.4673      0.1423     .
-## singleback_success       -1.4144      0.1573      
-## empty_success             0.7584      0.4482      
-## iform_success             0.0233      0.9815      
-## def_stop_rate_run         0.1911      0.8484      
-## def_stop_rate_pass       -3.5019      0.0005   ***
-## avg_pass_rushers         -0.7187      0.4724      
-## avg_box_defenders         0.1286      0.8977      
-## cover0_rate               0.3657      0.7146      
-## cover1_rate               1.6111      0.1072     .
-## cover2_rate               0.2918      0.7704      
-## cover3_rate               0.3462      0.7292      
-## cover4_rate               0.6771      0.4984      
-## cover6_rate              -1.5641      0.1178     .
-## two_man_rate             -0.5147      0.6068      
-## prevent_rate              0.7681      0.4425      
-## p_player_26_punti...      0.4789      0.6320      
-## p_player_26_punti...     -0.6242      0.5325      
-## p_player_26_punti...     -0.1979      0.8432      
-## p_player_26_kicko...      0.4284      0.6684      
-## p_player_26_speci...     -0.0192      0.9847      
-## p_player_26_speci...      0.0239      0.9809      
-## p_player_26_kicko...      1.6736      0.0943     *
-## p_player_26_punti...     -0.9973      0.3187      
-## k_player_25_kicko...      0.6934      0.4881      
-## k_player_25_field...      0.5523      0.5808      
-## k_player_25_kicko...      0.5828      0.5600      
-## k_player_25_speci...      0.3337      0.7386      
-## k_player_25_speci...      0.8726      0.3829      
-## k_player_25_field...     -0.7189      0.4722      
-## k_player_25_speci...     -0.9934      0.3206      
-## k_player_25_speci...      1.4345      0.1515      
-## k_player_25_kicko...     -1.2519      0.2106      
-## k_player_25_field...     -0.6653      0.5059      
-## k_player_25_speci...     -0.6419      0.5210      
-## k_player_25_kicko...      0.0054      0.9957      
-## roof_outdoors             0.5927      0.5534      
-## Chuck_Pagano              0.1569      0.8753      
-## Bruce_Arians             -0.2668      0.7896      
-## Sean_McDermott            0.9381      0.3482      
-## Ron_Rivera                0.5165      0.6055      
-## John_Fox                  0.5081      0.6114      
-## Dirk_Koetter             -0.5013      0.6162      
-## Hue_Jackson              -0.1608      0.8722      
-## John_Harbaugh             0.8533      0.3935      
-## Jason_Garrett             1.0400      0.2984      
-## Vance_Joseph              0.4656      0.6415      
-## Ben_McAdoo                0.7646      0.4446      
-## Jim_Caldwell              0.2991      0.7649      
-## Mike_McCarthy             0.9774      0.3284      
-## Dan_Quinn                 0.5609      0.5749      
-## Marvin_Lewis              0.6669      0.5049      
-## Bill_OBrien               0.0126      0.9899      
-## Adam_Gase                 0.0792      0.9368      
-## Anthony_Lynn              0.6660      0.5055      
-## Mike_Zimmer               0.8322      0.4053      
-## Mike_Tomlin               0.5614      0.5746      
-## Bill_Belichick            0.4279      0.6688      
-## Sean_Payton               0.3738      0.7086      
-## Jack_Del_Rio              0.9406      0.3469      
-## Todd_Bowles              -0.2201      0.8258      
-## Doug_Pederson             1.4879      0.1368     .
-## Andy_Reid                 1.1872      0.2352      
-## Kyle_Shanahan            -0.0614      0.9510      
-## Pete_Carroll              1.0847      0.2781      
-## Mike_Mularkey             0.5310      0.5954      
-## Doug_Marrone              0.1310      0.8958      
-## Jay_Gruden                0.5472      0.5843      
-## Sean_McVay                0.9666      0.3338      
-## Steve_Spagnuolo           1.1262      0.2601      
-## Matt_Patricia             0.8089      0.4186      
-## Mike_Vrabel               0.8672      0.3859      
-## Frank_Reich               1.4392      0.1501      
-## Jon_Gruden                0.3410      0.7331      
-## Matt_Nagy                 1.1166      0.2642      
-## Kliff_Kingsbury           0.6758      0.4992      
-## Vic_Fangio                0.3686      0.7125      
-## Matt_LaFleur              2.1073      0.0351    **
-## Brian_Flores              0.3146      0.7531      
-## Zac_Taylor                0.3907      0.6961      
-## Matt_Rhule                1.3723      0.1700      
-## Kevin_Stefanski           1.6292      0.1033     .
-## Joe_Judge                 0.2188      0.8268      
-## Romeo_Crennel            -0.1755      0.8607      
-## Raheem_Morris             0.8146      0.4153      
-## yardline_1_10             5.1330      0.0000   ***
-## yardline_11_20            2.7208      0.0065   ***
-## yardline_21_30            2.5407      0.0111    **
-## yardline_31_40            9.9047      0.0000   ***
-## yardline_41_50            6.6721      0.0000   ***
-## yardline_51_60            1.8650      0.0622     *
-## yardline_61_70           -0.1020      0.9187      
-## yardline_71_80           -1.6324      0.1026     .
-## yardline_81_90           -0.0093      0.9926      
-## is_first_half           -14.3071      0.0000   ***
-## time_in_half             -6.9212      0.0000   ***
-## attendance_raw           -0.1829      0.8549      
-## posteam_type_home         0.9379      0.3483      
-## interact_HxA              1.2239      0.2210      
+## (Intercept)               0.9491      0.3426      
+## ydstogo                 -21.3958      0.0000   ***
+## posteam_timeouts_...     -6.8467      0.0000   ***
+## defteam_timeouts_...     -0.5083      0.6112      
+## week                      0.2518      0.8012      
+## temp                     -0.0141      0.9887      
+## wind                     -0.4510      0.6520      
+## vegas_wp                 -9.6532      0.0000   ***
+## total_line               -3.2781      0.0011   ***
+## score_diff               -0.3731      0.7091      
+## roof_outdoors            -0.2157      0.8292      
+## down1_pct                -1.2580      0.2084      
+## down2_pct                -1.3206      0.1867      
+## down3_pct                 0.3106      0.7562      
+## down4_pct                -0.2611      0.7941      
+## prep_days                -1.6817      0.0927     *
+## overall_win_pct          -2.0234      0.0431    **
+## team_win_pct              2.6780      0.0074   ***
+## prev_win_pct              0.1631      0.8704      
+## prev_shotgun_rate        -0.8731      0.3827      
+## prev_singleback_rate     -0.1962      0.8444      
+## prev_empty_rate          -0.8671      0.3859      
+## prev_iform_rate          -1.9875      0.0469    **
+## prev_shotgun_success      1.7096      0.0874     *
+## prev_singleback_s...     -0.8769      0.3806      
+## prev_empty_success        1.3366      0.1814      
+## prev_iform_success        0.0760      0.9395      
+## prev_stop_rate_run       -1.9935      0.0463    **
+## prev_stop_rate_pass       0.9913      0.3216      
+## shotgun_rate              0.4311      0.6664      
+## singleback_rate          -0.2783      0.7808      
+## empty_rate                0.6915      0.4892      
+## iform_rate                0.2391      0.8110      
+## shotgun_success           1.9312      0.0535     *
+## singleback_success        0.8354      0.4035      
+## empty_success            -0.4218      0.6732      
+## iform_success             0.0024      0.9981      
+## def_stop_rate_run        -1.0602      0.2891      
+## def_stop_rate_pass       -2.5025      0.0124    **
+## avg_pass_rushers         -0.5960      0.5512      
+## avg_box_defenders         0.4508      0.6521      
+## cover0_rate              -0.1664      0.8678      
+## cover1_rate               0.2261      0.8212      
+## cover2_rate               1.6157      0.1062     .
+## cover3_rate              -0.3039      0.7612      
+## cover4_rate               0.2636      0.7921      
+## cover6_rate               0.6943      0.4875      
+## two_man_rate             -2.3780      0.0174    **
+## prevent_rate              0.3252      0.7450      
+## starter_offense_p...     -1.4345      0.1515      
+## starter_offense_p...      1.2189      0.2229      
+## starter_offense_p...     -0.7823      0.4341      
+## starter_offense_p...     -0.5141      0.6072      
+## starter_offense_p...      0.7638      0.4450      
+## starter_offense_p...     -0.9375      0.3485      
+## starter_offense_p...      0.7149      0.4747      
+## starter_offense_p...     -0.7504      0.4530      
+## starter_offense_p...     -1.1014      0.2708      
+## starter_offense_p...      0.6511      0.5150      
+## starter_offense_p...     -0.1254      0.9002      
+## starter_offense_p...      0.2107      0.8331      
+## starter_offense_p...      0.7555      0.4500      
+## starter_offense_p...      0.6656      0.5057      
+## starter_offense_p...     -0.0105      0.9916      
+## starter_offense_p...     -0.1995      0.8419      
+## starter_offense_p...     -0.4647      0.6422      
+## starter_offense_p...      0.0640      0.9490      
+## starter_offense_p...      1.1651      0.2440      
+## starter_offense_p...      0.8755      0.3813      
+## starter_offense_p...     -0.2893      0.7724      
+## starter_offense_p...      0.0481      0.9617      
+## starter_offense_p...     -1.3351      0.1819      
+## starter_offense_p...     -0.9678      0.3332      
+## starter_offense_p...      0.4775      0.6331      
+## starter_offense_p...      0.4508      0.6522      
+## starter_offense_p...     -0.7266      0.4675      
+## starter_offense_p...     -0.2572      0.7970      
+## starter_offense_p...     -1.0486      0.2944      
+## starter_offense_p...     -1.5518      0.1208     .
+## starter_offense_p...     -0.3417      0.7326      
+## starter_offense_p...     -1.1529      0.2490      
+## starter_offense_p...      0.2536      0.7998      
+## starter_offense_p...      0.5755      0.5650      
+## starter_offense_p...      0.1694      0.8655      
+## starter_offense_p...      2.0357      0.0418    **
+## starter_offense_p...      0.1606      0.8724      
+## starter_offense_p...      0.6611      0.5086      
+## starter_offense_p...     -0.5038      0.6144      
+## starter_offense_p...     -0.6976      0.4855      
+## starter_offense_p...      1.7811      0.0749     *
+## starter_offense_p...     -0.0749      0.9403      
+## starter_offense_p...     -0.4704      0.6381      
+## starter_offense_p...      1.2424      0.2141      
+## starter_offense_p...      1.1143      0.2652      
+## starter_offense_p...      1.2806      0.2004      
+## starter_offense_p...     -1.0550      0.2915      
+## starter_offense_p...      1.0643      0.2872      
+## starter_offense_p...     -0.1479      0.8824      
+## starter_offense_p...      1.6056      0.1084     .
+## starter_offense_p...      1.3592      0.1741      
+## starter_offense_p...      2.1781      0.0294    **
+## starter_offense_p...      1.0569      0.2906      
+## starter_offense_p...      1.5345      0.1250     .
+## starter_offense_p...     -0.8125      0.4165      
+## starter_offense_p...     -0.3512      0.7254      
+## starter_offense_p...     -0.2627      0.7928      
+## starter_offense_p...     -0.4035      0.6866      
+## starter_offense_p...      1.0061      0.3144      
+## starter_offense_p...     -0.4563      0.6482      
+## starter_offense_p...     -0.1717      0.8637      
+## starter_offense_p...      0.4987      0.6180      
+## starter_offense_p...      0.5771      0.5639      
+## starter_offense_p...     -1.2806      0.2004      
+## starter_offense_p...      0.3869      0.6989      
+## starter_offense_p...      1.3042      0.1922      
+## starter_defense_p...     -1.2071      0.2274      
+## starter_defense_p...      0.2831      0.7771      
+## starter_defense_p...     -0.2086      0.8348      
+## starter_defense_p...     -0.0314      0.9749      
+## starter_defense_p...     -2.0207      0.0434    **
+## starter_defense_p...     -0.4140      0.6789      
+## starter_defense_p...     -1.3227      0.1860      
+## starter_defense_p...     -0.7028      0.4822      
+## starter_defense_p...     -0.0555      0.9557      
+## starter_defense_p...     -1.9578      0.0503     *
+## starter_defense_p...      1.0609      0.2888      
+## starter_defense_p...     -0.5926      0.5535      
+## starter_defense_p...     -0.0056      0.9955      
+## starter_defense_p...      0.8773      0.3804      
+## starter_defense_p...     -0.5340      0.5934      
+## starter_defense_p...      0.2671      0.7894      
+## starter_defense_p...      0.4223      0.6728      
+## starter_defense_p...      0.6771      0.4984      
+## starter_defense_p...      1.0460      0.2956      
+## starter_defense_p...     -0.0602      0.9520      
+## starter_defense_p...     -0.6379      0.5235      
+## starter_defense_p...      0.9731      0.3305      
+## starter_defense_p...      2.0076      0.0447    **
+## starter_defense_p...     -0.6730      0.5010      
+## starter_defense_p...      0.6443      0.5194      
+## starter_defense_p...      0.0136      0.9892      
+## starter_defense_p...      0.0512      0.9591      
+## starter_defense_p...      1.6984      0.0895     *
+## starter_defense_p...     -0.1816      0.8559      
+## starter_defense_p...      0.5421      0.5878      
+## starter_defense_p...     -0.5532      0.5801      
+## starter_defense_p...     -0.3299      0.7415      
+## starter_defense_p...      2.3273      0.0200    **
+## starter_defense_p...      0.1855      0.8528      
+## starter_defense_p...     -0.1612      0.8719      
+## starter_defense_p...      1.0378      0.2994      
+## starter_defense_p...     -0.8263      0.4086      
+## starter_defense_p...      0.1245      0.9010      
+## starter_defense_p...      1.0341      0.3011      
+## starter_defense_p...     -0.2138      0.8307      
+## starter_defense_p...      0.8716      0.3834      
+## starter_defense_p...     -1.3142      0.1888      
+## starter_defense_p...     -1.8089      0.0705     *
+## starter_defense_p...      0.5021      0.6156      
+## starter_defense_p...     -0.4268      0.6695      
+## starter_defense_p...     -2.0608      0.0394    **
+## starter_defense_p...      1.5244      0.1274     .
+## starter_defense_p...      0.1279      0.8982      
+## starter_defense_p...      0.2905      0.7715      
+## starter_defense_p...     -1.2548      0.2096      
+## starter_defense_p...     -0.7969      0.4255      
+## starter_defense_p...      0.3962      0.6920      
+## starter_defense_p...     -0.3947      0.6931      
+## starter_defense_p...     -0.1302      0.8964      
+## starter_defense_p...      0.6554      0.5123      
+## starter_defense_p...     -1.7803      0.0751     *
+## starter_defense_p...      1.4124      0.1579      
+## starter_defense_p...      1.3466      0.1781      
+## starter_defense_p...     -0.3996      0.6895      
+## starter_defense_p...      0.6826      0.4949      
+## starter_defense_p...      0.8763      0.3809      
+## starter_defense_p...      0.7053      0.4806      
+## starter_defense_p...     -0.3308      0.7408      
+## starter_defense_p...     -1.1299      0.2586      
+## starter_defense_p...      0.3802      0.7038      
+## starter_defense_p...     -0.4759      0.6342      
+## starter_defense_p...     -1.4663      0.1426     .
+## starter_defense_p...      1.2337      0.2174      
+## starter_offense_p...     -0.0004      0.9997      
+## starter_offense_p...      0.3460      0.7294      
+## starter_offense_p...      2.2145      0.0268    **
+## starter_offense_p...      1.1672      0.2432      
+## starter_offense_p...      0.0484      0.9614      
+## starter_offense_p...      0.4792      0.6318      
+## starter_offense_p...      2.0637      0.0391    **
+## starter_offense_p...     -0.3111      0.7557      
+## starter_offense_p...      0.2146      0.8301      
+## starter_offense_p...      0.1676      0.8669      
+## starter_offense_p...      0.4961      0.6199      
+## starter_offense_p...     -0.0598      0.9523      
+## starter_offense_p...      0.6096      0.5422      
+## starter_offense_p...      0.8795      0.3792      
+## starter_offense_p...     -0.3448      0.7302      
+## starter_offense_p...     -0.5777      0.5635      
+## starter_offense_p...      0.0607      0.9516      
+## starter_offense_p...     -1.0640      0.2874      
+## starter_offense_p...     -0.6469      0.5177      
+## starter_offense_p...     -0.4251      0.6708      
+## starter_offense_p...      0.4963      0.6197      
+## starter_offense_p...      2.5000      0.0124    **
+## starter_offense_p...     -0.3564      0.7215      
+## starter_offense_p...     -1.1907      0.2338      
+## starter_offense_p...     -0.3639      0.7159      
+## starter_offense_p...      0.2492      0.8032      
+## starter_offense_p...     -1.0392      0.2988      
+## starter_offense_p...     -0.7062      0.4801      
+## starter_offense_p...     -0.3142      0.7534      
+## starter_offense_p...     -0.6576      0.5108      
+## starter_offense_p...      0.6463      0.5181      
+## starter_offense_p...     -0.2643      0.7916      
+## starter_offense_p...     -1.7415      0.0816     *
+## starter_offense_p...      1.1061      0.2687      
+## starter_offense_p...      1.9860      0.0471    **
+## starter_offense_p...      0.2553      0.7985      
+## starter_offense_p...      0.3909      0.6959      
+## starter_offense_p...     -1.0843      0.2783      
+## starter_offense_p...      1.0920      0.2749      
+## starter_offense_p...      0.2222      0.8242      
+## starter_offense_p...     -0.5667      0.5710      
+## starter_offense_p...     -0.9721      0.3310      
+## starter_offense_p...     -0.5855      0.5582      
+## starter_offense_p...      0.0678      0.9460      
+## starter_offense_p...      0.8704      0.3841      
+## starter_offense_p...      0.2218      0.8244      
+## starter_offense_p...     -1.3750      0.1692      
+## starter_offense_p...     -2.6281      0.0086   ***
+## starter_offense_p...     -0.3011      0.7633      
+## starter_offense_p...      0.5357      0.5922      
+## starter_offense_p...      0.4414      0.6589      
+## starter_offense_p...      0.0051      0.9959      
+## starter_offense_p...     -0.1577      0.8747      
+## starter_offense_p...      1.0456      0.2958      
+## starter_offense_p...     -1.5203      0.1285     .
+## starter_offense_p...     -0.4792      0.6318      
+## starter_offense_p...      0.1896      0.8497      
+## starter_offense_p...     -1.2880      0.1978      
+## starter_offense_p...     -0.8601      0.3898      
+## starter_offense_p...      0.7349      0.4625      
+## starter_offense_p...      0.2392      0.8110      
+## starter_offense_p...      1.6917      0.0907     *
+## starter_defense_p...     -0.4687      0.6393      
+## starter_defense_p...      1.1473      0.2513      
+## starter_defense_p...      0.4529      0.6506      
+## starter_defense_p...      0.3130      0.7543      
+## starter_defense_p...     -0.1502      0.8806      
+## starter_defense_p...     -0.5277      0.5977      
+## starter_defense_p...     -0.1848      0.8534      
+## starter_defense_p...      0.0958      0.9237      
+## starter_defense_p...     -0.2683      0.7885      
+## starter_defense_p...      0.0491      0.9608      
+## starter_defense_p...      1.7001      0.0892     *
+## starter_defense_p...     -0.0663      0.9471      
+## starter_defense_p...     -1.2181      0.2232      
+## starter_defense_p...      2.3065      0.0211    **
+## starter_defense_p...      0.6380      0.5235      
+## starter_defense_p...      0.1381      0.8901      
+## starter_defense_p...     -0.1728      0.8628      
+## starter_defense_p...      0.0424      0.9662      
+## starter_defense_p...      0.4623      0.6439      
+## starter_defense_p...     -0.4923      0.6225      
+## starter_defense_p...      1.5365      0.1245     .
+## starter_defense_p...      1.0908      0.2754      
+## starter_defense_p...      1.3356      0.1817      
+## starter_defense_p...      1.6337      0.1024     .
+## starter_defense_p...     -1.6554      0.0979     *
+## starter_defense_p...     -1.3667      0.1718      
+## starter_defense_p...      0.1793      0.8577      
+## starter_defense_p...     -0.1266      0.8992      
+## starter_defense_p...     -1.5970      0.1103     .
+## starter_defense_p...     -0.1468      0.8833      
+## starter_defense_p...     -0.6406      0.5218      
+## starter_defense_p...      0.3308      0.7408      
+## starter_defense_p...      0.2506      0.8022      
+## starter_defense_p...     -0.8378      0.4022      
+## starter_defense_p...     -0.6354      0.5252      
+## starter_defense_p...      0.6104      0.5416      
+## starter_defense_p...     -0.3525      0.7245      
+## starter_defense_p...     -1.5909      0.1117     .
+## starter_defense_p...     -0.3809      0.7033      
+## starter_defense_p...     -1.0872      0.2770      
+## starter_defense_p...     -0.8604      0.3896      
+## starter_defense_p...     -0.3007      0.7636      
+## starter_defense_p...     -1.2206      0.2223      
+## starter_defense_p...      0.3708      0.7108      
+## starter_defense_p...      0.3858      0.6997      
+## starter_defense_p...     -1.1209      0.2624      
+## starter_defense_p...     -1.5648      0.1177     .
+## starter_defense_p...      2.0294      0.0425    **
+## starter_defense_p...     -1.9474      0.0515     *
+## starter_defense_p...     -0.5571      0.5774      
+## starter_defense_p...      0.7189      0.4723      
+## starter_defense_p...     -1.5992      0.1098     .
+## starter_defense_p...     -0.0908      0.9277      
+## starter_defense_p...      0.5691      0.5693      
+## starter_defense_p...     -1.1298      0.2586      
+## starter_defense_p...     -1.4329      0.1519      
+## starter_defense_p...      0.0762      0.9393      
+## starter_defense_p...     -1.8084      0.0706     *
+## starter_defense_p...      0.4886      0.6251      
+## starter_defense_p...      0.2661      0.7902      
+## starter_defense_p...      0.3134      0.7540      
+## starter_defense_p...      0.2875      0.7737      
+## starter_defense_p...     -1.3349      0.1819      
+## starter_defense_p...     -0.8127      0.4164      
+## starter_defense_p...      0.3359      0.7369      
+## starter_defense_p...      0.3270      0.7437      
+## starter_defense_p...     -0.4459      0.6557      
+## starter_defense_p...     -0.1659      0.8682      
+## home_coach.yAndy ...     -1.6892      0.0912     *
+## home_coach.yAntho...     -0.5270      0.5982      
+## home_coach.yBen M...      0.7994      0.4241      
+## home_coach.yBill ...     -0.6293      0.5292      
+## home_coach.yBill ...     -1.5233      0.1277     .
+## home_coach.yBrian...      0.7680      0.4425      
+## home_coach.yBruce...     -0.9899      0.3223      
+## home_coach.yChuck...      0.7425      0.4578      
+## home_coach.yDan Q...     -0.9955      0.3195      
+## home_coach.yDarre...      0.7274      0.4670      
+## home_coach.yDirk ...     -0.1951      0.8453      
+## home_coach.yDoug ...     -0.0982      0.9218      
+## home_coach.yDoug ...     -1.2241      0.2209      
+## home_coach.yFrank...     -1.9006      0.0574     *
+## home_coach.yHue J...      0.2714      0.7861      
+## home_coach.yJack ...     -1.0946      0.2738      
+## home_coach.yJason...     -0.0686      0.9453      
+## home_coach.yJay G...     -1.1771      0.2392      
+## home_coach.yJim C...     -0.4696      0.6387      
+## home_coach.yJoe J...      1.0395      0.2986      
+## home_coach.yJohn Fox     -1.7349      0.0828     *
+## home_coach.yJohn ...     -0.2213      0.8248      
+## home_coach.yJon G...     -1.0635      0.2876      
+## home_coach.yKevin...     -0.5986      0.5495      
+## home_coach.yKliff...      0.9051      0.3655      
+## home_coach.yKyle ...     -1.1153      0.2648      
+## home_coach.yMarvi...     -0.1939      0.8463      
+## home_coach.yMatt ...     -0.6281      0.5299      
+## home_coach.yMatt ...      0.0141      0.9887      
+## home_coach.yMatt ...      0.9053      0.3653      
+## home_coach.yMatt ...     -2.2511      0.0244    **
+## home_coach.yMike ...      0.0273      0.9782      
+## home_coach.yMike ...      0.9523      0.3410      
+## home_coach.yMike ...     -0.2156      0.8293      
+## home_coach.yMike ...      0.7471      0.4550      
+## home_coach.yMike ...     -0.5912      0.5544      
+## home_coach.yPete ...     -0.3758      0.7071      
+## home_coach.yRahee...     -1.5830      0.1135     .
+## home_coach.yRomeo...      0.1431      0.8862      
+## home_coach.yRon R...     -0.2736      0.7844      
+## home_coach.ySean ...     -1.1236      0.2612      
+## home_coach.ySean ...     -1.1367      0.2557      
+## home_coach.ySean ...      0.3960      0.6921      
+## home_coach.ySteve...     -2.7222      0.0065   ***
+## home_coach.yTodd ...      0.5455      0.5854      
+## home_coach.yVance...      0.3364      0.7366      
+## home_coach.yVic F...     -0.0979      0.9220      
+## home_coach.yZac T...     -0.2913      0.7708      
+## away_coach.yAndy ...     -1.6657      0.0958     *
+## away_coach.yAntho...     -1.9418      0.0522     *
+## away_coach.yBen M...      0.1278      0.8983      
+## away_coach.yBill ...     -1.3659      0.1720      
+## away_coach.yBill ...     -1.1104      0.2669      
+## away_coach.yBrian...      0.3819      0.7026      
+## away_coach.yBruce...     -1.4281      0.1533      
+## away_coach.yChuck...     -0.2537      0.7997      
+## away_coach.yDan Q...     -1.0369      0.2998      
+## away_coach.yDarre...     -0.3778      0.7056      
+## away_coach.yDirk ...     -1.5687      0.1168     .
+## away_coach.yDoug ...     -1.7252      0.0845     *
+## away_coach.yDoug ...     -1.9952      0.0461    **
+## away_coach.yFrank...     -2.7089      0.0068   ***
+## away_coach.yHue J...      1.0771      0.2815      
+## away_coach.yJack ...     -0.6036      0.5461      
+## away_coach.yJason...     -0.5805      0.5616      
+## away_coach.yJay G...     -1.4212      0.1553      
+## away_coach.yJim C...     -1.6579      0.0974     *
+## away_coach.yJoe J...     -0.1286      0.8977      
+## away_coach.yJohn Fox     -0.9234      0.3558      
+## away_coach.yJohn ...     -1.1557      0.2478      
+## away_coach.yJon G...     -1.1162      0.2644      
+## away_coach.yKevin...     -0.5652      0.5719      
+## away_coach.yKliff...     -0.3335      0.7388      
+## away_coach.yKyle ...     -2.5616      0.0104    **
+## away_coach.yMarvi...     -0.8721      0.3832      
+## away_coach.yMatt ...     -2.7230      0.0065   ***
+## away_coach.yMatt ...     -1.5936      0.1111     .
+## away_coach.yMatt ...      0.9584      0.3379      
+## away_coach.yMatt ...     -3.6958      0.0002   ***
+## away_coach.yMike ...      0.0875      0.9302      
+## away_coach.yMike ...     -1.0528      0.2925      
+## away_coach.yMike ...     -1.7485      0.0804     *
+## away_coach.yMike ...     -0.1365      0.8914      
+## away_coach.yMike ...     -1.4060      0.1598      
+## away_coach.yPete ...     -1.4947      0.1350     .
+## away_coach.yRahee...     -1.5204      0.1285     .
+## away_coach.yRomeo...     -1.4606      0.1442     .
+## away_coach.yRon R...     -0.6079      0.5433      
+## away_coach.ySean ...     -2.0345      0.0419    **
+## away_coach.ySean ...     -1.5587      0.1191     .
+## away_coach.ySean ...     -0.3319      0.7400      
+## away_coach.ySteve...     -0.4744      0.6353      
+## away_coach.yTodd ...      0.0851      0.9322      
+## away_coach.yVance...     -0.0719      0.9427      
+## away_coach.yVic F...     -1.0232      0.3063      
+## away_coach.yZac T...     -0.6607      0.5088      
+## Chuck_Pagano             -0.1129      0.9101      
+## Bruce_Arians              0.1525      0.8788      
+## Sean_McDermott            1.7077      0.0877     *
+## Ron_Rivera                0.9347      0.3500      
+## John_Fox                  0.5922      0.5537      
+## Dirk_Koetter              0.3611      0.7180      
+## Hue_Jackson              -0.3901      0.6965      
+## John_Harbaugh             0.5623      0.5739      
+## Jason_Garrett            -0.4081      0.6832      
+## Vance_Joseph              0.9724      0.3309      
+## Ben_McAdoo                0.5181      0.6044      
+## Jim_Caldwell              0.7727      0.4397      
+## Mike_McCarthy             0.7856      0.4322      
+## Dan_Quinn                 0.3833      0.7015      
+## Marvin_Lewis              0.1652      0.8688      
+## Bill_OBrien               0.4035      0.6866      
+## Adam_Gase                -0.2181      0.8273      
+## Anthony_Lynn              0.9291      0.3529      
+## Mike_Zimmer               0.8042      0.4213      
+## Mike_Tomlin               1.0203      0.3076      
+## Bill_Belichick            1.0711      0.2842      
+## Sean_Payton               0.1898      0.8495      
+## Jack_Del_Rio              0.6804      0.4963      
+## Todd_Bowles              -0.2409      0.8096      
+## Doug_Pederson             1.5631      0.1181     .
+## Andy_Reid                 0.9272      0.3539      
+## Kyle_Shanahan             0.7583      0.4483      
+## Pete_Carroll              0.4846      0.6280      
+## Mike_Mularkey             1.2390      0.2154      
+## Doug_Marrone              0.3466      0.7289      
+## Jay_Gruden                1.0795      0.2804      
+## Sean_McVay                0.8161      0.4145      
+## Steve_Spagnuolo           1.5844      0.1131     .
+## Matt_Patricia            -0.4188      0.6754      
+## Mike_Vrabel               0.7550      0.4503      
+## Frank_Reich               1.5712      0.1162     .
+## Jon_Gruden                0.7478      0.4546      
+## Matt_Nagy                 0.5408      0.5887      
+## Kliff_Kingsbury           0.7098      0.4778      
+## Vic_Fangio                1.2332      0.2175      
+## Matt_LaFleur              1.4450      0.1485     .
+## Brian_Flores             -0.2091      0.8344      
+## Zac_Taylor                0.0336      0.9732      
+## Matt_Rhule                1.6667      0.0956     *
+## Kevin_Stefanski           1.2524      0.2105      
+## Joe_Judge                -0.1310      0.8958      
+## Romeo_Crennel             0.0667      0.9468      
+## Raheem_Morris             0.6839      0.4941      
+## yardline_1_10             5.2802      0.0000   ***
+## yardline_11_20            3.0290      0.0025   ***
+## yardline_21_30            2.9942      0.0028   ***
+## yardline_31_40           10.3902      0.0000   ***
+## yardline_41_50            6.8420      0.0000   ***
+## yardline_51_60            2.2943      0.0218    **
+## yardline_61_70            0.1168      0.9071      
+## yardline_71_80           -1.2834      0.1994      
+## yardline_81_90            0.0410      0.9673      
+## is_first_half           -14.4645      0.0000   ***
+## time_in_half             -6.7044      0.0000   ***
+## attendance_raw           -0.1493      0.8813      
+## posteam_type_home         1.0651      0.2869      
+## interact_HxA              0.8194      0.4126      
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
@@ -626,135 +968,469 @@ for (year in years) {
 ## 
 ## Variable                 t-value     p-value   sig
 ## ---------                -------     -------  ----
-## (Intercept)               0.7168      0.4735      
-## ydstogo                 -24.5604      0.0000   ***
-## posteam_timeouts_...     -5.4347      0.0000   ***
-## defteam_timeouts_...      0.7034      0.4819      
-## week                      1.3891      0.1649      
-## temp                     -1.8053      0.0711     *
-## wind                     -0.0397      0.9683      
-## vegas_wp                 -8.5108      0.0000   ***
-## vegas_wp_posteam          0.4465      0.6552      
-## total_line               -2.1353      0.0328    **
-## score_diff               -0.5800      0.5619      
-## down1_pct                -1.3561      0.1751      
-## down2_pct                 0.4308      0.6667      
-## down3_pct                 0.8748      0.3817      
-## down4_pct                -0.9144      0.3605      
-## prep_days                -0.5595      0.5758      
-## overall_win_pct          -0.6591      0.5099      
-## team_win_pct              0.1572      0.8751      
-## prev_win_pct             -1.7432      0.0813     *
-## prev_shotgun_rate         0.4737      0.6357      
-## prev_singleback_rate     -0.2461      0.8056      
-## prev_empty_rate          -0.6751      0.4996      
-## prev_iform_rate           1.3096      0.1904      
-## prev_shotgun_success     -0.0137      0.9890      
-## prev_singleback_s...      0.9709      0.3317      
-## prev_empty_success        0.9393      0.3476      
-## prev_iform_success        0.3649      0.7152      
-## prev_stop_rate_run        1.5879      0.1123     .
-## prev_stop_rate_pass      -1.0705      0.2844      
-## shotgun_rate             -6.4614      0.0000   ***
-## singleback_rate          -4.9562      0.0000   ***
-## empty_rate               -5.6732      0.0000   ***
-## iform_rate               -1.8535      0.0639     *
-## shotgun_success           0.2346      0.8145      
-## singleback_success       -0.7795      0.4357      
-## empty_success             0.5179      0.6045      
-## iform_success             0.6832      0.4945      
-## def_stop_rate_run        -0.4756      0.6344      
-## def_stop_rate_pass       -3.7376      0.0002   ***
-## avg_pass_rushers         -0.1447      0.8850      
-## avg_box_defenders         0.5368      0.5914      
-## cover0_rate               0.6261      0.5312      
-## cover1_rate               1.3705      0.1706      
-## cover2_rate               0.8493      0.3957      
-## cover3_rate               0.3083      0.7579      
-## cover4_rate               1.2596      0.2079      
-## cover6_rate              -0.8609      0.3893      
-## two_man_rate             -0.1404      0.8883      
-## prevent_rate             -0.3739      0.7085      
-## p_player_26_punti...      0.3895      0.6969      
-## p_player_26_punti...      0.5618      0.5743      
-## p_player_26_punti...     -1.3061      0.1915      
-## p_player_26_kicko...     -0.0909      0.9276      
-## p_player_26_speci...     -0.8819      0.3778      
-## p_player_26_speci...      0.6156      0.5382      
-## p_player_26_kicko...      1.4762      0.1399     .
-## p_player_26_punti...     -1.0106      0.3122      
-## k_player_25_kicko...      0.9103      0.3627      
-## k_player_25_field...     -0.1535      0.8780      
-## k_player_25_kicko...      0.2255      0.8216      
-## k_player_25_speci...      0.5335      0.5937      
-## k_player_25_speci...      0.5945      0.5522      
-## k_player_25_field...      0.2068      0.8362      
-## k_player_25_speci...     -0.7863      0.4317      
-## k_player_25_speci...      0.9904      0.3220      
-## k_player_25_kicko...     -0.4991      0.6178      
-## k_player_25_field...     -2.1080      0.0351    **
-## k_player_25_speci...      1.1249      0.2607      
-## k_player_25_kicko...     -0.2975      0.7661      
-## roof_outdoors             1.1491      0.2506      
-## Bruce_Arians              1.0567      0.2907      
-## Sean_McDermott            0.2416      0.8091      
-## Ron_Rivera                1.2011      0.2298      
-## Dirk_Koetter              1.5424      0.1230     .
-## Hue_Jackson              -0.4705      0.6380      
-## John_Harbaugh             0.2462      0.8056      
-## Jason_Garrett             1.2411      0.2146      
-## Vance_Joseph              0.8051      0.4208      
-## Mike_McCarthy             0.6006      0.5481      
-## Dan_Quinn                 0.4966      0.6195      
-## Marvin_Lewis              0.8306      0.4062      
-## Bill_OBrien               0.8032      0.4219      
-## Adam_Gase                 0.6684      0.5039      
-## Anthony_Lynn              1.3789      0.1680      
-## Mike_Zimmer               1.4216      0.1552      
-## Mike_Tomlin               1.1892      0.2344      
-## Bill_Belichick            0.6638      0.5069      
-## Sean_Payton               1.0562      0.2909      
-## Todd_Bowles               0.1034      0.9176      
-## Doug_Pederson             1.8126      0.0699     *
-## Andy_Reid                 0.9074      0.3642      
-## Kyle_Shanahan             0.6012      0.5478      
-## Pete_Carroll              1.4517      0.1466     .
-## Doug_Marrone              0.5570      0.5776      
-## Jay_Gruden                0.8465      0.3973      
-## Sean_McVay                1.6597      0.0970     *
-## Steve_Wilks               0.5027      0.6152      
-## Matt_Patricia             0.9360      0.3493      
-## Mike_Vrabel               1.5344      0.1250     .
-## Frank_Reich               1.1584      0.2467      
-## Pat_Shurmur               0.6263      0.5311      
-## Jon_Gruden                0.6057      0.5447      
-## Matt_Nagy                 0.5821      0.5605      
-## Gregg_Williams            0.1481      0.8822      
-## Joe_Philbin               0.3271      0.7436      
-## Kliff_Kingsbury           0.9871      0.3237      
-## Vic_Fangio                0.5237      0.6005      
-## Matt_LaFleur              1.9186      0.0551     *
-## Brian_Flores              0.3683      0.7126      
-## Zac_Taylor                0.1870      0.8517      
-## Matt_Rhule                0.3931      0.6943      
-## Kevin_Stefanski           1.5275      0.1267     .
-## Joe_Judge                 0.3389      0.7347      
-## Romeo_Crennel             0.7968      0.4256      
-## Raheem_Morris             0.2688      0.7881      
-## yardline_1_10             5.0538      0.0000   ***
-## yardline_11_20            1.6109      0.1072     .
-## yardline_21_30            1.5792      0.1143     .
-## yardline_31_40            8.5959      0.0000   ***
-## yardline_41_50            6.1604      0.0000   ***
-## yardline_51_60            1.5388      0.1239     .
-## yardline_61_70           -0.9437      0.3454      
-## yardline_71_80           -2.0457      0.0408    **
-## yardline_81_90           -0.0431      0.9657      
-## is_first_half           -15.0157      0.0000   ***
-## time_in_half             -8.7402      0.0000   ***
-## attendance_raw           -0.4623      0.6439      
-## posteam_type_home         1.3935      0.1635      
-## interact_HxA              1.4717      0.1411     .
+## (Intercept)               0.1805      0.8568      
+## ydstogo                 -24.9320      0.0000   ***
+## posteam_timeouts_...     -5.4969      0.0000   ***
+## defteam_timeouts_...      0.3947      0.6931      
+## week                      0.0364      0.9710      
+## temp                     -2.2791      0.0227    **
+## wind                      1.1044      0.2695      
+## vegas_wp                 -9.5435      0.0000   ***
+## total_line                0.4246      0.6712      
+## score_diff               -0.6851      0.4933      
+## roof_outdoors            -1.5532      0.1204     .
+## down1_pct                -0.1751      0.8610      
+## down2_pct                 0.7319      0.4643      
+## down3_pct                -0.2571      0.7971      
+## down4_pct                 1.6275      0.1037     .
+## prep_days                -0.8922      0.3723      
+## overall_win_pct           1.9475      0.0515     *
+## team_win_pct             -0.8920      0.3724      
+## prev_win_pct             -1.4281      0.1533      
+## prev_shotgun_rate         2.1775      0.0295    **
+## prev_singleback_rate      1.1325      0.2575      
+## prev_empty_rate           0.9844      0.3250      
+## prev_iform_rate           2.8451      0.0045   ***
+## prev_shotgun_success      1.6462      0.0998     *
+## prev_singleback_s...      2.1251      0.0336    **
+## prev_empty_success       -0.2208      0.8252      
+## prev_iform_success        0.7127      0.4761      
+## prev_stop_rate_run        1.1244      0.2609      
+## prev_stop_rate_pass       0.1393      0.8892      
+## shotgun_rate              1.1297      0.2586      
+## singleback_rate          -0.6757      0.4993      
+## empty_rate                0.5671      0.5707      
+## iform_rate                1.5593      0.1190     .
+## shotgun_success          -1.2860      0.1985      
+## singleback_success        1.7943      0.0728     *
+## empty_success             0.6008      0.5480      
+## iform_success            -1.2638      0.2063      
+## def_stop_rate_run        -1.0735      0.2831      
+## def_stop_rate_pass       -1.3216      0.1863      
+## avg_pass_rushers         -0.9998      0.3174      
+## avg_box_defenders         0.5342      0.5932      
+## cover0_rate               0.7083      0.4788      
+## cover1_rate               1.1636      0.2446      
+## cover2_rate               2.5681      0.0102    **
+## cover3_rate               0.9047      0.3657      
+## cover4_rate               2.3860      0.0171    **
+## cover6_rate              -0.5302      0.5960      
+## two_man_rate             -1.5225      0.1279     .
+## prevent_rate              0.2879      0.7734      
+## starter_offense_p...     -1.0512      0.2932      
+## starter_offense_p...      1.2792      0.2009      
+## starter_offense_p...      0.0480      0.9617      
+## starter_offense_p...     -0.9849      0.3247      
+## starter_offense_p...      2.5325      0.0113    **
+## starter_offense_p...     -1.8499      0.0644     *
+## starter_offense_p...      1.8957      0.0580     *
+## starter_offense_p...     -1.0889      0.2762      
+## starter_offense_p...     -0.5561      0.5781      
+## starter_offense_p...      0.0517      0.9588      
+## starter_offense_p...     -0.4286      0.6682      
+## starter_offense_p...     -1.7118      0.0870     *
+## starter_offense_p...      0.5193      0.6036      
+## starter_offense_p...     -0.1343      0.8932      
+## starter_offense_p...     -1.8717      0.0613     *
+## starter_offense_p...     -0.1217      0.9032      
+## starter_offense_p...     -1.1297      0.2587      
+## starter_offense_p...     -0.1029      0.9180      
+## starter_offense_p...     -0.3127      0.7545      
+## starter_offense_p...      1.0902      0.2757      
+## starter_offense_p...      0.6521      0.5143      
+## starter_offense_p...      0.9245      0.3553      
+## starter_offense_p...     -0.2396      0.8107      
+## starter_offense_p...     -0.7702      0.4412      
+## starter_offense_p...      0.1750      0.8611      
+## starter_offense_p...      0.5040      0.6143      
+## starter_offense_p...     -2.4891      0.0128    **
+## starter_offense_p...     -0.1740      0.8618      
+## starter_offense_p...     -1.2777      0.2014      
+## starter_offense_p...      1.0161      0.3096      
+## starter_offense_p...     -0.8785      0.3797      
+## starter_offense_p...      0.0351      0.9720      
+## starter_offense_p...     -0.2099      0.8338      
+## starter_offense_p...      1.1505      0.2500      
+## starter_offense_p...      0.4234      0.6720      
+## starter_offense_p...      0.2437      0.8075      
+## starter_offense_p...     -0.1872      0.8515      
+## starter_offense_p...      1.1173      0.2639      
+## starter_offense_p...     -0.4567      0.6479      
+## starter_offense_p...     -1.1164      0.2643      
+## starter_offense_p...     -0.0294      0.9766      
+## starter_offense_p...     -0.1787      0.8582      
+## starter_offense_p...     -0.3417      0.7326      
+## starter_offense_p...      1.7162      0.0862     *
+## starter_offense_p...      0.7068      0.4797      
+## starter_offense_p...      0.4814      0.6303      
+## starter_offense_p...     -0.9044      0.3658      
+## starter_offense_p...      0.3021      0.7626      
+## starter_offense_p...      1.8522      0.0640     *
+## starter_offense_p...      1.8958      0.0580     *
+## starter_offense_p...     -0.6204      0.5350      
+## starter_offense_p...      0.1526      0.8787      
+## starter_offense_p...      0.7805      0.4351      
+## starter_offense_p...      1.1485      0.2508      
+## starter_offense_p...     -0.2828      0.7773      
+## starter_offense_p...      0.8187      0.4130      
+## starter_offense_p...      0.3944      0.6933      
+## starter_offense_p...      1.2587      0.2082      
+## starter_offense_p...      0.1130      0.9100      
+## starter_offense_p...      0.3419      0.7325      
+## starter_offense_p...      0.2996      0.7645      
+## starter_offense_p...      1.3756      0.1690      
+## starter_offense_p...      0.4156      0.6777      
+## starter_offense_p...     -0.4351      0.6635      
+## starter_offense_p...     -1.4900      0.1363     .
+## starter_offense_p...     -0.1203      0.9043      
+## starter_defense_p...     -0.0027      0.9979      
+## starter_defense_p...     -0.2475      0.8045      
+## starter_defense_p...      0.2929      0.7696      
+## starter_defense_p...      0.4945      0.6210      
+## starter_defense_p...     -0.2030      0.8391      
+## starter_defense_p...      1.2057      0.2280      
+## starter_defense_p...     -0.1558      0.8762      
+## starter_defense_p...      0.4258      0.6702      
+## starter_defense_p...      0.4952      0.6205      
+## starter_defense_p...     -1.5944      0.1109     .
+## starter_defense_p...      1.1686      0.2426      
+## starter_defense_p...      0.5464      0.5848      
+## starter_defense_p...      0.3014      0.7631      
+## starter_defense_p...     -0.5408      0.5887      
+## starter_defense_p...      0.1951      0.8453      
+## starter_defense_p...      0.6955      0.4867      
+## starter_defense_p...      0.2422      0.8086      
+## starter_defense_p...     -0.9869      0.3237      
+## starter_defense_p...      1.1539      0.2486      
+## starter_defense_p...     -1.1616      0.2454      
+## starter_defense_p...     -0.5106      0.6096      
+## starter_defense_p...     -0.7149      0.4747      
+## starter_defense_p...     -0.3422      0.7322      
+## starter_defense_p...     -1.3736      0.1696      
+## starter_defense_p...     -1.0506      0.2935      
+## starter_defense_p...      0.4917      0.6229      
+## starter_defense_p...      0.4933      0.6218      
+## starter_defense_p...      1.4237      0.1546      
+## starter_defense_p...      0.1566      0.8755      
+## starter_defense_p...      0.4981      0.6184      
+## starter_defense_p...     -0.0140      0.9889      
+## starter_defense_p...     -0.7227      0.4699      
+## starter_defense_p...      1.9501      0.0512     *
+## starter_defense_p...     -1.2036      0.2288      
+## starter_defense_p...     -1.4254      0.1541      
+## starter_defense_p...      0.3314      0.7403      
+## starter_defense_p...     -1.8850      0.0595     *
+## starter_defense_p...     -1.3995      0.1617      
+## starter_defense_p...     -0.6147      0.5388      
+## starter_defense_p...     -0.4215      0.6734      
+## starter_defense_p...      1.9630      0.0497    **
+## starter_defense_p...     -0.4754      0.6345      
+## starter_defense_p...     -0.8459      0.3976      
+## starter_defense_p...      0.6188      0.5361      
+## starter_defense_p...      0.8888      0.3741      
+## starter_defense_p...     -1.2232      0.2213      
+## starter_defense_p...      0.3114      0.7555      
+## starter_defense_p...      0.3985      0.6903      
+## starter_defense_p...      0.0328      0.9738      
+## starter_defense_p...      0.5320      0.5947      
+## starter_defense_p...     -2.5886      0.0097   ***
+## starter_defense_p...     -1.3090      0.1906      
+## starter_defense_p...     -0.6046      0.5455      
+## starter_defense_p...     -0.8315      0.4057      
+## starter_defense_p...      1.7918      0.0732     *
+## starter_defense_p...     -0.9184      0.3584      
+## starter_defense_p...      0.6132      0.5398      
+## starter_defense_p...      0.2095      0.8341      
+## starter_defense_p...     -0.6032      0.5464      
+## starter_defense_p...      1.5480      0.1217     .
+## starter_defense_p...     -1.1506      0.2499      
+## starter_defense_p...      1.5991      0.1098     .
+## starter_defense_p...      1.4923      0.1357     .
+## starter_defense_p...     -1.5835      0.1134     .
+## starter_defense_p...     -0.3602      0.7187      
+## starter_defense_p...     -0.5588      0.5763      
+## starter_defense_p...      0.7568      0.4492      
+## starter_defense_p...      0.5747      0.5655      
+## starter_offense_p...      0.3544      0.7231      
+## starter_offense_p...      1.0589      0.2897      
+## starter_offense_p...     -0.0690      0.9450      
+## starter_offense_p...     -0.9716      0.3313      
+## starter_offense_p...     -0.7777      0.4368      
+## starter_offense_p...     -1.0724      0.2836      
+## starter_offense_p...      1.0523      0.2927      
+## starter_offense_p...      1.0252      0.3053      
+## starter_offense_p...      0.9141      0.3607      
+## starter_offense_p...      0.4616      0.6444      
+## starter_offense_p...      1.3305      0.1834      
+## starter_offense_p...     -0.0999      0.9204      
+## starter_offense_p...     -0.7384      0.4603      
+## starter_offense_p...      0.6755      0.4994      
+## starter_offense_p...      0.0086      0.9932      
+## starter_offense_p...     -0.0405      0.9677      
+## starter_offense_p...      0.9588      0.3377      
+## starter_offense_p...     -1.4926      0.1356     .
+## starter_offense_p...      0.4248      0.6710      
+## starter_offense_p...     -0.4109      0.6812      
+## starter_offense_p...     -1.6590      0.0972     *
+## starter_offense_p...     -0.0307      0.9755      
+## starter_offense_p...      0.5802      0.5618      
+## starter_offense_p...     -0.8237      0.4102      
+## starter_offense_p...     -0.8585      0.3906      
+## starter_offense_p...     -0.9993      0.3177      
+## starter_offense_p...      0.1078      0.9141      
+## starter_offense_p...     -2.3355      0.0195    **
+## starter_offense_p...     -0.7833      0.4335      
+## starter_offense_p...     -1.3157      0.1883      
+## starter_offense_p...     -0.5878      0.5567      
+## starter_offense_p...     -0.3968      0.6915      
+## starter_offense_p...     -1.1243      0.2609      
+## starter_offense_p...     -1.2698      0.2042      
+## starter_offense_p...      0.9070      0.3644      
+## starter_offense_p...      2.1167      0.0343    **
+## starter_offense_p...      0.5753      0.5651      
+## starter_offense_p...     -0.5745      0.5656      
+## starter_offense_p...     -0.3582      0.7202      
+## starter_offense_p...      1.3011      0.1933      
+## starter_offense_p...     -0.5793      0.5624      
+## starter_offense_p...     -2.0227      0.0431    **
+## starter_offense_p...     -1.1704      0.2419      
+## starter_offense_p...     -2.1881      0.0287    **
+## starter_offense_p...      0.7644      0.4446      
+## starter_offense_p...      0.3593      0.7194      
+## starter_offense_p...      0.8549      0.3927      
+## starter_offense_p...     -0.3781      0.7054      
+## starter_offense_p...     -2.3080      0.0210    **
+## starter_offense_p...      0.4124      0.6800      
+## starter_offense_p...      0.6683      0.5040      
+## starter_offense_p...      0.0909      0.9276      
+## starter_offense_p...      0.7014      0.4831      
+## starter_offense_p...     -0.9822      0.3260      
+## starter_offense_p...      1.1212      0.2622      
+## starter_offense_p...      0.3216      0.7478      
+## starter_offense_p...     -0.4735      0.6358      
+## starter_offense_p...      0.4910      0.6234      
+## starter_offense_p...     -0.4690      0.6391      
+## starter_offense_p...     -1.4105      0.1584      
+## starter_offense_p...     -0.7767      0.4374      
+## starter_offense_p...      1.5855      0.1129     .
+## starter_offense_p...      0.4543      0.6496      
+## starter_defense_p...     -2.4244      0.0154    **
+## starter_defense_p...      0.1161      0.9075      
+## starter_defense_p...      2.8122      0.0049   ***
+## starter_defense_p...     -0.1304      0.8962      
+## starter_defense_p...      1.4111      0.1583      
+## starter_defense_p...     -0.0399      0.9682      
+## starter_defense_p...     -1.2463      0.2127      
+## starter_defense_p...     -0.2437      0.8075      
+## starter_defense_p...      1.1386      0.2549      
+## starter_defense_p...      1.0653      0.2868      
+## starter_defense_p...      1.2921      0.1964      
+## starter_defense_p...      0.8659      0.3866      
+## starter_defense_p...      1.7425      0.0815     *
+## starter_defense_p...      1.7176      0.0859     *
+## starter_defense_p...      0.8808      0.3784      
+## starter_defense_p...     -1.7048      0.0883     *
+## starter_defense_p...     -0.3905      0.6962      
+## starter_defense_p...     -2.7448      0.0061   ***
+## starter_defense_p...      0.5571      0.5775      
+## starter_defense_p...      0.3100      0.7566      
+## starter_defense_p...      0.2788      0.7804      
+## starter_defense_p...      2.0569      0.0397    **
+## starter_defense_p...      0.5367      0.5915      
+## starter_defense_p...     -0.2383      0.8117      
+## starter_defense_p...     -0.9974      0.3186      
+## starter_defense_p...      0.0525      0.9582      
+## starter_defense_p...      0.6830      0.4947      
+## starter_defense_p...      0.9912      0.3216      
+## starter_defense_p...     -1.2342      0.2172      
+## starter_defense_p...     -1.4872      0.1370     .
+## starter_defense_p...     -0.6360      0.5248      
+## starter_defense_p...     -0.5825      0.5602      
+## starter_defense_p...     -0.1255      0.9001      
+## starter_defense_p...      0.7713      0.4405      
+## starter_defense_p...     -0.0812      0.9353      
+## starter_defense_p...      0.8147      0.4153      
+## starter_defense_p...      1.6975      0.0897     *
+## starter_defense_p...     -1.0232      0.3063      
+## starter_defense_p...     -0.1879      0.8509      
+## starter_defense_p...     -1.4447      0.1486     .
+## starter_defense_p...     -0.0642      0.9488      
+## starter_defense_p...      0.2445      0.8068      
+## starter_defense_p...     -0.7341      0.4629      
+## starter_defense_p...      0.2432      0.8078      
+## starter_defense_p...     -0.7692      0.4418      
+## starter_defense_p...      1.1223      0.2618      
+## starter_defense_p...      0.1032      0.9178      
+## starter_defense_p...     -0.3767      0.7064      
+## starter_defense_p...     -1.6875      0.0916     *
+## starter_defense_p...      0.3179      0.7506      
+## starter_defense_p...      0.2358      0.8136      
+## starter_defense_p...     -1.8359      0.0664     *
+## starter_defense_p...      2.0260      0.0428    **
+## starter_defense_p...     -1.2541      0.2098      
+## starter_defense_p...     -1.6555      0.0979     *
+## starter_defense_p...     -0.8457      0.3978      
+## starter_defense_p...      0.5264      0.5986      
+## starter_defense_p...     -1.7682      0.0771     *
+## starter_defense_p...     -0.2496      0.8029      
+## starter_defense_p...     -1.6165      0.1060     .
+## starter_defense_p...      1.9859      0.0471    **
+## starter_defense_p...     -0.3199      0.7491      
+## starter_defense_p...     -0.4967      0.6194      
+## starter_defense_p...      1.2792      0.2009      
+## starter_defense_p...     -1.0303      0.3029      
+## starter_defense_p...      0.2333      0.8156      
+## starter_defense_p...     -2.8959      0.0038   ***
+## starter_defense_p...      0.4716      0.6372      
+## home_coach.yAndy ...     -0.1382      0.8901      
+## home_coach.yAntho...     -1.3891      0.1649      
+## home_coach.yBill ...     -0.8720      0.3832      
+## home_coach.yBill ...     -2.2292      0.0258    **
+## home_coach.yBrian...      0.1834      0.8545      
+## home_coach.yBruce...     -1.0713      0.2841      
+## home_coach.yDan Q...     -1.7214      0.0852     *
+## home_coach.yDarre...      0.3671      0.7136      
+## home_coach.yDirk ...     -0.4882      0.6254      
+## home_coach.yDoug ...     -0.1819      0.8556      
+## home_coach.yDoug ...     -1.3789      0.1680      
+## home_coach.yFrank...     -2.3937      0.0167    **
+## home_coach.yGregg...     -0.4480      0.6542      
+## home_coach.yHue J...      0.1884      0.8505      
+## home_coach.yJason...     -1.2071      0.2274      
+## home_coach.yJay G...     -0.8780      0.3800      
+## home_coach.yJoe J...     -0.3563      0.7216      
+## home_coach.yJoe P...     -1.3989      0.1619      
+## home_coach.yJohn ...     -0.1158      0.9078      
+## home_coach.yJon G...     -0.3288      0.7423      
+## home_coach.yKevin...     -0.5369      0.5914      
+## home_coach.yKliff...     -0.6767      0.4986      
+## home_coach.yKyle ...     -0.6979      0.4853      
+## home_coach.yMarvi...     -0.8131      0.4162      
+## home_coach.yMatt ...     -0.6505      0.5154      
+## home_coach.yMatt ...     -0.5855      0.5582      
+## home_coach.yMatt ...     -0.6138      0.5394      
+## home_coach.yMatt ...     -1.2262      0.2202      
+## home_coach.yMike ...     -0.2255      0.8216      
+## home_coach.yMike ...      0.1178      0.9062      
+## home_coach.yMike ...      0.5504      0.5820      
+## home_coach.yMike ...     -1.7105      0.0872     *
+## home_coach.yPat S...      1.2719      0.2034      
+## home_coach.yPete ...     -2.1405      0.0324    **
+## home_coach.yRahee...     -0.7466      0.4553      
+## home_coach.yRomeo...     -0.2845      0.7761      
+## home_coach.yRon R...     -0.1707      0.8645      
+## home_coach.ySean ...     -1.7182      0.0858     *
+## home_coach.ySean ...     -1.0804      0.2800      
+## home_coach.ySean ...     -0.4054      0.6852      
+## home_coach.ySteve...     -1.1024      0.2703      
+## home_coach.yTodd ...      0.5864      0.5577      
+## home_coach.yVance...     -0.6433      0.5200      
+## home_coach.yVic F...      0.0099      0.9921      
+## home_coach.yZac T...     -0.4249      0.6710      
+## away_coach.yAndy ...     -1.2176      0.2234      
+## away_coach.yAntho...     -1.8287      0.0675     *
+## away_coach.yBill ...     -1.4421      0.1493     .
+## away_coach.yBill ...     -1.6916      0.0908     *
+## away_coach.yBrian...      0.0178      0.9858      
+## away_coach.yBruce...     -1.2079      0.2271      
+## away_coach.yDan Q...     -0.1730      0.8626      
+## away_coach.yDarre...      0.3096      0.7569      
+## away_coach.yDirk ...     -0.5101      0.6100      
+## away_coach.yDoug ...     -0.0626      0.9501      
+## away_coach.yDoug ...     -1.9288      0.0538     *
+## away_coach.yFrank...     -1.5193      0.1287     .
+## away_coach.yGregg...     -0.2443      0.8070      
+## away_coach.yHue J...     -1.9987      0.0457    **
+## away_coach.yJason...     -0.2402      0.8102      
+## away_coach.yJay G...     -1.6970      0.0897     *
+## away_coach.yJoe J...     -0.1560      0.8760      
+## away_coach.yJoe P...     -0.5356      0.5922      
+## away_coach.yJohn ...      0.1208      0.9039      
+## away_coach.yJon G...     -0.6923      0.4888      
+## away_coach.yKevin...      0.4439      0.6571      
+## away_coach.yKliff...     -1.2697      0.2042      
+## away_coach.yKyle ...     -0.1554      0.8765      
+## away_coach.yMarvi...     -0.9608      0.3367      
+## away_coach.yMatt ...     -2.3296      0.0199    **
+## away_coach.yMatt ...     -0.0843      0.9328      
+## away_coach.yMatt ...     -0.1624      0.8710      
+## away_coach.yMatt ...     -2.2832      0.0225    **
+## away_coach.yMike ...      0.3071      0.7588      
+## away_coach.yMike ...     -0.8012      0.4230      
+## away_coach.yMike ...     -0.4802      0.6311      
+## away_coach.yMike ...     -2.1726      0.0298    **
+## away_coach.yPat S...     -0.7417      0.4583      
+## away_coach.yPete ...     -2.1259      0.0335    **
+## away_coach.yRahee...     -1.2165      0.2239      
+## away_coach.yRomeo...     -0.8603      0.3897      
+## away_coach.yRon R...     -0.2661      0.7902      
+## away_coach.ySean ...     -1.7438      0.0812     *
+## away_coach.ySean ...     -1.1793      0.2383      
+## away_coach.ySean ...     -0.2222      0.8242      
+## away_coach.ySteve...      1.1183      0.2635      
+## away_coach.yTodd ...     -1.6508      0.0988     *
+## away_coach.yVance...     -0.3364      0.7366      
+## away_coach.yVic F...     -0.5262      0.5988      
+## away_coach.yZac T...      0.0358      0.9714      
+## Bruce_Arians              1.3360      0.1816      
+## Sean_McDermott            2.0734      0.0382    **
+## Ron_Rivera                1.8942      0.0582     *
+## Dirk_Koetter              1.1742      0.2403      
+## Hue_Jackson               1.6592      0.0971     *
+## John_Harbaugh             1.7644      0.0777     *
+## Jason_Garrett             1.4746      0.1404     .
+## Vance_Joseph              1.9015      0.0573     *
+## Mike_McCarthy             1.0301      0.3030      
+## Dan_Quinn                 1.7998      0.0719     *
+## Marvin_Lewis              1.4464      0.1481     .
+## Bill_OBrien               2.2765      0.0228    **
+## Adam_Gase                 1.6718      0.0946     *
+## Anthony_Lynn              1.9636      0.0496    **
+## Mike_Zimmer               2.5876      0.0097   ***
+## Mike_Tomlin               1.2678      0.2049      
+## Bill_Belichick            0.9991      0.3178      
+## Sean_Payton               1.4635      0.1434     .
+## Todd_Bowles               1.9544      0.0507     *
+## Doug_Pederson             1.7721      0.0764     *
+## Andy_Reid                 1.1789      0.2385      
+## Kyle_Shanahan             0.8594      0.3901      
+## Pete_Carroll              1.8439      0.0652     *
+## Doug_Marrone              1.7726      0.0763     *
+## Jay_Gruden                2.2430      0.0249    **
+## Sean_McVay                1.8512      0.0642     *
+## Steve_Wilks               1.6352      0.1021     .
+## Matt_Patricia             2.2386      0.0252    **
+## Mike_Vrabel               1.3366      0.1814      
+## Frank_Reich               1.8344      0.0666     *
+## Pat_Shurmur               2.1293      0.0333    **
+## Jon_Gruden                1.4164      0.1567      
+## Matt_Nagy                 2.1205      0.0340    **
+## Gregg_Williams            1.4820      0.1384     .
+## Joe_Philbin               1.0435      0.2968      
+## Kliff_Kingsbury           2.0149      0.0440    **
+## Vic_Fangio                1.4229      0.1548      
+## Matt_LaFleur              2.0003      0.0455    **
+## Brian_Flores              1.0107      0.3122      
+## Zac_Taylor                1.2838      0.1993      
+## Matt_Rhule                1.8634      0.0625     *
+## Kevin_Stefanski           1.8263      0.0679     *
+## Joe_Judge                 1.3045      0.1921      
+## Romeo_Crennel             1.6635      0.0963     *
+## Raheem_Morris             1.5671      0.1171     .
+## yardline_1_10             4.7725      0.0000   ***
+## yardline_11_20            1.2271      0.2198      
+## yardline_21_30            1.4707      0.1414     .
+## yardline_31_40            8.0138      0.0000   ***
+## yardline_41_50            5.6433      0.0000   ***
+## yardline_51_60            1.1649      0.2441      
+## yardline_61_70           -1.2709      0.2038      
+## yardline_71_80           -2.3263      0.0200    **
+## yardline_81_90           -0.5189      0.6038      
+## is_first_half           -15.0210      0.0000   ***
+## time_in_half             -8.3884      0.0000   ***
+## attendance_raw           -1.0954      0.2734      
+## posteam_type_home         2.3847      0.0171    **
+## interact_HxA              1.8924      0.0585     *
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
@@ -765,129 +1441,451 @@ for (year in years) {
 ## 
 ## Variable                 t-value     p-value   sig
 ## ---------                -------     -------  ----
-## (Intercept)               1.6855      0.0919     *
-## ydstogo                 -25.1848      0.0000   ***
-## posteam_timeouts_...     -6.4093      0.0000   ***
-## defteam_timeouts_...      0.2420      0.8088      
-## week                      0.4651      0.6419      
-## temp                     -0.6753      0.4995      
-## wind                     -0.1843      0.8538      
-## vegas_wp                 -8.2393      0.0000   ***
-## vegas_wp_posteam         -0.8652      0.3870      
-## total_line               -1.7727      0.0763     *
-## score_diff               -1.4283      0.1532      
-## down1_pct                -1.5101      0.1311     .
-## down2_pct                -1.3944      0.1632      
-## down3_pct                -1.2688      0.2045      
-## down4_pct                -1.6263      0.1039     .
-## prep_days                -1.1964      0.2316      
-## overall_win_pct          -0.0742      0.9408      
-## team_win_pct              0.2592      0.7955      
-## prev_win_pct              0.6288      0.5295      
-## prev_shotgun_rate         0.1055      0.9160      
-## prev_singleback_rate     -0.4159      0.6775      
-## prev_empty_rate           1.6311      0.1029     .
-## prev_iform_rate           1.5771      0.1148     .
-## prev_shotgun_success     -1.1089      0.2675      
-## prev_singleback_s...     -1.4569      0.1452     .
-## prev_empty_success       -0.8108      0.4175      
-## prev_iform_success       -1.1308      0.2582      
-## prev_stop_rate_run       -0.1374      0.8907      
-## prev_stop_rate_pass      -0.5849      0.5586      
-## shotgun_rate             -7.9824      0.0000   ***
-## singleback_rate          -5.9968      0.0000   ***
-## empty_rate               -5.6355      0.0000   ***
-## iform_rate               -3.6523      0.0003   ***
-## shotgun_success           0.6819      0.4953      
-## singleback_success       -0.2180      0.8274      
-## empty_success            -0.4436      0.6573      
-## iform_success             1.8081      0.0706     *
-## def_stop_rate_run        -0.9209      0.3571      
-## def_stop_rate_pass       -3.1357      0.0017   ***
-## avg_pass_rushers         -0.5170      0.6052      
-## avg_box_defenders         0.3807      0.7034      
-## cover0_rate               0.3284      0.7427      
-## cover1_rate               1.0214      0.3071      
-## cover2_rate               0.3833      0.7015      
-## cover3_rate               0.0757      0.9397      
-## cover4_rate               1.1277      0.2595      
-## cover6_rate              -1.6682      0.0953     *
-## two_man_rate              0.7664      0.4435      
-## prevent_rate             -0.0121      0.9904      
-## p_player_26_punti...      0.2780      0.7810      
-## p_player_26_punti...     -0.2957      0.7675      
-## p_player_26_punti...     -1.4215      0.1552      
-## p_player_26_kicko...     -0.3820      0.7025      
-## p_player_26_speci...     -0.1435      0.8859      
-## p_player_26_speci...      0.7912      0.4289      
-## p_player_26_kicko...      1.5092      0.1313     .
-## p_player_26_punti...     -0.3322      0.7397      
-## k_player_25_kicko...      1.2393      0.2153      
-## k_player_25_field...      0.4861      0.6269      
-## k_player_25_kicko...     -0.0160      0.9873      
-## k_player_25_speci...     -0.3735      0.7088      
-## k_player_25_speci...      1.4776      0.1396     .
-## k_player_25_field...     -1.2443      0.2134      
-## k_player_25_speci...     -0.1601      0.8728      
-## k_player_25_speci...      1.4678      0.1422     .
-## k_player_25_kicko...     -0.7464      0.4555      
-## k_player_25_field...     -0.8268      0.4084      
-## k_player_25_speci...     -0.9535      0.3404      
-## k_player_25_kicko...     -0.6193      0.5357      
-## roof_outdoors            -0.2470      0.8049      
-## Bruce_Arians             -0.2093      0.8342      
-## Sean_McDermott           -0.3685      0.7125      
-## Ron_Rivera               -0.4146      0.6784      
-## John_Harbaugh             1.1479      0.2511      
-## Jason_Garrett             0.7149      0.4747      
-## Mike_McCarthy             1.2701      0.2041      
-## Dan_Quinn                 1.0511      0.2933      
-## Bill_OBrien               0.6509      0.5151      
-## Adam_Gase                -0.9202      0.3575      
-## Anthony_Lynn              0.3888      0.6974      
-## Mike_Zimmer               1.0119      0.3116      
-## Mike_Tomlin              -1.1957      0.2319      
-## Bill_Belichick           -0.3522      0.7247      
-## Sean_Payton               0.4516      0.6515      
-## Doug_Pederson             1.3897      0.1647      
-## Andy_Reid                 0.8386      0.4017      
-## Kyle_Shanahan            -0.9176      0.3589      
-## Pete_Carroll              1.0859      0.2776      
-## Doug_Marrone             -0.0219      0.9825      
-## Jay_Gruden               -1.1487      0.2507      
-## Sean_McVay                0.8910      0.3730      
-## Matt_Patricia             0.5406      0.5888      
-## Mike_Vrabel              -0.0768      0.9388      
-## Frank_Reich               1.5139      0.1301     .
-## Pat_Shurmur               0.5090      0.6107      
-## Jon_Gruden               -0.5850      0.5586      
-## Matt_Nagy                -0.0837      0.9333      
-## Kliff_Kingsbury           0.3746      0.7080      
-## Vic_Fangio               -0.2409      0.8097      
-## Freddie_Kitchens         -0.4822      0.6297      
-## Matt_LaFleur              1.3062      0.1915      
-## Brian_Flores             -0.0204      0.9837      
-## Zac_Taylor                0.6919      0.4890      
-## Bill_Callahan            -1.4018      0.1610      
-## Matt_Rhule                2.0628      0.0392    **
-## Kevin_Stefanski           2.0929      0.0364    **
-## Joe_Judge                -0.4846      0.6280      
-## Romeo_Crennel            -0.1483      0.8821      
-## Raheem_Morris             0.6175      0.5369      
-## yardline_1_10             5.8704      0.0000   ***
-## yardline_11_20            1.9960      0.0460    **
-## yardline_21_30            2.8521      0.0044   ***
-## yardline_31_40           10.6300      0.0000   ***
-## yardline_41_50            7.6913      0.0000   ***
-## yardline_51_60            2.0570      0.0397    **
-## yardline_61_70            0.0063      0.9950      
-## yardline_71_80           -0.5809      0.5613      
-## yardline_81_90            1.3970      0.1625      
-## is_first_half           -16.0901      0.0000   ***
-## time_in_half             -8.0090      0.0000   ***
-## attendance_raw           -0.5318      0.5949      
-## posteam_type_home         1.8623      0.0626     *
-## interact_HxA              2.5854      0.0097   ***
+## (Intercept)               1.3273      0.1844      
+## ydstogo                 -25.9229      0.0000   ***
+## posteam_timeouts_...     -6.4980      0.0000   ***
+## defteam_timeouts_...     -0.1009      0.9196      
+## week                      0.3919      0.6951      
+## temp                     -0.4415      0.6588      
+## wind                      0.6474      0.5174      
+## vegas_wp                 -8.7858      0.0000   ***
+## total_line               -1.1077      0.2680      
+## score_diff               -1.6360      0.1019     .
+## roof_outdoors            -0.1124      0.9105      
+## down1_pct                -0.5689      0.5694      
+## down2_pct                -2.2829      0.0225    **
+## down3_pct                -0.7313      0.4646      
+## down4_pct                -0.5010      0.6164      
+## prep_days                -1.6744      0.0941     *
+## overall_win_pct           0.4432      0.6577      
+## team_win_pct              1.7910      0.0733     *
+## prev_win_pct              0.0126      0.9900      
+## prev_shotgun_rate        -0.5583      0.5767      
+## prev_singleback_rate     -0.7088      0.4785      
+## prev_empty_rate           0.6141      0.5391      
+## prev_iform_rate           1.5983      0.1100     .
+## prev_shotgun_success      0.2933      0.7693      
+## prev_singleback_s...     -0.1854      0.8530      
+## prev_empty_success       -0.3504      0.7260      
+## prev_iform_success        0.1812      0.8562      
+## prev_stop_rate_run       -0.4393      0.6604      
+## prev_stop_rate_pass      -1.9148      0.0556     *
+## shotgun_rate             -0.6156      0.5382      
+## singleback_rate          -1.0019      0.3164      
+## empty_rate                0.6951      0.4870      
+## iform_rate               -0.9182      0.3586      
+## shotgun_success           0.2360      0.8134      
+## singleback_success        0.5766      0.5642      
+## empty_success            -1.2483      0.2120      
+## iform_success             0.6039      0.5459      
+## def_stop_rate_run        -1.1201      0.2627      
+## def_stop_rate_pass       -4.0177      0.0001   ***
+## avg_pass_rushers          1.5937      0.1110     .
+## avg_box_defenders         1.1554      0.2480      
+## cover0_rate              -0.1588      0.8738      
+## cover1_rate               0.2605      0.7945      
+## cover2_rate               1.4852      0.1375     .
+## cover3_rate               0.4067      0.6842      
+## cover4_rate               2.3912      0.0168    **
+## cover6_rate              -1.7923      0.0731     *
+## two_man_rate              0.5616      0.5744      
+## prevent_rate              1.3441      0.1790      
+## starter_offense_p...     -0.8747      0.3818      
+## starter_offense_p...      0.0791      0.9369      
+## starter_offense_p...      0.5741      0.5659      
+## starter_offense_p...     -1.2535      0.2101      
+## starter_offense_p...      1.6973      0.0897     *
+## starter_offense_p...     -2.0521      0.0402    **
+## starter_offense_p...      0.3928      0.6945      
+## starter_offense_p...     -1.1880      0.2349      
+## starter_offense_p...      0.7607      0.4468      
+## starter_offense_p...     -0.4274      0.6691      
+## starter_offense_p...      0.6896      0.4905      
+## starter_offense_p...      0.7490      0.4539      
+## starter_offense_p...     -1.4397      0.1500     .
+## starter_offense_p...      1.3278      0.1843      
+## starter_offense_p...     -1.3579      0.1745      
+## starter_offense_p...     -0.6777      0.4980      
+## starter_offense_p...     -1.6106      0.1073     .
+## starter_offense_p...      2.3176      0.0205    **
+## starter_offense_p...     -0.2082      0.8351      
+## starter_offense_p...      0.1720      0.8634      
+## starter_offense_p...     -0.2282      0.8195      
+## starter_offense_p...      1.2544      0.2098      
+## starter_offense_p...     -1.2644      0.2061      
+## starter_offense_p...     -1.2278      0.2196      
+## starter_offense_p...      0.5954      0.5516      
+## starter_offense_p...     -0.3194      0.7494      
+## starter_offense_p...     -1.7585      0.0787     *
+## starter_offense_p...     -0.4664      0.6409      
+## starter_offense_p...     -1.9340      0.0532     *
+## starter_offense_p...      1.6815      0.0927     *
+## starter_offense_p...     -2.4924      0.0127    **
+## starter_offense_p...     -0.5669      0.5708      
+## starter_offense_p...     -1.2337      0.2174      
+## starter_offense_p...     -1.4024      0.1608      
+## starter_offense_p...      0.0412      0.9671      
+## starter_offense_p...      0.3351      0.7375      
+## starter_offense_p...     -0.4425      0.6582      
+## starter_offense_p...      1.9918      0.0464    **
+## starter_offense_p...      1.3743      0.1694      
+## starter_offense_p...     -0.1878      0.8510      
+## starter_offense_p...      1.0399      0.2984      
+## starter_offense_p...     -1.7218      0.0852     *
+## starter_offense_p...     -1.4930      0.1355     .
+## starter_offense_p...     -0.3716      0.7102      
+## starter_offense_p...      1.2592      0.2080      
+## starter_offense_p...      0.8356      0.4034      
+## starter_offense_p...      1.7412      0.0817     *
+## starter_offense_p...     -0.4646      0.6422      
+## starter_offense_p...      2.0253      0.0429    **
+## starter_offense_p...      1.4205      0.1555      
+## starter_offense_p...      1.4828      0.1382     .
+## starter_offense_p...      0.3968      0.6915      
+## starter_offense_p...      1.2036      0.2288      
+## starter_offense_p...      1.5239      0.1276     .
+## starter_offense_p...      1.8883      0.0590     *
+## starter_offense_p...      1.0662      0.2864      
+## starter_offense_p...      1.2485      0.2119      
+## starter_offense_p...     -1.4688      0.1419     .
+## starter_offense_p...      0.8434      0.3990      
+## starter_offense_p...      2.1170      0.0343    **
+## starter_offense_p...      0.7030      0.4821      
+## starter_offense_p...     -0.2637      0.7920      
+## starter_offense_p...     -0.6438      0.5197      
+## starter_offense_p...      0.2893      0.7723      
+## starter_offense_p...     -0.6688      0.5036      
+## starter_offense_p...      1.6072      0.1081     .
+## starter_offense_p...      0.7628      0.4456      
+## starter_defense_p...      0.2862      0.7748      
+## starter_defense_p...      1.6003      0.1096     .
+## starter_defense_p...     -0.9841      0.3251      
+## starter_defense_p...     -0.2242      0.8226      
+## starter_defense_p...     -1.7440      0.0812     *
+## starter_defense_p...     -0.3686      0.7124      
+## starter_defense_p...     -0.6049      0.5453      
+## starter_defense_p...      0.9541      0.3401      
+## starter_defense_p...      0.0755      0.9398      
+## starter_defense_p...     -1.4393      0.1501      
+## starter_defense_p...      1.5066      0.1320     .
+## starter_defense_p...     -0.9930      0.3208      
+## starter_defense_p...      0.9546      0.3398      
+## starter_defense_p...      0.4094      0.6823      
+## starter_defense_p...     -0.8074      0.4195      
+## starter_defense_p...      0.4869      0.6263      
+## starter_defense_p...      0.3402      0.7337      
+## starter_defense_p...      0.1621      0.8712      
+## starter_defense_p...     -0.7865      0.4316      
+## starter_defense_p...      1.1629      0.2449      
+## starter_defense_p...     -0.3576      0.7206      
+## starter_defense_p...      0.3883      0.6978      
+## starter_defense_p...      0.1792      0.8578      
+## starter_defense_p...     -1.1574      0.2471      
+## starter_defense_p...      1.3959      0.1628      
+## starter_defense_p...      0.0508      0.9595      
+## starter_defense_p...      0.0040      0.9968      
+## starter_defense_p...      3.3511      0.0008   ***
+## starter_defense_p...      1.1331      0.2572      
+## starter_defense_p...     -0.0661      0.9473      
+## starter_defense_p...     -1.0505      0.2935      
+## starter_defense_p...      0.4869      0.6263      
+## starter_defense_p...      1.7602      0.0784     *
+## starter_defense_p...     -1.8206      0.0687     *
+## starter_defense_p...      0.1020      0.9188      
+## starter_defense_p...     -0.8441      0.3987      
+## starter_defense_p...     -0.7621      0.4460      
+## starter_defense_p...      0.2216      0.8246      
+## starter_defense_p...      1.5020      0.1332     .
+## starter_defense_p...     -1.1097      0.2672      
+## starter_defense_p...      0.5419      0.5879      
+## starter_defense_p...      1.0778      0.2812      
+## starter_defense_p...     -2.0748      0.0380    **
+## starter_defense_p...      0.3037      0.7614      
+## starter_defense_p...     -0.3437      0.7311      
+## starter_defense_p...      0.4479      0.6542      
+## starter_defense_p...     -1.4583      0.1448     .
+## starter_defense_p...     -0.7813      0.4346      
+## starter_defense_p...     -0.4511      0.6519      
+## starter_defense_p...      0.1803      0.8569      
+## starter_defense_p...     -1.5470      0.1219     .
+## starter_defense_p...      0.2632      0.7924      
+## starter_defense_p...      0.1654      0.8687      
+## starter_defense_p...     -0.4209      0.6738      
+## starter_defense_p...      0.9413      0.3466      
+## starter_defense_p...     -0.2033      0.8389      
+## starter_defense_p...     -0.8742      0.3820      
+## starter_defense_p...      0.6626      0.5076      
+## starter_defense_p...      0.6238      0.5328      
+## starter_defense_p...      0.4186      0.6755      
+## starter_defense_p...      0.2447      0.8067      
+## starter_defense_p...      0.4240      0.6716      
+## starter_defense_p...      1.7317      0.0834     *
+## starter_defense_p...     -1.7634      0.0779     *
+## starter_defense_p...     -1.1697      0.2422      
+## starter_defense_p...     -0.3843      0.7008      
+## starter_defense_p...      0.6357      0.5250      
+## starter_defense_p...     -0.3410      0.7331      
+## starter_offense_p...      1.7806      0.0750     *
+## starter_offense_p...     -0.3649      0.7152      
+## starter_offense_p...      0.8542      0.3930      
+## starter_offense_p...      1.1918      0.2334      
+## starter_offense_p...     -0.9092      0.3633      
+## starter_offense_p...     -1.7292      0.0838     *
+## starter_offense_p...      1.5515      0.1208     .
+## starter_offense_p...     -0.1482      0.8822      
+## starter_offense_p...      0.0746      0.9405      
+## starter_offense_p...      0.1812      0.8562      
+## starter_offense_p...      1.5791      0.1144     .
+## starter_offense_p...     -0.2217      0.8245      
+## starter_offense_p...     -0.0143      0.9886      
+## starter_offense_p...     -0.0258      0.9794      
+## starter_offense_p...      0.1426      0.8866      
+## starter_offense_p...     -1.3415      0.1798      
+## starter_offense_p...      1.9754      0.0483    **
+## starter_offense_p...      0.1948      0.8455      
+## starter_offense_p...      0.5481      0.5837      
+## starter_offense_p...     -0.1351      0.8925      
+## starter_offense_p...      0.3995      0.6895      
+## starter_offense_p...      1.3644      0.1725      
+## starter_offense_p...     -0.3891      0.6972      
+## starter_offense_p...     -2.1962      0.0281    **
+## starter_offense_p...     -1.5748      0.1153     .
+## starter_offense_p...      0.8929      0.3719      
+## starter_offense_p...      0.2995      0.7646      
+## starter_offense_p...     -0.7672      0.4430      
+## starter_offense_p...     -0.0830      0.9338      
+## starter_offense_p...     -0.6796      0.4968      
+## starter_offense_p...      0.5559      0.5783      
+## starter_offense_p...     -1.0422      0.2974      
+## starter_offense_p...     -2.8437      0.0045   ***
+## starter_offense_p...      0.7789      0.4360      
+## starter_offense_p...     -1.8518      0.0641     *
+## starter_offense_p...     -0.2407      0.8098      
+## starter_offense_p...     -1.5679      0.1170     .
+## starter_offense_p...      0.0606      0.9517      
+## starter_offense_p...      2.2206      0.0264    **
+## starter_offense_p...     -0.9036      0.3662      
+## starter_offense_p...     -0.8725      0.3830      
+## starter_offense_p...     -1.9168      0.0553     *
+## starter_offense_p...     -1.3881      0.1651      
+## starter_offense_p...     -0.1624      0.8710      
+## starter_offense_p...      1.8247      0.0681     *
+## starter_offense_p...      1.1672      0.2432      
+## starter_offense_p...     -0.0110      0.9913      
+## starter_offense_p...     -2.0977      0.0360    **
+## starter_offense_p...      0.5993      0.5490      
+## starter_offense_p...      1.5303      0.1260     .
+## starter_offense_p...      0.6393      0.5226      
+## starter_offense_p...      0.0911      0.9274      
+## starter_offense_p...      0.2825      0.7776      
+## starter_offense_p...      1.0846      0.2781      
+## starter_offense_p...      0.7698      0.4414      
+## starter_offense_p...      0.1720      0.8635      
+## starter_offense_p...     -0.5987      0.5494      
+## starter_offense_p...     -2.4637      0.0138    **
+## starter_offense_p...      0.3511      0.7255      
+## starter_offense_p...     -0.4089      0.6826      
+## starter_offense_p...      0.7760      0.4378      
+## starter_offense_p...      0.3579      0.7204      
+## starter_defense_p...     -0.9000      0.3682      
+## starter_defense_p...      0.0448      0.9643      
+## starter_defense_p...     -0.8030      0.4220      
+## starter_defense_p...     -0.6922      0.4888      
+## starter_defense_p...     -0.0099      0.9921      
+## starter_defense_p...      0.4604      0.6453      
+## starter_defense_p...     -1.0170      0.3092      
+## starter_defense_p...      0.1662      0.8680      
+## starter_defense_p...     -0.1967      0.8440      
+## starter_defense_p...     -1.9187      0.0551     *
+## starter_defense_p...      2.0541      0.0400    **
+## starter_defense_p...      0.7114      0.4769      
+## starter_defense_p...      0.1593      0.8735      
+## starter_defense_p...      0.0186      0.9851      
+## starter_defense_p...     -0.8069      0.4197      
+## starter_defense_p...      0.0531      0.9577      
+## starter_defense_p...      0.5408      0.5886      
+## starter_defense_p...     -2.2748      0.0229    **
+## starter_defense_p...      0.2692      0.7878      
+## starter_defense_p...      0.0739      0.9411      
+## starter_defense_p...      0.2893      0.7724      
+## starter_defense_p...     -1.0885      0.2764      
+## starter_defense_p...     -0.3576      0.7207      
+## starter_defense_p...      1.0603      0.2890      
+## starter_defense_p...      0.0526      0.9580      
+## starter_defense_p...      1.0853      0.2778      
+## starter_defense_p...      1.0025      0.3161      
+## starter_defense_p...      2.2579      0.0240    **
+## starter_defense_p...     -1.3625      0.1731      
+## starter_defense_p...     -0.7452      0.4562      
+## starter_defense_p...     -0.7188      0.4723      
+## starter_defense_p...      0.2916      0.7706      
+## starter_defense_p...      0.5068      0.6123      
+## starter_defense_p...      0.3908      0.6959      
+## starter_defense_p...     -0.4403      0.6598      
+## starter_defense_p...      1.5379      0.1241     .
+## starter_defense_p...     -0.3921      0.6950      
+## starter_defense_p...      1.5311      0.1258     .
+## starter_defense_p...      0.0095      0.9924      
+## starter_defense_p...      0.3632      0.7164      
+## starter_defense_p...      1.4190      0.1560      
+## starter_defense_p...      1.2470      0.2125      
+## starter_defense_p...      1.1877      0.2350      
+## starter_defense_p...      0.0879      0.9300      
+## starter_defense_p...      0.3846      0.7006      
+## starter_defense_p...     -0.3637      0.7161      
+## starter_defense_p...     -1.3641      0.1726      
+## starter_defense_p...      0.8078      0.4192      
+## starter_defense_p...     -1.5226      0.1279     .
+## starter_defense_p...     -1.6188      0.1055     .
+## starter_defense_p...     -0.2903      0.7716      
+## starter_defense_p...     -2.3970      0.0166    **
+## starter_defense_p...     -0.1018      0.9189      
+## starter_defense_p...     -1.5965      0.1104     .
+## starter_defense_p...     -0.2456      0.8060      
+## starter_defense_p...     -0.2830      0.7772      
+## starter_defense_p...      1.8021      0.0716     *
+## starter_defense_p...      0.3845      0.7007      
+## starter_defense_p...      0.0235      0.9813      
+## starter_defense_p...      0.5140      0.6073      
+## starter_defense_p...     -1.6578      0.0974     *
+## starter_defense_p...     -0.1202      0.9043      
+## starter_defense_p...     -1.0326      0.3018      
+## starter_defense_p...     -0.7233      0.4695      
+## starter_defense_p...     -0.2719      0.7857      
+## starter_defense_p...     -1.4689      0.1419     .
+## starter_defense_p...     -1.9203      0.0549     *
+## starter_defense_p...     -2.2319      0.0257    **
+## home_coach.yAndy ...      0.2425      0.8084      
+## home_coach.yAntho...      0.6168      0.5374      
+## home_coach.yBill ...      1.1583      0.2468      
+## home_coach.yBill ...      0.7517      0.4523      
+## home_coach.yBill ...     -0.1852      0.8531      
+## home_coach.yBrian...      0.0591      0.9529      
+## home_coach.yBruce...     -0.9282      0.3533      
+## home_coach.yDan Q...     -0.3272      0.7435      
+## home_coach.yDarre...      0.0324      0.9741      
+## home_coach.yDoug ...     -0.7243      0.4689      
+## home_coach.yDoug ...     -0.3690      0.7121      
+## home_coach.yFrank...     -0.4291      0.6679      
+## home_coach.yFredd...     -0.4628      0.6436      
+## home_coach.yJason...      1.2489      0.2117      
+## home_coach.yJay G...      0.7881      0.4306      
+## home_coach.yJoe J...     -0.7645      0.4446      
+## home_coach.yJohn ...      0.9859      0.3242      
+## home_coach.yJon G...     -0.4692      0.6389      
+## home_coach.yKevin...      0.0454      0.9638      
+## home_coach.yKliff...     -1.1077      0.2681      
+## home_coach.yKyle ...      0.2097      0.8339      
+## home_coach.yMatt ...     -0.0025      0.9980      
+## home_coach.yMatt ...      1.1235      0.2613      
+## home_coach.yMatt ...      0.9793      0.3275      
+## home_coach.yMatt ...     -1.1250      0.2606      
+## home_coach.yMike ...      0.8119      0.4169      
+## home_coach.yMike ...      1.3756      0.1690      
+## home_coach.yMike ...      0.5184      0.6042      
+## home_coach.yMike ...     -0.2207      0.8253      
+## home_coach.yPat S...     -0.8907      0.3731      
+## home_coach.yPete ...     -1.0085      0.3133      
+## home_coach.yRahee...      0.0070      0.9944      
+## home_coach.yRomeo...     -0.0659      0.9475      
+## home_coach.yRon R...     -0.4054      0.6852      
+## home_coach.ySean ...     -0.9101      0.3628      
+## home_coach.ySean ...      1.1039      0.2697      
+## home_coach.ySean ...     -0.5084      0.6112      
+## home_coach.yVic F...      1.2685      0.2047      
+## home_coach.yZac T...     -1.0806      0.2799      
+## away_coach.yAndy ...     -1.1164      0.2643      
+## away_coach.yAntho...      0.3922      0.6949      
+## away_coach.yBill ...     -0.2008      0.8409      
+## away_coach.yBill ...     -0.1767      0.8597      
+## away_coach.yBill ...     -0.6697      0.5031      
+## away_coach.yBrian...     -0.4133      0.6794      
+## away_coach.yBruce...     -0.5336      0.5936      
+## away_coach.yDan Q...     -0.1779      0.8588      
+## away_coach.yDarre...     -0.3779      0.7055      
+## away_coach.yDoug ...     -1.7311      0.0835     *
+## away_coach.yDoug ...     -0.1833      0.8546      
+## away_coach.yFrank...     -1.7327      0.0832     *
+## away_coach.yFredd...     -1.1215      0.2621      
+## away_coach.yJason...     -0.6608      0.5088      
+## away_coach.yJay G...     -1.5783      0.1145     .
+## away_coach.yJoe J...     -0.7522      0.4520      
+## away_coach.yJohn ...      0.0156      0.9875      
+## away_coach.yJon G...     -1.6084      0.1078     .
+## away_coach.yKevin...      0.3525      0.7244      
+## away_coach.yKliff...     -1.3736      0.1696      
+## away_coach.yKyle ...      0.1201      0.9044      
+## away_coach.yMatt ...     -1.1292      0.2588      
+## away_coach.yMatt ...      0.5011      0.6164      
+## away_coach.yMatt ...      0.2166      0.8285      
+## away_coach.yMatt ...     -2.3198      0.0204    **
+## away_coach.yMike ...      0.5888      0.5560      
+## away_coach.yMike ...      0.4127      0.6798      
+## away_coach.yMike ...     -0.5972      0.5504      
+## away_coach.yMike ...     -1.3549      0.1755      
+## away_coach.yPat S...     -1.9937      0.0462    **
+## away_coach.yPete ...     -2.1249      0.0336    **
+## away_coach.yRahee...     -1.2089      0.2268      
+## away_coach.yRomeo...     -1.4550      0.1457     .
+## away_coach.yRon R...     -0.7528      0.4516      
+## away_coach.ySean ...     -1.4666      0.1425     .
+## away_coach.ySean ...     -0.2450      0.8064      
+## away_coach.ySean ...     -1.4108      0.1584      
+## away_coach.yVic F...      1.2208      0.2222      
+## away_coach.yZac T...     -1.9096      0.0562     *
+## Bruce_Arians             -0.2023      0.8397      
+## Sean_McDermott           -0.0627      0.9500      
+## Ron_Rivera                0.7350      0.4623      
+## John_Harbaugh            -0.5832      0.5598      
+## Jason_Garrett             0.0232      0.9815      
+## Mike_McCarthy             0.1591      0.8736      
+## Dan_Quinn                -0.0701      0.9441      
+## Bill_OBrien               0.8351      0.4037      
+## Adam_Gase                -0.1769      0.8596      
+## Anthony_Lynn             -0.2381      0.8118      
+## Mike_Zimmer               0.7532      0.4514      
+## Mike_Tomlin              -1.0222      0.3067      
+## Bill_Belichick           -1.6747      0.0940     *
+## Sean_Payton              -0.1461      0.8839      
+## Doug_Pederson             1.1191      0.2631      
+## Andy_Reid                 0.2310      0.8173      
+## Kyle_Shanahan            -1.4994      0.1338     .
+## Pete_Carroll              1.0054      0.3147      
+## Doug_Marrone              0.9311      0.3518      
+## Jay_Gruden               -0.2048      0.8377      
+## Sean_McVay               -0.0171      0.9863      
+## Matt_Patricia            -0.5585      0.5765      
+## Mike_Vrabel              -0.3066      0.7592      
+## Frank_Reich               1.3518      0.1765      
+## Pat_Shurmur               1.0231      0.3063      
+## Jon_Gruden                0.3851      0.7001      
+## Matt_Nagy                 0.1056      0.9159      
+## Kliff_Kingsbury           0.8181      0.4134      
+## Vic_Fangio               -1.2993      0.1939      
+## Freddie_Kitchens         -0.2698      0.7873      
+## Matt_LaFleur              0.3808      0.7033      
+## Brian_Flores              0.1726      0.8630      
+## Zac_Taylor                1.0258      0.3050      
+## Bill_Callahan            -0.3636      0.7162      
+## Matt_Rhule                1.1441      0.2526      
+## Kevin_Stefanski           0.3850      0.7003      
+## Joe_Judge                 0.0898      0.9285      
+## Romeo_Crennel             0.7064      0.4800      
+## Raheem_Morris            -0.1055      0.9160      
+## yardline_1_10             5.3994      0.0000   ***
+## yardline_11_20            1.7068      0.0879     *
+## yardline_21_30            2.6024      0.0093   ***
+## yardline_31_40            9.9714      0.0000   ***
+## yardline_41_50            7.0594      0.0000   ***
+## yardline_51_60            1.5192      0.1288     .
+## yardline_61_70           -0.4460      0.6556      
+## yardline_71_80           -1.0844      0.2782      
+## yardline_81_90            0.7198      0.4717      
+## is_first_half           -15.9418      0.0000   ***
+## time_in_half             -7.4490      0.0000   ***
+## attendance_raw           -2.3588      0.0184    **
+## posteam_type_home         1.7424      0.0815     *
+## interact_HxA              2.4254      0.0153    **
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
@@ -898,132 +1896,459 @@ for (year in years) {
 ## 
 ## Variable                 t-value     p-value   sig
 ## ---------                -------     -------  ----
-## (Intercept)               3.7237      0.0002   ***
-## ydstogo                 -26.6982      0.0000   ***
-## posteam_timeouts_...     -6.1758      0.0000   ***
-## defteam_timeouts_...     -0.2748      0.7835      
-## week                      2.1439      0.0321    **
-## temp                     -0.5843      0.5590      
-## wind                     -0.1991      0.8422      
-## vegas_wp                 -6.6116      0.0000   ***
-## vegas_wp_posteam         -0.7571      0.4490      
-## total_line               -0.6130      0.5399      
-## score_diff               -3.3286      0.0009   ***
-## down1_pct                -0.5566      0.5778      
-## down2_pct                -1.2732      0.2030      
-## down3_pct                 0.4050      0.6855      
-## down4_pct                -1.9113      0.0560     *
-## prep_days                -0.2461      0.8056      
-## overall_win_pct           0.5419      0.5879      
-## team_win_pct              2.7966      0.0052   ***
-## prev_win_pct              0.8092      0.4184      
-## prev_shotgun_rate         0.8021      0.4225      
-## prev_singleback_rate      1.0363      0.3001      
-## prev_empty_rate           0.0120      0.9904      
-## prev_iform_rate          -0.0159      0.9873      
-## prev_shotgun_success      0.6205      0.5350      
-## prev_singleback_s...      1.6254      0.1041     .
-## prev_empty_success        1.3851      0.1661      
-## prev_iform_success       -0.5642      0.5726      
-## prev_stop_rate_run        0.5424      0.5876      
-## prev_stop_rate_pass      -0.7573      0.4489      
-## shotgun_rate             -8.5712      0.0000   ***
-## singleback_rate          -6.5209      0.0000   ***
-## empty_rate               -6.3435      0.0000   ***
-## iform_rate               -3.4068      0.0007   ***
-## shotgun_success          -0.8137      0.4159      
-## singleback_success       -1.1213      0.2622      
-## empty_success             0.3698      0.7115      
-## iform_success            -0.4525      0.6509      
-## def_stop_rate_run         0.4226      0.6726      
-## def_stop_rate_pass       -1.6443      0.1002     .
-## avg_pass_rushers         -0.0422      0.9663      
-## avg_box_defenders        -0.6569      0.5112      
-## cover0_rate              -0.2975      0.7661      
-## cover1_rate               0.6202      0.5351      
-## cover2_rate              -0.6435      0.5199      
-## cover3_rate              -1.0957      0.2732      
-## cover4_rate              -0.2110      0.8329      
-## cover6_rate              -1.9816      0.0476    **
-## two_man_rate             -0.5667      0.5710      
-## prevent_rate             -0.2915      0.7707      
-## p_player_26_punti...      1.5452      0.1223     .
-## p_player_26_punti...     -1.4039      0.1604      
-## p_player_26_punti...      0.8868      0.3752      
-## p_player_26_kicko...      0.6501      0.5156      
-## p_player_26_speci...     -0.2802      0.7794      
-## p_player_26_speci...     -0.9911      0.3217      
-## p_player_26_kicko...      2.1516      0.0315    **
-## p_player_26_punti...      0.1916      0.8481      
-## k_player_25_kicko...      0.1291      0.8973      
-## k_player_25_field...      0.2393      0.8109      
-## k_player_25_kicko...     -1.1926      0.2331      
-## k_player_25_speci...     -1.4611      0.1440     .
-## k_player_25_speci...     -1.6525      0.0985     *
-## k_player_25_field...     -0.7315      0.4645      
-## k_player_25_speci...     -0.1209      0.9037      
-## k_player_25_speci...      0.9311      0.3518      
-## k_player_25_kicko...     -0.5497      0.5826      
-## k_player_25_field...      1.3960      0.1627      
-## k_player_25_speci...      1.8003      0.0718     *
-## k_player_25_kicko...      0.3852      0.7001      
-## roof_outdoors             1.5048      0.1324     .
-## Bruce_Arians             -2.1437      0.0321    **
-## Sean_McDermott           -1.5363      0.1245     .
-## Ron_Rivera                1.1388      0.2548      
-## John_Harbaugh            -0.2716      0.7859      
-## Mike_McCarthy            -0.3470      0.7286      
-## Dan_Quinn                -0.0011      0.9991      
-## Bill_OBrien               0.6008      0.5480      
-## Adam_Gase                -0.6832      0.4945      
-## Anthony_Lynn             -0.2761      0.7825      
-## Mike_Zimmer               0.7691      0.4419      
-## Mike_Tomlin              -0.8628      0.3883      
-## Bill_Belichick           -0.1721      0.8634      
-## Sean_Payton              -0.9529      0.3407      
-## Doug_Pederson             0.4232      0.6721      
-## Andy_Reid                -1.6564      0.0977     *
-## Kyle_Shanahan            -1.2418      0.2144      
-## Pete_Carroll             -1.0211      0.3072      
-## Doug_Marrone              0.7151      0.4746      
-## Sean_McVay               -0.5273      0.5980      
-## Matt_Patricia             0.9635      0.3353      
-## Mike_Vrabel              -0.0159      0.9873      
-## Frank_Reich              -1.0830      0.2788      
-## Jon_Gruden                0.6895      0.4905      
-## Matt_Nagy                 0.4607      0.6450      
-## Kliff_Kingsbury           0.7193      0.4720      
-## Vic_Fangio                0.8468      0.3972      
-## Matt_LaFleur             -0.6807      0.4961      
-## Brian_Flores             -0.6781      0.4977      
-## Zac_Taylor               -0.2519      0.8011      
-## Matt_Rhule                0.5202      0.6030      
-## Kevin_Stefanski          -0.1401      0.8886      
-## Joe_Judge                -0.6197      0.5355      
-## Romeo_Crennel            -0.1609      0.8722      
-## Raheem_Morris            -0.5033      0.6148      
-## Darrell_Bevell           -0.1182      0.9059      
-## Arthur_Smith              0.8475      0.3968      
-## Brandon_Staley            2.5345      0.0113    **
-## Urban_Meyer               0.9544      0.3399      
-## Dan_Campbell              1.4750      0.1403     .
-## David_Culley             -0.1071      0.9147      
-## Robert_Saleh              0.1973      0.8436      
-## Nick_Sirianni             0.2587      0.7959      
-## yardline_1_10             4.9572      0.0000   ***
-## yardline_11_20            1.2817      0.2000      
-## yardline_21_30            2.1343      0.0329    **
-## yardline_31_40            8.7568      0.0000   ***
-## yardline_41_50            7.2743      0.0000   ***
-## yardline_51_60            1.3209      0.1866      
-## yardline_61_70           -0.9431      0.3457      
-## yardline_71_80           -2.1953      0.0282    **
-## yardline_81_90            0.3078      0.7582      
-## is_first_half           -15.0666      0.0000   ***
-## time_in_half             -7.2540      0.0000   ***
-## attendance_raw           -0.2051      0.8375      
-## posteam_type_home         0.6322      0.5273      
-## interact_HxA              1.3063      0.1915      
+## (Intercept)               2.2197      0.0265    **
+## ydstogo                 -27.4026      0.0000   ***
+## posteam_timeouts_...     -6.3568      0.0000   ***
+## defteam_timeouts_...     -0.7422      0.4580      
+## week                     -0.0705      0.9438      
+## temp                     -0.3168      0.7514      
+## wind                      0.0053      0.9958      
+## vegas_wp                 -7.2552      0.0000   ***
+## total_line               -2.1799      0.0293    **
+## score_diff               -3.5659      0.0004   ***
+## roof_outdoors            -0.8711      0.3837      
+## down1_pct                -0.1753      0.8609      
+## down2_pct                -1.6486      0.0993     *
+## down3_pct                -0.5066      0.6124      
+## down4_pct                -0.1580      0.8745      
+## prep_days                -0.4022      0.6876      
+## overall_win_pct           0.0988      0.9213      
+## team_win_pct              0.3769      0.7063      
+## prev_win_pct              0.5718      0.5674      
+## prev_shotgun_rate         0.2905      0.7715      
+## prev_singleback_rate     -0.0433      0.9655      
+## prev_empty_rate          -0.7935      0.4275      
+## prev_iform_rate          -0.1040      0.9171      
+## prev_shotgun_success     -0.4620      0.6441      
+## prev_singleback_s...     -1.9012      0.0573     *
+## prev_empty_success       -1.2908      0.1968      
+## prev_iform_success        1.2944      0.1956      
+## prev_stop_rate_run        0.1941      0.8461      
+## prev_stop_rate_pass      -1.2986      0.1941      
+## shotgun_rate             -0.2875      0.7738      
+## singleback_rate          -1.1479      0.2510      
+## empty_rate                0.6612      0.5085      
+## iform_rate               -1.6429      0.1005     .
+## shotgun_success          -0.2049      0.8376      
+## singleback_success        1.6412      0.1008     .
+## empty_success             0.0700      0.9442      
+## iform_success             0.8727      0.3829      
+## def_stop_rate_run         0.5767      0.5642      
+## def_stop_rate_pass       -0.8973      0.3696      
+## avg_pass_rushers          0.5450      0.5858      
+## avg_box_defenders         0.4501      0.6527      
+## cover0_rate              -1.0916      0.2751      
+## cover1_rate              -0.5399      0.5893      
+## cover2_rate               0.7606      0.4469      
+## cover3_rate               0.3371      0.7360      
+## cover4_rate               0.1640      0.8697      
+## cover6_rate              -0.0984      0.9216      
+## two_man_rate             -0.7646      0.4445      
+## prevent_rate             -0.2648      0.7912      
+## starter_offense_p...     -2.1302      0.0332    **
+## starter_offense_p...      0.5802      0.5618      
+## starter_offense_p...     -1.5050      0.1324     .
+## starter_offense_p...     -1.4309      0.1525      
+## starter_offense_p...      1.7171      0.0860     *
+## starter_offense_p...     -0.0046      0.9963      
+## starter_offense_p...      1.3275      0.1844      
+## starter_offense_p...      0.1439      0.8856      
+## starter_offense_p...     -0.2555      0.7984      
+## starter_offense_p...      0.6538      0.5133      
+## starter_offense_p...     -0.1246      0.9009      
+## starter_offense_p...      0.0684      0.9455      
+## starter_offense_p...      0.6445      0.5193      
+## starter_offense_p...     -1.0633      0.2877      
+## starter_offense_p...     -0.3652      0.7150      
+## starter_offense_p...      0.7513      0.4525      
+## starter_offense_p...     -1.2107      0.2261      
+## starter_offense_p...      0.6938      0.4879      
+## starter_offense_p...      0.4401      0.6599      
+## starter_offense_p...      0.9106      0.3626      
+## starter_offense_p...     -0.1407      0.8881      
+## starter_offense_p...      1.9117      0.0560     *
+## starter_offense_p...     -1.0058      0.3146      
+## starter_offense_p...     -0.2171      0.8281      
+## starter_offense_p...      1.5801      0.1141     .
+## starter_offense_p...      1.7661      0.0774     *
+## starter_offense_p...     -1.6052      0.1085     .
+## starter_offense_p...     -0.7337      0.4631      
+## starter_offense_p...     -1.4467      0.1480     .
+## starter_offense_p...      1.6591      0.0971     *
+## starter_offense_p...      0.5604      0.5752      
+## starter_offense_p...     -0.8535      0.3934      
+## starter_offense_p...     -0.3887      0.6975      
+## starter_offense_p...     -0.1974      0.8435      
+## starter_offense_p...     -0.2356      0.8138      
+## starter_offense_p...      0.8150      0.4151      
+## starter_offense_p...     -0.5168      0.6053      
+## starter_offense_p...      1.2601      0.2077      
+## starter_offense_p...      0.5004      0.6168      
+## starter_offense_p...     -0.7968      0.4256      
+## starter_offense_p...     -0.6229      0.5334      
+## starter_offense_p...     -0.6909      0.4896      
+## starter_offense_p...      0.3852      0.7001      
+## starter_offense_p...     -0.2133      0.8311      
+## starter_offense_p...      1.6052      0.1085     .
+## starter_offense_p...      2.1719      0.0299    **
+## starter_offense_p...     -1.1970      0.2313      
+## starter_offense_p...      1.8381      0.0661     *
+## starter_offense_p...     -0.7633      0.4453      
+## starter_offense_p...      1.5644      0.1178     .
+## starter_offense_p...     -1.6023      0.1091     .
+## starter_offense_p...      0.0708      0.9435      
+## starter_offense_p...      0.3805      0.7036      
+## starter_offense_p...     -0.9253      0.3548      
+## starter_offense_p...      0.0390      0.9689      
+## starter_offense_p...      0.8756      0.3813      
+## starter_offense_p...      0.1806      0.8567      
+## starter_offense_p...      1.0083      0.3134      
+## starter_offense_p...      0.9855      0.3244      
+## starter_offense_p...     -0.2448      0.8066      
+## starter_offense_p...     -0.5922      0.5537      
+## starter_offense_p...     -0.0763      0.9392      
+## starter_offense_p...      0.3211      0.7481      
+## starter_offense_p...      0.5798      0.5621      
+## starter_offense_p...     -0.5611      0.5748      
+## starter_offense_p...      0.4113      0.6808      
+## starter_defense_p...     -1.6466      0.0997     *
+## starter_defense_p...     -0.4764      0.6338      
+## starter_defense_p...      0.7776      0.4369      
+## starter_defense_p...     -1.0074      0.3138      
+## starter_defense_p...      1.1743      0.2403      
+## starter_defense_p...     -0.0818      0.9348      
+## starter_defense_p...     -0.7642      0.4447      
+## starter_defense_p...      1.8694      0.0616     *
+## starter_defense_p...      2.0038      0.0451    **
+## starter_defense_p...     -1.4794      0.1391     .
+## starter_defense_p...      2.0207      0.0434    **
+## starter_defense_p...     -0.2185      0.8271      
+## starter_defense_p...      0.2917      0.7706      
+## starter_defense_p...     -1.3777      0.1683      
+## starter_defense_p...      1.1135      0.2655      
+## starter_defense_p...      1.5031      0.1328     .
+## starter_defense_p...     -0.5717      0.5675      
+## starter_defense_p...      0.3611      0.7180      
+## starter_defense_p...      1.7026      0.0887     *
+## starter_defense_p...     -0.4596      0.6458      
+## starter_defense_p...     -1.5486      0.1215     .
+## starter_defense_p...     -1.4802      0.1389     .
+## starter_defense_p...     -0.1602      0.8728      
+## starter_defense_p...      2.1201      0.0340    **
+## starter_defense_p...     -0.0050      0.9960      
+## starter_defense_p...      0.1015      0.9192      
+## starter_defense_p...     -0.3189      0.7498      
+## starter_defense_p...      2.2267      0.0260    **
+## starter_defense_p...     -0.6966      0.4861      
+## starter_defense_p...     -2.4446      0.0145    **
+## starter_defense_p...      0.1107      0.9119      
+## starter_defense_p...     -0.2577      0.7967      
+## starter_defense_p...      1.4347      0.1514      
+## starter_defense_p...     -1.2047      0.2283      
+## starter_defense_p...     -0.5146      0.6069      
+## starter_defense_p...      0.5096      0.6103      
+## starter_defense_p...      0.0800      0.9362      
+## starter_defense_p...     -0.9858      0.3243      
+## starter_defense_p...     -0.1916      0.8481      
+## starter_defense_p...     -1.0510      0.2933      
+## starter_defense_p...      0.8491      0.3958      
+## starter_defense_p...     -2.4973      0.0125    **
+## starter_defense_p...     -2.5680      0.0103    **
+## starter_defense_p...      1.0988      0.2719      
+## starter_defense_p...      1.1654      0.2439      
+## starter_defense_p...     -0.4787      0.6322      
+## starter_defense_p...      1.7126      0.0868     *
+## starter_defense_p...      0.7769      0.4372      
+## starter_defense_p...      0.2153      0.8296      
+## starter_defense_p...      1.9756      0.0482    **
+## starter_defense_p...     -2.3799      0.0173    **
+## starter_defense_p...      0.0649      0.9483      
+## starter_defense_p...      2.5677      0.0103    **
+## starter_defense_p...     -2.0573      0.0397    **
+## starter_defense_p...      1.3990      0.1619      
+## starter_defense_p...     -1.4652      0.1429     .
+## starter_defense_p...      0.4829      0.6292      
+## starter_defense_p...     -0.5848      0.5587      
+## starter_defense_p...     -1.4642      0.1432     .
+## starter_defense_p...     -0.2505      0.8022      
+## starter_defense_p...      0.2073      0.8358      
+## starter_defense_p...      1.1964      0.2316      
+## starter_defense_p...      1.3998      0.1616      
+## starter_defense_p...     -2.3444      0.0191    **
+## starter_defense_p...      1.0909      0.2754      
+## starter_defense_p...      0.4414      0.6590      
+## starter_defense_p...      0.5451      0.5857      
+## starter_defense_p...      1.0727      0.2835      
+## starter_offense_p...      2.2449      0.0248    **
+## starter_offense_p...     -1.5124      0.1305     .
+## starter_offense_p...      2.0729      0.0382    **
+## starter_offense_p...      1.7073      0.0878     *
+## starter_offense_p...     -0.6769      0.4985      
+## starter_offense_p...      0.2592      0.7955      
+## starter_offense_p...      2.8835      0.0039   ***
+## starter_offense_p...      0.1221      0.9028      
+## starter_offense_p...      0.4871      0.6262      
+## starter_offense_p...     -0.2110      0.8329      
+## starter_offense_p...      0.9417      0.3464      
+## starter_offense_p...     -0.1194      0.9050      
+## starter_offense_p...      0.1768      0.8596      
+## starter_offense_p...     -1.5834      0.1134     .
+## starter_offense_p...      0.0049      0.9961      
+## starter_offense_p...      0.0081      0.9935      
+## starter_offense_p...      0.2615      0.7937      
+## starter_offense_p...     -0.5246      0.5999      
+## starter_offense_p...     -0.5115      0.6090      
+## starter_offense_p...      0.4324      0.6655      
+## starter_offense_p...      0.5836      0.5595      
+## starter_offense_p...      1.4570      0.1452     .
+## starter_offense_p...     -0.5446      0.5860      
+## starter_offense_p...     -0.9069      0.3645      
+## starter_offense_p...     -0.5449      0.5858      
+## starter_offense_p...      0.1318      0.8952      
+## starter_offense_p...     -2.9497      0.0032   ***
+## starter_offense_p...      0.2710      0.7864      
+## starter_offense_p...     -0.3537      0.7236      
+## starter_offense_p...     -0.9725      0.3308      
+## starter_offense_p...      0.1094      0.9129      
+## starter_offense_p...     -0.4858      0.6271      
+## starter_offense_p...     -1.4410      0.1496     .
+## starter_offense_p...     -0.5967      0.5507      
+## starter_offense_p...     -1.0963      0.2730      
+## starter_offense_p...      2.2072      0.0273    **
+## starter_offense_p...      0.0647      0.9484      
+## starter_offense_p...      0.2436      0.8075      
+## starter_offense_p...     -0.6750      0.4997      
+## starter_offense_p...     -2.3822      0.0172    **
+## starter_offense_p...     -0.8484      0.3962      
+## starter_offense_p...     -1.2955      0.1952      
+## starter_offense_p...     -1.8699      0.0615     *
+## starter_offense_p...     -0.1109      0.9117      
+## starter_offense_p...      1.0840      0.2784      
+## starter_offense_p...      0.6785      0.4975      
+## starter_offense_p...     -0.5403      0.5890      
+## starter_offense_p...     -2.3512      0.0187    **
+## starter_offense_p...     -0.9759      0.3291      
+## starter_offense_p...      0.9458      0.3443      
+## starter_offense_p...      0.1012      0.9194      
+## starter_offense_p...      0.2069      0.8361      
+## starter_offense_p...      0.0969      0.9228      
+## starter_offense_p...      0.1383      0.8900      
+## starter_offense_p...     -0.5212      0.6022      
+## starter_offense_p...      0.0739      0.9411      
+## starter_offense_p...     -0.6922      0.4888      
+## starter_offense_p...     -0.0965      0.9232      
+## starter_offense_p...      0.3491      0.7270      
+## starter_offense_p...     -1.4665      0.1426     .
+## starter_offense_p...      2.2657      0.0235    **
+## starter_offense_p...     -0.1228      0.9023      
+## starter_defense_p...     -1.1162      0.2644      
+## starter_defense_p...     -0.2632      0.7924      
+## starter_defense_p...      1.1379      0.2552      
+## starter_defense_p...      0.1358      0.8920      
+## starter_defense_p...     -1.2610      0.2074      
+## starter_defense_p...     -0.3939      0.6937      
+## starter_defense_p...     -0.0265      0.9789      
+## starter_defense_p...     -0.8393      0.4013      
+## starter_defense_p...     -0.3978      0.6908      
+## starter_defense_p...      1.5178      0.1291     .
+## starter_defense_p...      1.2703      0.2040      
+## starter_defense_p...      0.5696      0.5690      
+## starter_defense_p...     -0.0564      0.9550      
+## starter_defense_p...     -0.9169      0.3592      
+## starter_defense_p...     -1.1410      0.2539      
+## starter_defense_p...     -1.0584      0.2899      
+## starter_defense_p...     -0.0904      0.9280      
+## starter_defense_p...     -1.8176      0.0692     *
+## starter_defense_p...     -0.1080      0.9140      
+## starter_defense_p...     -0.7518      0.4522      
+## starter_defense_p...     -0.3171      0.7512      
+## starter_defense_p...     -1.9284      0.0539     *
+## starter_defense_p...      0.2528      0.8004      
+## starter_defense_p...     -0.4131      0.6796      
+## starter_defense_p...      0.9192      0.3580      
+## starter_defense_p...     -0.7357      0.4619      
+## starter_defense_p...      0.9204      0.3574      
+## starter_defense_p...     -0.1887      0.8503      
+## starter_defense_p...     -2.0574      0.0397    **
+## starter_defense_p...      0.7562      0.4496      
+## starter_defense_p...     -0.6045      0.5455      
+## starter_defense_p...      0.2489      0.8034      
+## starter_defense_p...      0.6011      0.5478      
+## starter_defense_p...      0.0052      0.9958      
+## starter_defense_p...      0.8723      0.3831      
+## starter_defense_p...      0.0621      0.9504      
+## starter_defense_p...     -2.4495      0.0143    **
+## starter_defense_p...     -1.0782      0.2810      
+## starter_defense_p...     -1.1255      0.2604      
+## starter_defense_p...     -0.1690      0.8658      
+## starter_defense_p...     -0.7174      0.4732      
+## starter_defense_p...      1.0783      0.2809      
+## starter_defense_p...     -1.9955      0.0460    **
+## starter_defense_p...     -0.2509      0.8019      
+## starter_defense_p...     -1.7009      0.0890     *
+## starter_defense_p...     -0.9463      0.3440      
+## starter_defense_p...     -0.3736      0.7087      
+## starter_defense_p...     -1.7266      0.0843     *
+## starter_defense_p...      0.3296      0.7417      
+## starter_defense_p...     -0.4273      0.6692      
+## starter_defense_p...      0.9256      0.3547      
+## starter_defense_p...     -1.4517      0.1466     .
+## starter_defense_p...      0.0890      0.9291      
+## starter_defense_p...      0.6725      0.5013      
+## starter_defense_p...     -0.1606      0.8724      
+## starter_defense_p...     -1.0908      0.2754      
+## starter_defense_p...      0.5380      0.5906      
+## starter_defense_p...     -1.0940      0.2740      
+## starter_defense_p...     -0.2157      0.8293      
+## starter_defense_p...      2.2482      0.0246    **
+## starter_defense_p...      1.1538      0.2486      
+## starter_defense_p...      0.9426      0.3459      
+## starter_defense_p...     -1.5958      0.1106     .
+## starter_defense_p...     -0.3865      0.6992      
+## starter_defense_p...     -1.7087      0.0876     *
+## starter_defense_p...      0.9397      0.3474      
+## starter_defense_p...     -0.6382      0.5234      
+## starter_defense_p...     -0.7084      0.4787      
+## home_coach.yAndy ...     -0.4570      0.6477      
+## home_coach.yAntho...     -0.8490      0.3959      
+## home_coach.yArthu...     -1.6639      0.0962     *
+## home_coach.yBill ...     -0.1990      0.8423      
+## home_coach.yBill ...     -0.1541      0.8775      
+## home_coach.yBrand...     -0.3253      0.7449      
+## home_coach.yBrian...     -0.5765      0.5643      
+## home_coach.yBruce...     -0.7772      0.4371      
+## home_coach.yDan C...     -0.5503      0.5822      
+## home_coach.yDan Q...     -1.0034      0.3157      
+## home_coach.yDarre...      0.3660      0.7144      
+## home_coach.yDavid...     -1.7882      0.0738     *
+## home_coach.yDoug ...     -0.1321      0.8949      
+## home_coach.yDoug ...     -0.4221      0.6729      
+## home_coach.yFrank...     -1.8954      0.0581     *
+## home_coach.yJoe J...     -0.7361      0.4617      
+## home_coach.yJohn ...     -0.1128      0.9102      
+## home_coach.yJon G...     -1.1617      0.2454      
+## home_coach.yKevin...     -0.7625      0.4458      
+## home_coach.yKliff...     -1.4711      0.1413     .
+## home_coach.yKyle ...     -0.4307      0.6667      
+## home_coach.yMatt ...     -0.2754      0.7830      
+## home_coach.yMatt ...      0.1314      0.8955      
+## home_coach.yMatt ...     -0.0749      0.9403      
+## home_coach.yMatt ...     -0.9054      0.3653      
+## home_coach.yMike ...     -1.1626      0.2450      
+## home_coach.yMike ...     -0.8403      0.4008      
+## home_coach.yMike ...      0.0019      0.9985      
+## home_coach.yMike ...     -1.4148      0.1572      
+## home_coach.yNick ...     -1.7464      0.0808     *
+## home_coach.yPete ...     -0.6823      0.4951      
+## home_coach.yRahee...     -1.0642      0.2873      
+## home_coach.yRich ...     -1.0586      0.2898      
+## home_coach.yRober...      0.1893      0.8498      
+## home_coach.yRomeo...     -0.7707      0.4409      
+## home_coach.yRon R...     -0.2829      0.7772      
+## home_coach.ySean ...     -0.5398      0.5894      
+## home_coach.ySean ...     -1.0394      0.2987      
+## home_coach.ySean ...     -1.4533      0.1462     .
+## home_coach.yUrban...      0.0662      0.9472      
+## home_coach.yVic F...      0.1783      0.8585      
+## home_coach.yZac T...     -0.6261      0.5313      
+## away_coach.yAndy ...      0.4561      0.6483      
+## away_coach.yAntho...     -1.2851      0.1988      
+## away_coach.yArthu...      0.3670      0.7136      
+## away_coach.yBill ...      0.3960      0.6921      
+## away_coach.yBill ...     -0.3706      0.7110      
+## away_coach.yBrand...     -0.1875      0.8513      
+## away_coach.yBrian...     -0.0711      0.9433      
+## away_coach.yBruce...     -1.0869      0.2771      
+## away_coach.yDan C...     -1.7918      0.0732     *
+## away_coach.yDan Q...      1.1263      0.2601      
+## away_coach.yDarre...      0.3238      0.7461      
+## away_coach.yDavid...     -0.4649      0.6420      
+## away_coach.yDoug ...     -1.2244      0.2209      
+## away_coach.yDoug ...     -0.6725      0.5013      
+## away_coach.yFrank...     -1.7348      0.0828     *
+## away_coach.yJoe J...     -0.7655      0.4440      
+## away_coach.yJohn ...     -0.6033      0.5463      
+## away_coach.yJon G...     -0.7656      0.4440      
+## away_coach.yKevin...     -0.0337      0.9732      
+## away_coach.yKliff...     -0.9502      0.3421      
+## away_coach.yKyle ...     -0.5025      0.6153      
+## away_coach.yMatt ...     -0.5300      0.5961      
+## away_coach.yMatt ...     -1.0135      0.3109      
+## away_coach.yMatt ...      0.7862      0.4318      
+## away_coach.yMatt ...     -1.4405      0.1498     .
+## away_coach.yMike ...     -0.2080      0.8353      
+## away_coach.yMike ...     -0.6460      0.5183      
+## away_coach.yMike ...     -0.0269      0.9785      
+## away_coach.yMike ...     -1.2228      0.2214      
+## away_coach.yNick ...     -1.3947      0.1631      
+## away_coach.yPete ...     -1.2366      0.2163      
+## away_coach.yRahee...     -0.8848      0.3763      
+## away_coach.yRich ...     -1.5133      0.1303     .
+## away_coach.yRober...      0.2249      0.8220      
+## away_coach.yRomeo...     -0.9013      0.3674      
+## away_coach.yRon R...      0.1277      0.8984      
+## away_coach.ySean ...      0.2999      0.7642      
+## away_coach.ySean ...     -0.6010      0.5479      
+## away_coach.ySean ...     -0.2961      0.7672      
+## away_coach.yUrban...     -0.4991      0.6177      
+## away_coach.yVic F...     -0.0044      0.9965      
+## away_coach.yZac T...     -1.3765      0.1687      
+## Bruce_Arians             -0.0915      0.9271      
+## Sean_McDermott            0.3626      0.7169      
+## Ron_Rivera               -0.5511      0.5816      
+## John_Harbaugh             0.7974      0.4253      
+## Mike_McCarthy             0.0670      0.9466      
+## Dan_Quinn                 0.5101      0.6100      
+## Bill_OBrien               0.5655      0.5717      
+## Adam_Gase                -1.0959      0.2732      
+## Anthony_Lynn              1.1585      0.2467      
+## Mike_Zimmer               1.4015      0.1611      
+## Mike_Tomlin              -0.5661      0.5713      
+## Bill_Belichick           -1.4145      0.1573      
+## Sean_Payton               0.2861      0.7748      
+## Doug_Pederson            -0.4974      0.6189      
+## Andy_Reid                -0.5692      0.5692      
+## Kyle_Shanahan            -0.2289      0.8190      
+## Pete_Carroll             -0.2215      0.8247      
+## Doug_Marrone             -0.1580      0.8745      
+## Sean_McVay                0.2245      0.8223      
+## Matt_Patricia            -1.0646      0.2871      
+## Mike_Vrabel              -0.1520      0.8792      
+## Frank_Reich               1.4044      0.1602      
+## Jon_Gruden               -0.2854      0.7754      
+## Matt_Nagy                 0.0516      0.9589      
+## Kliff_Kingsbury           0.9948      0.3199      
+## Vic_Fangio               -1.0694      0.2849      
+## Matt_LaFleur              0.4103      0.6816      
+## Brian_Flores             -0.2294      0.8186      
+## Zac_Taylor               -0.0715      0.9430      
+## Matt_Rhule                0.9234      0.3559      
+## Kevin_Stefanski           0.8016      0.4228      
+## Joe_Judge                -1.0083      0.3133      
+## Romeo_Crennel             0.1898      0.8494      
+## Raheem_Morris             0.6243      0.5325      
+## Darrell_Bevell           -0.8278      0.4078      
+## Arthur_Smith             -1.0265      0.3047      
+## Brandon_Staley            0.9644      0.3349      
+## Urban_Meyer               0.2114      0.8326      
+## Dan_Campbell              1.2558      0.2092      
+## David_Culley              0.2471      0.8049      
+## Robert_Saleh             -0.9276      0.3537      
+## Nick_Sirianni            -0.4070      0.6840      
+## yardline_1_10             4.8725      0.0000   ***
+## yardline_11_20            1.3526      0.1762      
+## yardline_21_30            2.2955      0.0217    **
+## yardline_31_40            8.9649      0.0000   ***
+## yardline_41_50            7.2860      0.0000   ***
+## yardline_51_60            1.4085      0.1590      
+## yardline_61_70           -1.0332      0.3015      
+## yardline_71_80           -1.9856      0.0471    **
+## yardline_81_90            0.5228      0.6011      
+## is_first_half           -14.7077      0.0000   ***
+## time_in_half             -6.5138      0.0000   ***
+## attendance_raw            0.5805      0.5616      
+## posteam_type_home         1.2287      0.2192      
+## interact_HxA              1.0864      0.2774      
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
@@ -1034,141 +2359,486 @@ for (year in years) {
 ## 
 ## Variable                 t-value     p-value   sig
 ## ---------                -------     -------  ----
-## (Intercept)               0.6563      0.5117      
-## ydstogo                 -27.7408      0.0000   ***
-## posteam_timeouts_...     -5.8570      0.0000   ***
-## defteam_timeouts_...     -1.1280      0.2594      
-## week                     -0.0195      0.9844      
-## temp                     -0.1186      0.9056      
-## wind                     -1.1802      0.2380      
-## vegas_wp                 -8.3415      0.0000   ***
-## vegas_wp_posteam          0.2830      0.7772      
-## total_line               -0.6949      0.4871      
-## score_diff               -1.5723      0.1159     .
-## down1_pct                -0.2911      0.7709      
-## down2_pct                -1.1433      0.2529      
-## down3_pct                 0.2692      0.7878      
-## down4_pct                -2.6877      0.0072   ***
-## prep_days                 0.0035      0.9972      
-## overall_win_pct           0.4902      0.6240      
-## team_win_pct              0.3717      0.7102      
-## prev_win_pct             -2.0014      0.0454    **
-## prev_shotgun_rate         0.4245      0.6712      
-## prev_singleback_rate      0.5307      0.5957      
-## prev_empty_rate           0.0745      0.9406      
-## prev_iform_rate          -1.7521      0.0798     *
-## prev_shotgun_success      0.4560      0.6484      
-## prev_singleback_s...     -0.4173      0.6764      
-## prev_empty_success        1.6589      0.0972     *
-## prev_iform_success       -0.4034      0.6867      
-## prev_stop_rate_run        1.9311      0.0535     *
-## prev_stop_rate_pass      -1.3861      0.1658      
-## shotgun_rate             -8.1048      0.0000   ***
-## singleback_rate          -5.7253      0.0000   ***
-## empty_rate               -6.6252      0.0000   ***
-## iform_rate               -4.1101      0.0000   ***
-## shotgun_success           0.5130      0.6080      
-## singleback_success       -1.9370      0.0528     *
-## empty_success            -0.2044      0.8381      
-## iform_success             1.9520      0.0510     *
-## def_stop_rate_run         0.0155      0.9876      
-## def_stop_rate_pass       -3.4581      0.0005   ***
-## avg_pass_rushers         -0.2529      0.8004      
-## avg_box_defenders        -0.0160      0.9873      
-## cover0_rate              -0.9846      0.3248      
-## cover1_rate              -0.0081      0.9936      
-## cover2_rate              -0.3522      0.7247      
-## cover3_rate              -0.5845      0.5589      
-## cover4_rate              -0.4867      0.6265      
-## cover6_rate              -1.8723      0.0612     *
-## two_man_rate             -1.3283      0.1841      
-## prevent_rate              0.0601      0.9521      
-## p_player_26_punti...      0.3916      0.6953      
-## p_player_26_punti...     -0.6491      0.5163      
-## p_player_26_punti...      0.4239      0.6717      
-## p_player_26_kicko...      0.4294      0.6676      
-## p_player_26_speci...      0.5622      0.5740      
-## p_player_26_speci...     -0.7047      0.4810      
-## p_player_26_kicko...      2.5194      0.0118    **
-## p_player_26_punti...     -0.3119      0.7552      
-## k_player_25_kicko...      0.6562      0.5117      
-## k_player_25_field...      0.2482      0.8040      
-## k_player_25_kicko...      1.5928      0.1113     .
-## k_player_25_speci...      0.4615      0.6444      
-## k_player_25_speci...      1.4756      0.1401     .
-## k_player_25_field...      0.1988      0.8424      
-## k_player_25_speci...     -1.8256      0.0679     *
-## k_player_25_speci...      0.4373      0.6619      
-## k_player_25_kicko...     -0.5899      0.5553      
-## k_player_25_field...     -1.3091      0.1906      
-## k_player_25_speci...      0.1141      0.9091      
-## k_player_25_kicko...     -0.2271      0.8204      
-## roof_outdoors             1.8751      0.0608     *
-## Bruce_Arians             -0.4200      0.6745      
-## Sean_McDermott            0.9787      0.3278      
-## Ron_Rivera                0.1608      0.8722      
-## John_Harbaugh             0.4736      0.6358      
-## Mike_McCarthy             0.2474      0.8046      
-## Dan_Quinn                 1.0366      0.3000      
-## Bill_OBrien               0.1795      0.8575      
-## Adam_Gase                 0.1037      0.9174      
-## Anthony_Lynn             -0.3544      0.7230      
-## Mike_Zimmer               2.1688      0.0301    **
-## Mike_Tomlin               0.2478      0.8043      
-## Bill_Belichick            1.3820      0.1670      
-## Sean_Payton               0.5447      0.5860      
-## Todd_Bowles               0.7579      0.4485      
-## Doug_Pederson             0.7814      0.4346      
-## Andy_Reid                 0.6212      0.5345      
-## Kyle_Shanahan             1.4132      0.1576      
-## Pete_Carroll              0.5426      0.5874      
-## Doug_Marrone              0.6307      0.5283      
-## Sean_McVay                0.1518      0.8794      
-## Steve_Wilks               0.6624      0.5078      
-## Matt_Patricia             1.1455      0.2520      
-## Mike_Vrabel               1.1033      0.2699      
-## Frank_Reich               0.4194      0.6749      
-## Jon_Gruden                0.9997      0.3175      
-## Matt_Nagy                 0.7761      0.4377      
-## Kliff_Kingsbury           0.6492      0.5162      
-## Vic_Fangio                1.4902      0.1362     .
-## Matt_LaFleur              1.5382      0.1240     .
-## Brian_Flores             -0.3678      0.7130      
-## Zac_Taylor               -0.2719      0.7857      
-## Matt_Rhule                1.0591      0.2896      
-## Kevin_Stefanski           1.1804      0.2379      
-## Joe_Judge                -0.2267      0.8207      
-## Romeo_Crennel            -0.0850      0.9323      
-## Raheem_Morris             1.0284      0.3038      
-## Darrell_Bevell            0.9243      0.3553      
-## Arthur_Smith              1.0047      0.3151      
-## Brandon_Staley            0.4908      0.6236      
-## Dan_Campbell              1.1360      0.2560      
-## Robert_Saleh              0.3945      0.6932      
-## Nick_Sirianni             0.9548      0.3397      
-## Josh_McDaniels            0.8366      0.4029      
-## Brian_Daboll              0.6889      0.4909      
-## Matt_Eberflus             0.9943      0.3201      
-## Lovie_Smith               0.8457      0.3977      
-## Nathaniel_Hackett         0.0960      0.9236      
-## Mike_McDaniel             0.7127      0.4760      
-## Kevin_OConnell            1.9226      0.0546     *
-## Dennis_Allen              0.0133      0.9894      
-## Jeff_Saturday             1.1715      0.2414      
-## yardline_1_10             5.4157      0.0000   ***
-## yardline_11_20            2.6247      0.0087   ***
-## yardline_21_30            3.0032      0.0027   ***
-## yardline_31_40            9.4259      0.0000   ***
-## yardline_41_50            7.3017      0.0000   ***
-## yardline_51_60            1.9029      0.0571     *
-## yardline_61_70           -0.4021      0.6876      
-## yardline_71_80           -1.5021      0.1331     .
-## yardline_81_90            0.5316      0.5951      
-## is_first_half           -14.1586      0.0000   ***
-## time_in_half             -7.0766      0.0000   ***
-## attendance_raw           -1.4787      0.1393     .
-## posteam_type_home         1.9074      0.0565     *
-## interact_HxA              2.0836      0.0372    **
+## (Intercept)               3.6607      0.0003   ***
+## ydstogo                 -28.3445      0.0000   ***
+## posteam_timeouts_...     -5.7883      0.0000   ***
+## defteam_timeouts_...     -1.2664      0.2054      
+## week                     -0.4709      0.6377      
+## temp                     -0.4461      0.6556      
+## wind                     -1.3257      0.1850      
+## vegas_wp                 -8.4607      0.0000   ***
+## total_line               -1.3620      0.1732      
+## score_diff               -2.2736      0.0230    **
+## roof_outdoors            -0.0502      0.9600      
+## down1_pct                 0.8511      0.3948      
+## down2_pct                -1.7878      0.0739     *
+## down3_pct                 1.1731      0.2408      
+## down4_pct                -1.1154      0.2647      
+## prep_days                -1.3375      0.1811      
+## overall_win_pct          -0.7180      0.4728      
+## team_win_pct              0.4085      0.6829      
+## prev_win_pct             -0.0021      0.9983      
+## prev_shotgun_rate        -0.6716      0.5018      
+## prev_singleback_rate     -0.7849      0.4326      
+## prev_empty_rate           0.2328      0.8159      
+## prev_iform_rate          -1.0661      0.2864      
+## prev_shotgun_success      0.6767      0.4986      
+## prev_singleback_s...      1.3804      0.1675      
+## prev_empty_success       -1.0922      0.2748      
+## prev_iform_success       -2.2534      0.0243    **
+## prev_stop_rate_run       -1.6859      0.0919     *
+## prev_stop_rate_pass       0.7485      0.4542      
+## shotgun_rate              0.6469      0.5177      
+## singleback_rate           1.3938      0.1634      
+## empty_rate                1.0160      0.3097      
+## iform_rate               -0.1117      0.9110      
+## shotgun_success           1.8113      0.0701     *
+## singleback_success       -0.1321      0.8949      
+## empty_success            -0.3686      0.7124      
+## iform_success             1.0047      0.3151      
+## def_stop_rate_run        -0.1705      0.8647      
+## def_stop_rate_pass       -1.9407      0.0523     *
+## avg_pass_rushers         -0.5198      0.6032      
+## avg_box_defenders        -0.4517      0.6515      
+## cover0_rate              -0.9609      0.3366      
+## cover1_rate               0.1499      0.8809      
+## cover2_rate              -1.2968      0.1947      
+## cover3_rate              -0.4001      0.6891      
+## cover4_rate               0.3964      0.6918      
+## cover6_rate               0.2703      0.7870      
+## two_man_rate             -2.2142      0.0268    **
+## prevent_rate              1.4130      0.1577      
+## starter_offense_p...     -0.5973      0.5503      
+## starter_offense_p...      0.2229      0.8237      
+## starter_offense_p...      0.3663      0.7142      
+## starter_offense_p...     -1.6858      0.0919     *
+## starter_offense_p...     -1.0782      0.2810      
+## starter_offense_p...     -1.1888      0.2346      
+## starter_offense_p...      0.3406      0.7334      
+## starter_offense_p...      0.1250      0.9005      
+## starter_offense_p...      0.5209      0.6025      
+## starter_offense_p...      0.3581      0.7203      
+## starter_offense_p...     -0.9882      0.3231      
+## starter_offense_p...      0.1919      0.8478      
+## starter_offense_p...     -0.2427      0.8082      
+## starter_offense_p...      0.9165      0.3595      
+## starter_offense_p...     -0.5556      0.5785      
+## starter_offense_p...      0.9091      0.3633      
+## starter_offense_p...      0.4931      0.6219      
+## starter_offense_p...      2.4912      0.0128    **
+## starter_offense_p...     -0.0473      0.9623      
+## starter_offense_p...      0.8794      0.3792      
+## starter_offense_p...      1.3063      0.1915      
+## starter_offense_p...      1.4448      0.1486     .
+## starter_offense_p...     -1.3020      0.1930      
+## starter_offense_p...      0.0515      0.9589      
+## starter_offense_p...     -0.5378      0.5907      
+## starter_offense_p...      2.2259      0.0261    **
+## starter_offense_p...      1.1471      0.2514      
+## starter_offense_p...      0.6628      0.5075      
+## starter_offense_p...      1.3254      0.1851      
+## starter_offense_p...     -0.6888      0.4909      
+## starter_offense_p...      1.2010      0.2298      
+## starter_offense_p...     -0.4619      0.6442      
+## starter_offense_p...     -0.0950      0.9243      
+## starter_offense_p...     -0.4628      0.6435      
+## starter_offense_p...      1.6171      0.1059     .
+## starter_offense_p...      0.6828      0.4947      
+## starter_offense_p...     -0.6339      0.5262      
+## starter_offense_p...     -0.2342      0.8149      
+## starter_offense_p...     -1.1145      0.2651      
+## starter_offense_p...     -0.6499      0.5158      
+## starter_offense_p...     -0.1368      0.8912      
+## starter_offense_p...     -1.2191      0.2228      
+## starter_offense_p...     -1.9403      0.0524     *
+## starter_offense_p...      0.1222      0.9028      
+## starter_offense_p...      1.9442      0.0519     *
+## starter_offense_p...      1.2785      0.2011      
+## starter_offense_p...     -0.8051      0.4208      
+## starter_offense_p...      0.1446      0.8850      
+## starter_offense_p...      1.0320      0.3021      
+## starter_offense_p...     -0.7814      0.4346      
+## starter_offense_p...     -1.9129      0.0558     *
+## starter_offense_p...      2.9771      0.0029   ***
+## starter_offense_p...      1.4620      0.1438     .
+## starter_offense_p...      0.9181      0.3586      
+## starter_offense_p...      0.8506      0.3950      
+## starter_offense_p...     -0.0192      0.9847      
+## starter_offense_p...      0.4226      0.6726      
+## starter_offense_p...      0.7132      0.4757      
+## starter_offense_p...      2.7035      0.0069   ***
+## starter_offense_p...     -0.3573      0.7208      
+## starter_offense_p...     -0.9165      0.3594      
+## starter_offense_p...      2.1817      0.0292    **
+## starter_offense_p...      1.3563      0.1751      
+## starter_offense_p...     -0.8306      0.4062      
+## starter_offense_p...     -1.0615      0.2885      
+## starter_offense_p...      1.6429      0.1005     .
+## starter_defense_p...      1.6795      0.0931     *
+## starter_defense_p...      0.4014      0.6881      
+## starter_defense_p...      0.9703      0.3319      
+## starter_defense_p...     -0.9122      0.3617      
+## starter_defense_p...      0.8321      0.4054      
+## starter_defense_p...      1.3983      0.1621      
+## starter_defense_p...     -1.2454      0.2130      
+## starter_defense_p...      2.2231      0.0262    **
+## starter_defense_p...      0.7693      0.4417      
+## starter_defense_p...     -1.8327      0.0669     *
+## starter_defense_p...      3.6784      0.0002   ***
+## starter_defense_p...     -1.5271      0.1268     .
+## starter_defense_p...     -0.3176      0.7508      
+## starter_defense_p...      0.6751      0.4996      
+## starter_defense_p...      1.8186      0.0690     *
+## starter_defense_p...     -0.8199      0.4123      
+## starter_defense_p...     -0.6955      0.4868      
+## starter_defense_p...     -0.6173      0.5370      
+## starter_defense_p...     -0.0160      0.9872      
+## starter_defense_p...      1.0293      0.3034      
+## starter_defense_p...     -1.7038      0.0885     *
+## starter_defense_p...      0.4753      0.6346      
+## starter_defense_p...     -0.5886      0.5561      
+## starter_defense_p...      0.5518      0.5811      
+## starter_defense_p...      0.8869      0.3752      
+## starter_defense_p...      0.2551      0.7987      
+## starter_defense_p...     -0.5588      0.5763      
+## starter_defense_p...      0.9282      0.3533      
+## starter_defense_p...      0.7934      0.4276      
+## starter_defense_p...      0.5519      0.5811      
+## starter_defense_p...     -2.5931      0.0095   ***
+## starter_defense_p...     -0.8867      0.3753      
+## starter_defense_p...      2.3101      0.0209    **
+## starter_defense_p...     -1.6813      0.0928     *
+## starter_defense_p...      1.6588      0.0972     *
+## starter_defense_p...      0.8439      0.3987      
+## starter_defense_p...      0.1780      0.8587      
+## starter_defense_p...     -1.7632      0.0779     *
+## starter_defense_p...     -0.2451      0.8064      
+## starter_defense_p...     -0.9013      0.3674      
+## starter_defense_p...      1.2589      0.2081      
+## starter_defense_p...      0.6565      0.5115      
+## starter_defense_p...     -1.5911      0.1116     .
+## starter_defense_p...      1.5996      0.1097     .
+## starter_defense_p...     -0.7826      0.4339      
+## starter_defense_p...     -0.1699      0.8651      
+## starter_defense_p...      0.1359      0.8919      
+## starter_defense_p...      0.8649      0.3871      
+## starter_defense_p...      0.0465      0.9629      
+## starter_defense_p...      0.7615      0.4464      
+## starter_defense_p...     -1.0257      0.3051      
+## starter_defense_p...     -1.4555      0.1456     .
+## starter_defense_p...     -0.4220      0.6731      
+## starter_defense_p...      0.8320      0.4054      
+## starter_defense_p...      1.1517      0.2495      
+## starter_defense_p...     -0.8262      0.4087      
+## starter_defense_p...     -0.2086      0.8348      
+## starter_defense_p...      1.8264      0.0678     *
+## starter_defense_p...     -0.8791      0.3794      
+## starter_defense_p...      0.0410      0.9673      
+## starter_defense_p...      1.8713      0.0613     *
+## starter_defense_p...      1.1924      0.2332      
+## starter_defense_p...      1.0562      0.2909      
+## starter_defense_p...     -0.4172      0.6766      
+## starter_defense_p...     -0.1897      0.8496      
+## starter_defense_p...     -0.1368      0.8912      
+## starter_defense_p...     -0.5129      0.6081      
+## starter_defense_p...     -0.2485      0.8037      
+## starter_offense_p...     -0.1885      0.8505      
+## starter_offense_p...     -1.4933      0.1354     .
+## starter_offense_p...      2.0806      0.0375    **
+## starter_offense_p...      0.9214      0.3569      
+## starter_offense_p...     -1.3675      0.1715      
+## starter_offense_p...     -0.8183      0.4132      
+## starter_offense_p...      2.3136      0.0207    **
+## starter_offense_p...     -1.4721      0.1410     .
+## starter_offense_p...      0.2796      0.7798      
+## starter_offense_p...      0.2059      0.8369      
+## starter_offense_p...     -0.2090      0.8344      
+## starter_offense_p...      0.5737      0.5662      
+## starter_offense_p...      1.0167      0.3093      
+## starter_offense_p...      0.7123      0.4763      
+## starter_offense_p...     -1.0602      0.2891      
+## starter_offense_p...     -0.7718      0.4403      
+## starter_offense_p...      1.4890      0.1365     .
+## starter_offense_p...     -1.3227      0.1860      
+## starter_offense_p...     -0.0456      0.9636      
+## starter_offense_p...      0.6743      0.5002      
+## starter_offense_p...     -0.3533      0.7238      
+## starter_offense_p...      1.6936      0.0904     *
+## starter_offense_p...      0.7381      0.4605      
+## starter_offense_p...     -1.2798      0.2007      
+## starter_offense_p...     -1.5898      0.1119     .
+## starter_offense_p...     -0.6784      0.4975      
+## starter_offense_p...     -0.1788      0.8581      
+## starter_offense_p...     -0.4992      0.6177      
+## starter_offense_p...     -0.2708      0.7865      
+## starter_offense_p...     -1.1501      0.2501      
+## starter_offense_p...      0.9024      0.3669      
+## starter_offense_p...     -0.4276      0.6690      
+## starter_offense_p...     -1.5338      0.1251     .
+## starter_offense_p...     -3.1767      0.0015   ***
+## starter_offense_p...     -0.6804      0.4963      
+## starter_offense_p...      0.9352      0.3497      
+## starter_offense_p...     -0.4997      0.6173      
+## starter_offense_p...     -0.5416      0.5881      
+## starter_offense_p...     -1.1124      0.2660      
+## starter_offense_p...      1.3152      0.1885      
+## starter_offense_p...     -1.2326      0.2178      
+## starter_offense_p...     -1.3184      0.1874      
+## starter_offense_p...     -1.6754      0.0939     *
+## starter_offense_p...     -0.5917      0.5540      
+## starter_offense_p...      0.6289      0.5294      
+## starter_offense_p...      0.5659      0.5715      
+## starter_offense_p...      0.3312      0.7405      
+## starter_offense_p...      0.4103      0.6816      
+## starter_offense_p...     -2.6601      0.0078   ***
+## starter_offense_p...     -0.1791      0.8578      
+## starter_offense_p...      0.8973      0.3696      
+## starter_offense_p...     -1.2681      0.2048      
+## starter_offense_p...      0.4891      0.6248      
+## starter_offense_p...      0.2699      0.7872      
+## starter_offense_p...      0.9892      0.3226      
+## starter_offense_p...     -0.0505      0.9597      
+## starter_offense_p...      0.5449      0.5859      
+## starter_offense_p...      1.2921      0.1963      
+## starter_offense_p...     -1.4417      0.1494     .
+## starter_offense_p...      0.1094      0.9129      
+## starter_offense_p...     -0.5731      0.5666      
+## starter_offense_p...      1.1895      0.2343      
+## starter_offense_p...     -0.4220      0.6730      
+## starter_defense_p...      0.6648      0.5062      
+## starter_defense_p...     -0.3292      0.7420      
+## starter_defense_p...      0.7438      0.4570      
+## starter_defense_p...      0.3217      0.7477      
+## starter_defense_p...     -0.4065      0.6844      
+## starter_defense_p...      0.2100      0.8336      
+## starter_defense_p...     -1.1762      0.2396      
+## starter_defense_p...     -0.6358      0.5249      
+## starter_defense_p...     -1.4170      0.1565      
+## starter_defense_p...      0.1727      0.8629      
+## starter_defense_p...      1.8221      0.0685     *
+## starter_defense_p...      0.5555      0.5786      
+## starter_defense_p...      0.9242      0.3554      
+## starter_defense_p...      0.2050      0.8376      
+## starter_defense_p...     -1.6085      0.1078     .
+## starter_defense_p...     -0.2332      0.8156      
+## starter_defense_p...      0.1422      0.8870      
+## starter_defense_p...     -1.3193      0.1871      
+## starter_defense_p...     -1.3308      0.1833      
+## starter_defense_p...     -0.2294      0.8185      
+## starter_defense_p...      0.2692      0.7878      
+## starter_defense_p...     -0.5659      0.5715      
+## starter_defense_p...      0.9146      0.3604      
+## starter_defense_p...     -0.0117      0.9907      
+## starter_defense_p...      1.0306      0.3028      
+## starter_defense_p...      1.5138      0.1301     .
+## starter_defense_p...      2.2125      0.0270    **
+## starter_defense_p...     -1.5040      0.1326     .
+## starter_defense_p...      0.0434      0.9654      
+## starter_defense_p...     -0.9891      0.3227      
+## starter_defense_p...      0.1786      0.8583      
+## starter_defense_p...     -0.4603      0.6453      
+## starter_defense_p...      0.2949      0.7681      
+## starter_defense_p...     -0.4604      0.6452      
+## starter_defense_p...      0.7432      0.4574      
+## starter_defense_p...     -0.4197      0.6747      
+## starter_defense_p...     -0.4328      0.6652      
+## starter_defense_p...      0.6797      0.4967      
+## starter_defense_p...     -1.8842      0.0596     *
+## starter_defense_p...     -0.6381      0.5234      
+## starter_defense_p...     -0.5567      0.5777      
+## starter_defense_p...      1.1533      0.2488      
+## starter_defense_p...      1.8314      0.0671     *
+## starter_defense_p...     -0.2358      0.8136      
+## starter_defense_p...     -2.1243      0.0337    **
+## starter_defense_p...      0.4178      0.6761      
+## starter_defense_p...     -1.0517      0.2930      
+## starter_defense_p...     -1.2877      0.1979      
+## starter_defense_p...     -0.3737      0.7086      
+## starter_defense_p...     -0.2008      0.8408      
+## starter_defense_p...     -2.7556      0.0059   ***
+## starter_defense_p...      1.4758      0.1400     .
+## starter_defense_p...      1.4006      0.1614      
+## starter_defense_p...     -0.8610      0.3893      
+## starter_defense_p...     -0.9372      0.3487      
+## starter_defense_p...      2.3145      0.0207    **
+## starter_defense_p...     -0.6362      0.5247      
+## starter_defense_p...     -0.6987      0.4848      
+## starter_defense_p...      0.3126      0.7546      
+## starter_defense_p...      0.6136      0.5395      
+## starter_defense_p...     -0.1345      0.8930      
+## starter_defense_p...     -1.1243      0.2609      
+## starter_defense_p...     -2.0601      0.0394    **
+## starter_defense_p...      1.3086      0.1907      
+## starter_defense_p...     -1.9208      0.0548     *
+## starter_defense_p...     -0.7297      0.4656      
+## starter_defense_p...     -0.1444      0.8852      
+## home_coach.yAndy ...     -1.8466      0.0648     *
+## home_coach.yAntho...     -1.8857      0.0594     *
+## home_coach.yArthu...     -1.6379      0.1015     .
+## home_coach.yBill ...     -1.9421      0.0522     *
+## home_coach.yBill ...     -1.2571      0.2088      
+## home_coach.yBrand...     -3.0628      0.0022   ***
+## home_coach.yBrian...     -2.0481      0.0406    **
+## home_coach.yBrian...     -0.9561      0.3391      
+## home_coach.yBruce...     -2.7360      0.0062   ***
+## home_coach.yDan C...     -0.8278      0.4078      
+## home_coach.yDan Q...     -1.7511      0.0800     *
+## home_coach.yDarre...     -0.7488      0.4540      
+## home_coach.yDenni...     -1.5434      0.1228     .
+## home_coach.yDoug ...     -2.1801      0.0293    **
+## home_coach.yDoug ...     -2.0945      0.0363    **
+## home_coach.yFrank...     -3.1101      0.0019   ***
+## home_coach.yJay R...     -3.5171      0.0004   ***
+## home_coach.yJeff ...     -0.9489      0.3427      
+## home_coach.yJoe J...     -0.3073      0.7586      
+## home_coach.yJohn ...     -2.3387      0.0194    **
+## home_coach.yJon G...     -2.6096      0.0091   ***
+## home_coach.yJosh ...     -2.0378      0.0416    **
+## home_coach.yKevin...     -2.8482      0.0044   ***
+## home_coach.yKevin...     -2.6055      0.0092   ***
+## home_coach.yKliff...     -2.3648      0.0181    **
+## home_coach.yKyle ...     -3.0096      0.0026   ***
+## home_coach.yLovie...     -1.7731      0.0763     *
+## home_coach.yMatt ...     -1.1686      0.2426      
+## home_coach.yMatt ...     -3.1251      0.0018   ***
+## home_coach.yMatt ...     -2.0878      0.0369    **
+## home_coach.yMatt ...     -0.8088      0.4187      
+## home_coach.yMatt ...     -3.0232      0.0025   ***
+## home_coach.yMike ...     -2.0008      0.0455    **
+## home_coach.yMike ...     -0.8378      0.4022      
+## home_coach.yMike ...     -2.3164      0.0206    **
+## home_coach.yMike ...     -2.5383      0.0112    **
+## home_coach.yMike ...     -1.2903      0.1970      
+## home_coach.yNatha...     -3.5113      0.0004   ***
+## home_coach.yNick ...     -1.7752      0.0759     *
+## home_coach.yPete ...     -1.8480      0.0647     *
+## home_coach.yRahee...     -1.8527      0.0640     *
+## home_coach.yRober...     -1.8029      0.0714     *
+## home_coach.yRomeo...     -1.3445      0.1788      
+## home_coach.yRon R...     -2.0558      0.0398    **
+## home_coach.ySean ...     -2.4967      0.0126    **
+## home_coach.ySean ...     -2.3377      0.0194    **
+## home_coach.ySean ...     -2.0381      0.0416    **
+## home_coach.ySteve...     -1.1940      0.2325      
+## home_coach.yTodd ...     -1.1233      0.2614      
+## home_coach.yVic F...     -2.5676      0.0103    **
+## home_coach.yZac T...     -2.4199      0.0156    **
+## away_coach.yAndy ...     -1.3888      0.1649      
+## away_coach.yAntho...     -2.5660      0.0103    **
+## away_coach.yArthu...     -1.3680      0.1713      
+## away_coach.yBill ...     -2.3552      0.0185    **
+## away_coach.yBill ...     -0.4866      0.6266      
+## away_coach.yBrand...     -2.8618      0.0042   ***
+## away_coach.yBrian...     -2.3682      0.0179    **
+## away_coach.yBrian...     -0.7149      0.4747      
+## away_coach.yBruce...     -2.1448      0.0320    **
+## away_coach.yDan C...     -1.3240      0.1856      
+## away_coach.yDan Q...      0.8585      0.3907      
+## away_coach.yDarre...     -1.0660      0.2864      
+## away_coach.yDenni...     -1.9269      0.0540     *
+## away_coach.yDoug ...     -2.5454      0.0109    **
+## away_coach.yDoug ...     -1.3556      0.1753      
+## away_coach.yFrank...     -2.4595      0.0139    **
+## away_coach.yJay R...     -1.5204      0.1285     .
+## away_coach.yJeff ...     -0.9350      0.3498      
+## away_coach.yJoe J...     -0.7365      0.4615      
+## away_coach.yJohn ...     -1.6974      0.0897     *
+## away_coach.yJon G...     -2.5681      0.0102    **
+## away_coach.yJosh ...     -1.8630      0.0625     *
+## away_coach.yKevin...     -2.6006      0.0093   ***
+## away_coach.yKevin...     -2.0167      0.0438    **
+## away_coach.yKliff...     -1.9751      0.0483    **
+## away_coach.yKyle ...     -3.3681      0.0008   ***
+## away_coach.yLovie...     -1.7913      0.0733     *
+## away_coach.yMatt ...     -2.2346      0.0255    **
+## away_coach.yMatt ...     -3.8592      0.0001   ***
+## away_coach.yMatt ...     -2.5114      0.0120    **
+## away_coach.yMatt ...     -0.6176      0.5369      
+## away_coach.yMatt ...     -3.2780      0.0011   ***
+## away_coach.yMike ...     -1.7600      0.0784     *
+## away_coach.yMike ...     -1.3667      0.1718      
+## away_coach.yMike ...     -2.7850      0.0054   ***
+## away_coach.yMike ...     -1.5941      0.1110     .
+## away_coach.yMike ...     -1.2998      0.1937      
+## away_coach.yNatha...     -1.5984      0.1100     .
+## away_coach.yNick ...     -1.5871      0.1125     .
+## away_coach.yPete ...     -1.9951      0.0461    **
+## away_coach.yRahee...     -1.7275      0.0841     *
+## away_coach.yRober...     -1.4995      0.1338     .
+## away_coach.yRomeo...     -1.6022      0.1091     .
+## away_coach.yRon R...     -1.3170      0.1879      
+## away_coach.ySean ...     -2.4935      0.0127    **
+## away_coach.ySean ...     -2.6333      0.0085   ***
+## away_coach.ySean ...     -1.1721      0.2412      
+## away_coach.ySteve...     -1.9802      0.0477    **
+## away_coach.yTodd ...     -1.5829      0.1135     .
+## away_coach.yVic F...     -2.5287      0.0115    **
+## away_coach.yZac T...     -1.7814      0.0749     *
+## Bruce_Arians             -1.2762      0.2019      
+## Sean_McDermott           -0.9182      0.3585      
+## Ron_Rivera               -1.6644      0.0961     *
+## John_Harbaugh            -1.8636      0.0624     *
+## Mike_McCarthy            -1.6170      0.1059     .
+## Dan_Quinn                -0.7274      0.4670      
+## Bill_OBrien              -1.3989      0.1619      
+## Adam_Gase                -2.5465      0.0109    **
+## Anthony_Lynn             -0.6522      0.5143      
+## Mike_Zimmer              -0.1989      0.8424      
+## Mike_Tomlin              -0.9906      0.3219      
+## Bill_Belichick           -1.8787      0.0603     *
+## Sean_Payton              -1.5036      0.1327     .
+## Todd_Bowles              -1.4162      0.1568      
+## Doug_Pederson            -1.4871      0.1370     .
+## Andy_Reid                -1.0691      0.2851      
+## Kyle_Shanahan            -1.1394      0.2546      
+## Pete_Carroll             -1.5788      0.1144     .
+## Doug_Marrone             -0.0898      0.9285      
+## Sean_McVay               -1.4234      0.1547      
+## Steve_Wilks              -1.0741      0.2828      
+## Matt_Patricia            -1.9263      0.0541     *
+## Mike_Vrabel              -1.3583      0.1744      
+## Frank_Reich              -0.1325      0.8946      
+## Jon_Gruden               -1.1645      0.2443      
+## Matt_Nagy                -0.9009      0.3677      
+## Kliff_Kingsbury          -1.4818      0.1384     .
+## Vic_Fangio               -1.0934      0.2742      
+## Matt_LaFleur              0.0540      0.9570      
+## Brian_Flores             -1.7964      0.0725     *
+## Zac_Taylor               -1.8455      0.0650     *
+## Matt_Rhule               -0.2528      0.8004      
+## Kevin_Stefanski          -0.3576      0.7206      
+## Joe_Judge                -2.4311      0.0151    **
+## Romeo_Crennel            -1.7659      0.0775     *
+## Raheem_Morris            -0.7821      0.4342      
+## Darrell_Bevell           -1.5967      0.1104     .
+## Arthur_Smith             -1.6867      0.0917     *
+## Brandon_Staley           -1.2303      0.2186      
+## Dan_Campbell             -1.1163      0.2643      
+## Robert_Saleh             -2.0531      0.0401    **
+## Nick_Sirianni            -0.2837      0.7766      
+## Josh_McDaniels           -1.7912      0.0733     *
+## Brian_Daboll             -0.9579      0.3381      
+## Matt_Eberflus            -2.0466      0.0407    **
+## Lovie_Smith              -1.3335      0.1824      
+## Nathaniel_Hackett        -1.4239      0.1545      
+## Mike_McDaniel            -1.4317      0.1523      
+## Kevin_OConnell           -0.8004      0.4235      
+## Dennis_Allen             -1.8856      0.0594     *
+## Jeff_Saturday            -0.8841      0.3767      
+## yardline_1_10             5.1311      0.0000   ***
+## yardline_11_20            2.3923      0.0168    **
+## yardline_21_30            2.9626      0.0031   ***
+## yardline_31_40            8.9992      0.0000   ***
+## yardline_41_50            6.7689      0.0000   ***
+## yardline_51_60            1.6112      0.1072     .
+## yardline_61_70           -0.6907      0.4898      
+## yardline_71_80           -1.7467      0.0807     *
+## yardline_81_90            0.1095      0.9128      
+## is_first_half           -14.1749      0.0000   ***
+## time_in_half             -6.8612      0.0000   ***
+## attendance_raw            0.0816      0.9349      
+## posteam_type_home         1.3379      0.1810      
+## interact_HxA              2.7165      0.0066   ***
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
@@ -1179,142 +2849,488 @@ for (year in years) {
 ## 
 ## Variable                 t-value     p-value   sig
 ## ---------                -------     -------  ----
-## (Intercept)               0.0678      0.9459      
-## ydstogo                 -26.9983      0.0000   ***
-## posteam_timeouts_...     -6.6255      0.0000   ***
-## defteam_timeouts_...      1.9580      0.0503     *
-## week                      1.0156      0.3099      
-## temp                     -1.3881      0.1652      
-## wind                      0.9404      0.3471      
-## vegas_wp                 -8.7168      0.0000   ***
-## vegas_wp_posteam          0.3283      0.7427      
-## total_line               -0.5613      0.5746      
-## score_diff               -0.5087      0.6109      
-## down1_pct                 0.7315      0.4645      
-## down2_pct                -1.3446      0.1788      
-## down3_pct                 0.6359      0.5249      
-## down4_pct                -1.7301      0.0837     *
-## prep_days                -1.1010      0.2709      
-## overall_win_pct           0.0343      0.9726      
-## team_win_pct             -0.0819      0.9347      
-## prev_win_pct              1.0111      0.3120      
-## prev_shotgun_rate         1.3194      0.1871      
-## prev_singleback_rate      1.3586      0.1743      
-## prev_empty_rate           0.7653      0.4441      
-## prev_iform_rate          -0.1388      0.8896      
-## prev_shotgun_success     -0.8419      0.3999      
-## prev_singleback_s...     -0.6468      0.5178      
-## prev_empty_success        1.3172      0.1878      
-## prev_iform_success       -0.0578      0.9539      
-## prev_stop_rate_run        1.9879      0.0469    **
-## prev_stop_rate_pass      -0.0644      0.9487      
-## shotgun_rate             -6.1075      0.0000   ***
-## singleback_rate          -5.0056      0.0000   ***
-## empty_rate               -6.6927      0.0000   ***
-## iform_rate               -3.0186      0.0025   ***
-## shotgun_success           0.0440      0.9649      
-## singleback_success        0.9218      0.3567      
-## empty_success            -0.8497      0.3955      
-## iform_success            -0.4516      0.6516      
-## def_stop_rate_run        -0.5951      0.5518      
-## def_stop_rate_pass       -4.7808      0.0000   ***
-## avg_pass_rushers         -0.2413      0.8093      
-## avg_box_defenders         0.4551      0.6490      
-## cover0_rate               0.0647      0.9484      
-## cover1_rate               1.0338      0.3013      
-## cover2_rate              -1.5428      0.1229     .
-## cover3_rate               1.1378      0.2552      
-## cover4_rate              -0.0841      0.9329      
-## cover6_rate              -0.7490      0.4539      
-## two_man_rate             -0.9985      0.3181      
-## prevent_rate              0.7822      0.4342      
-## p_player_26_punti...      0.9842      0.3251      
-## p_player_26_punti...     -0.8973      0.3696      
-## p_player_26_punti...      0.6781      0.4977      
-## p_player_26_kicko...      0.0474      0.9622      
-## p_player_26_speci...     -0.1608      0.8723      
-## p_player_26_speci...     -0.7289      0.4661      
-## p_player_26_kicko...      0.5040      0.6143      
-## p_player_26_punti...     -0.4877      0.6258      
-## k_player_25_kicko...     -0.1723      0.8632      
-## k_player_25_field...      0.0405      0.9677      
-## k_player_25_kicko...      0.0872      0.9305      
-## k_player_25_speci...     -0.3006      0.7637      
-## k_player_25_speci...      1.0534      0.2922      
-## k_player_25_field...     -0.6046      0.5455      
-## k_player_25_speci...     -1.0728      0.2834      
-## k_player_25_speci...      1.1380      0.2552      
-## k_player_25_kicko...     -0.8019      0.4226      
-## k_player_25_field...     -1.7208      0.0853     *
-## k_player_25_speci...      0.4266      0.6697      
-## k_player_25_kicko...      0.7612      0.4465      
-## roof_outdoors            -1.1385      0.2550      
-## Bruce_Arians              1.2932      0.1960      
-## Sean_McDermott            1.3358      0.1817      
-## Ron_Rivera                1.8171      0.0693     *
-## John_Harbaugh             1.9001      0.0575     *
-## Mike_McCarthy             1.4935      0.1353     .
-## Dan_Quinn                 2.0310      0.0423    **
-## Bill_OBrien               1.0873      0.2769      
-## Adam_Gase                 0.4172      0.6765      
-## Anthony_Lynn              1.9316      0.0534     *
-## Mike_Zimmer               2.1426      0.0322    **
-## Mike_Tomlin               1.3309      0.1833      
-## Bill_Belichick            1.6239      0.1044     .
-## Sean_Payton               2.4631      0.0138    **
-## Todd_Bowles               2.4309      0.0151    **
-## Doug_Pederson             2.5629      0.0104    **
-## Andy_Reid                 1.9904      0.0466    **
-## Kyle_Shanahan             2.3988      0.0165    **
-## Pete_Carroll              2.4794      0.0132    **
-## Doug_Marrone              0.9938      0.3203      
-## Sean_McVay                0.9510      0.3416      
-## Matt_Patricia             2.6600      0.0078   ***
-## Mike_Vrabel               2.4262      0.0153    **
-## Frank_Reich               1.8615      0.0627     *
-## Jon_Gruden                1.7185      0.0857     *
-## Matt_Nagy                 1.3797      0.1677      
-## Kliff_Kingsbury           1.4465      0.1481     .
-## Vic_Fangio                1.4674      0.1423     .
-## Matt_LaFleur              2.5262      0.0116    **
-## Brian_Flores              0.7982      0.4248      
-## Zac_Taylor                1.2200      0.2225      
-## Matt_Rhule                1.8104      0.0703     *
-## Kevin_Stefanski           1.2501      0.2113      
-## Joe_Judge                 1.6605      0.0969     *
-## Romeo_Crennel             0.9149      0.3603      
-## Raheem_Morris             1.6265      0.1039     .
-## Darrell_Bevell            1.5369      0.1244     .
-## Arthur_Smith              2.6823      0.0073   ***
-## Brandon_Staley            2.1371      0.0326    **
-## Dan_Campbell              2.9740      0.0030   ***
-## Robert_Saleh              1.2564      0.2090      
-## Nick_Sirianni             1.2388      0.2155      
-## Josh_McDaniels            1.6588      0.0972     *
-## Brian_Daboll              1.9174      0.0552     *
-## Matt_Eberflus             1.5900      0.1119     .
-## Mike_McDaniel             2.3813      0.0173    **
-## Kevin_OConnell            2.4315      0.0151    **
-## Dennis_Allen              1.1266      0.2599      
-## DeMeco_Ryans              2.0105      0.0444    **
-## Shane_Steichen            1.4726      0.1409     .
-## Jonathan_Gannon           2.3883      0.0170    **
-## Antonio_Pierce            1.6829      0.0925     *
-## Chris_Tabor               1.7255      0.0845     *
-## yardline_1_10             4.8736      0.0000   ***
-## yardline_11_20            1.4435      0.1489     .
-## yardline_21_30            2.5073      0.0122    **
-## yardline_31_40            8.5234      0.0000   ***
-## yardline_41_50            6.4717      0.0000   ***
-## yardline_51_60            2.0680      0.0387    **
-## yardline_61_70           -0.7368      0.4613      
-## yardline_71_80           -1.6024      0.1091     .
-## yardline_81_90           -0.3768      0.7064      
-## is_first_half           -14.4186      0.0000   ***
-## time_in_half             -8.5564      0.0000   ***
-## attendance_raw            0.2098      0.8339      
-## posteam_type_home         0.8645      0.3874      
-## interact_HxA              1.3218      0.1863      
+## (Intercept)               1.3262      0.1848      
+## ydstogo                 -27.6990      0.0000   ***
+## posteam_timeouts_...     -6.9228      0.0000   ***
+## defteam_timeouts_...      1.7708      0.0766     *
+## week                      1.5970      0.1103     .
+## temp                     -0.1803      0.8569      
+## wind                      2.5033      0.0123    **
+## vegas_wp                 -9.1538      0.0000   ***
+## total_line               -0.9251      0.3549      
+## score_diff               -1.3245      0.1854      
+## roof_outdoors             0.6027      0.5468      
+## down1_pct                 1.0617      0.2884      
+## down2_pct                 0.8917      0.3726      
+## down3_pct                -0.7223      0.4702      
+## down4_pct                -0.8177      0.4136      
+## prep_days                 0.9063      0.3648      
+## overall_win_pct          -0.3511      0.7255      
+## team_win_pct              1.4514      0.1467     .
+## prev_win_pct             -1.1496      0.2504      
+## prev_shotgun_rate        -2.5017      0.0124    **
+## prev_singleback_rate     -2.2678      0.0234    **
+## prev_empty_rate          -1.3967      0.1626      
+## prev_iform_rate          -2.3286      0.0199    **
+## prev_shotgun_success      2.0360      0.0418    **
+## prev_singleback_s...     -1.5701      0.1164     .
+## prev_empty_success       -0.6993      0.4844      
+## prev_iform_success       -0.7987      0.4245      
+## prev_stop_rate_run       -2.6537      0.0080   ***
+## prev_stop_rate_pass       0.8576      0.3912      
+## shotgun_rate              1.1760      0.2397      
+## singleback_rate           1.6899      0.0911     *
+## empty_rate               -0.5594      0.5759      
+## iform_rate               -0.6014      0.5476      
+## shotgun_success           0.9977      0.3185      
+## singleback_success        0.3546      0.7229      
+## empty_success            -0.2310      0.8173      
+## iform_success             0.7334      0.4633      
+## def_stop_rate_run        -0.4395      0.6603      
+## def_stop_rate_pass       -2.8712      0.0041   ***
+## avg_pass_rushers          0.2054      0.8373      
+## avg_box_defenders         2.2109      0.0271    **
+## cover0_rate               0.0697      0.9445      
+## cover1_rate              -0.1887      0.8503      
+## cover2_rate               0.1613      0.8718      
+## cover3_rate               0.5004      0.6168      
+## cover4_rate               0.8384      0.4018      
+## cover6_rate              -0.5147      0.6068      
+## two_man_rate             -0.7127      0.4760      
+## prevent_rate              1.4863      0.1373     .
+## starter_offense_p...      0.4281      0.6686      
+## starter_offense_p...      0.7133      0.4757      
+## starter_offense_p...     -0.2254      0.8217      
+## starter_offense_p...     -1.9583      0.0502     *
+## starter_offense_p...     -1.1231      0.2615      
+## starter_offense_p...      0.6966      0.4861      
+## starter_offense_p...      0.3616      0.7177      
+## starter_offense_p...     -1.6963      0.0899     *
+## starter_offense_p...     -0.0283      0.9775      
+## starter_offense_p...     -0.7460      0.4557      
+## starter_offense_p...     -1.2848      0.1989      
+## starter_offense_p...     -0.1845      0.8536      
+## starter_offense_p...      0.6740      0.5004      
+## starter_offense_p...     -0.5504      0.5821      
+## starter_offense_p...     -1.7464      0.0808     *
+## starter_offense_p...     -1.7088      0.0875     *
+## starter_offense_p...     -1.0514      0.2931      
+## starter_offense_p...      1.2049      0.2283      
+## starter_offense_p...      0.0166      0.9868      
+## starter_offense_p...      0.3555      0.7222      
+## starter_offense_p...      1.7555      0.0792     *
+## starter_offense_p...      1.3281      0.1842      
+## starter_offense_p...     -2.1152      0.0345    **
+## starter_offense_p...     -1.6427      0.1005     .
+## starter_offense_p...     -0.5625      0.5738      
+## starter_offense_p...      0.9169      0.3592      
+## starter_offense_p...      1.4302      0.1527      
+## starter_offense_p...     -1.9429      0.0521     *
+## starter_offense_p...      0.1124      0.9105      
+## starter_offense_p...      1.7661      0.0774     *
+## starter_offense_p...     -1.3059      0.1916      
+## starter_offense_p...      0.8124      0.4166      
+## starter_offense_p...     -0.0553      0.9559      
+## starter_offense_p...     -0.3396      0.7342      
+## starter_offense_p...      0.4348      0.6637      
+## starter_offense_p...      0.7433      0.4573      
+## starter_offense_p...     -0.4355      0.6632      
+## starter_offense_p...      1.2544      0.2097      
+## starter_offense_p...     -0.7924      0.4282      
+## starter_offense_p...     -0.1080      0.9140      
+## starter_offense_p...      0.0064      0.9949      
+## starter_offense_p...     -1.5273      0.1267     .
+## starter_offense_p...     -2.2960      0.0217    **
+## starter_offense_p...     -0.2577      0.7966      
+## starter_offense_p...     -0.0926      0.9262      
+## starter_offense_p...      1.1006      0.2711      
+## starter_offense_p...      1.4392      0.1502      
+## starter_offense_p...     -0.2720      0.7856      
+## starter_offense_p...      0.8768      0.3806      
+## starter_offense_p...      0.2616      0.7936      
+## starter_offense_p...     -0.4333      0.6648      
+## starter_offense_p...      1.4100      0.1586      
+## starter_offense_p...     -0.3899      0.6967      
+## starter_offense_p...      1.7344      0.0829     *
+## starter_offense_p...      0.1336      0.8937      
+## starter_offense_p...      1.0519      0.2929      
+## starter_offense_p...      1.6821      0.0926     *
+## starter_offense_p...      0.9747      0.3297      
+## starter_offense_p...     -0.0586      0.9533      
+## starter_offense_p...     -2.0129      0.0442    **
+## starter_offense_p...      0.4530      0.6506      
+## starter_offense_p...      1.5495      0.1213     .
+## starter_offense_p...      0.1532      0.8783      
+## starter_offense_p...     -1.8792      0.0603     *
+## starter_offense_p...      1.6345      0.1022     .
+## starter_offense_p...      2.0695      0.0385    **
+## starter_defense_p...     -0.4387      0.6609      
+## starter_defense_p...      0.5358      0.5921      
+## starter_defense_p...      0.4124      0.6801      
+## starter_defense_p...     -0.5756      0.5649      
+## starter_defense_p...     -1.6844      0.0921     *
+## starter_defense_p...      0.6618      0.5081      
+## starter_defense_p...     -0.1497      0.8810      
+## starter_defense_p...      1.2616      0.2071      
+## starter_defense_p...      0.3471      0.7285      
+## starter_defense_p...     -1.3118      0.1896      
+## starter_defense_p...      2.3639      0.0181    **
+## starter_defense_p...     -1.1995      0.2304      
+## starter_defense_p...      1.1817      0.2374      
+## starter_defense_p...     -1.2301      0.2187      
+## starter_defense_p...     -0.0442      0.9648      
+## starter_defense_p...      0.6937      0.4879      
+## starter_defense_p...     -1.5699      0.1165     .
+## starter_defense_p...      0.2516      0.8014      
+## starter_defense_p...      0.3568      0.7212      
+## starter_defense_p...      1.1225      0.2617      
+## starter_defense_p...      0.1296      0.8969      
+## starter_defense_p...     -0.7007      0.4835      
+## starter_defense_p...      0.0334      0.9734      
+## starter_defense_p...     -0.4278      0.6688      
+## starter_defense_p...      0.7102      0.4776      
+## starter_defense_p...     -0.9119      0.3619      
+## starter_defense_p...      1.4178      0.1563      
+## starter_defense_p...      1.0869      0.2771      
+## starter_defense_p...      1.3616      0.1734      
+## starter_defense_p...     -0.8194      0.4126      
+## starter_defense_p...     -1.6127      0.1069     .
+## starter_defense_p...      1.2862      0.1984      
+## starter_defense_p...      1.3960      0.1628      
+## starter_defense_p...     -2.2042      0.0275    **
+## starter_defense_p...     -0.7021      0.4827      
+## starter_defense_p...     -0.1502      0.8806      
+## starter_defense_p...     -1.4654      0.1429     .
+## starter_defense_p...     -0.1369      0.8911      
+## starter_defense_p...     -0.0779      0.9379      
+## starter_defense_p...      0.4219      0.6731      
+## starter_defense_p...      0.0204      0.9837      
+## starter_defense_p...      0.6991      0.4845      
+## starter_defense_p...      0.1385      0.8899      
+## starter_defense_p...      0.0433      0.9655      
+## starter_defense_p...      0.8570      0.3915      
+## starter_defense_p...      0.2693      0.7877      
+## starter_defense_p...      0.3058      0.7597      
+## starter_defense_p...     -1.1853      0.2359      
+## starter_defense_p...      0.1555      0.8764      
+## starter_defense_p...     -0.3568      0.7213      
+## starter_defense_p...     -1.1114      0.2664      
+## starter_defense_p...     -0.8148      0.4152      
+## starter_defense_p...      0.8482      0.3963      
+## starter_defense_p...      0.5674      0.5705      
+## starter_defense_p...     -0.6727      0.5011      
+## starter_defense_p...     -0.7943      0.4270      
+## starter_defense_p...     -0.3886      0.6976      
+## starter_defense_p...      1.4708      0.1414     .
+## starter_defense_p...      0.3403      0.7336      
+## starter_defense_p...      1.0799      0.2802      
+## starter_defense_p...     -1.1575      0.2471      
+## starter_defense_p...      2.9993      0.0027   ***
+## starter_defense_p...     -1.1895      0.2343      
+## starter_defense_p...      0.6057      0.5448      
+## starter_defense_p...      0.2678      0.7889      
+## starter_defense_p...     -0.7531      0.4514      
+## starter_defense_p...      0.4489      0.6535      
+## starter_defense_p...      0.4912      0.6233      
+## starter_offense_p...      0.7744      0.4387      
+## starter_offense_p...     -0.4047      0.6857      
+## starter_offense_p...      1.6474      0.0995     *
+## starter_offense_p...     -0.0195      0.9845      
+## starter_offense_p...      0.2080      0.8352      
+## starter_offense_p...      0.1289      0.8974      
+## starter_offense_p...      1.6069      0.1081     .
+## starter_offense_p...      0.5476      0.5840      
+## starter_offense_p...      0.9734      0.3304      
+## starter_offense_p...      0.9059      0.3650      
+## starter_offense_p...      1.2375      0.2160      
+## starter_offense_p...     -0.6046      0.5454      
+## starter_offense_p...     -0.0469      0.9626      
+## starter_offense_p...     -0.6349      0.5255      
+## starter_offense_p...     -0.4520      0.6513      
+## starter_offense_p...     -0.6258      0.5314      
+## starter_offense_p...      3.3011      0.0010   ***
+## starter_offense_p...     -0.4005      0.6888      
+## starter_offense_p...      0.0574      0.9542      
+## starter_offense_p...     -0.7142      0.4751      
+## starter_offense_p...      1.7768      0.0757     *
+## starter_offense_p...      1.0273      0.3043      
+## starter_offense_p...     -0.3692      0.7120      
+## starter_offense_p...     -0.9493      0.3425      
+## starter_offense_p...     -0.8257      0.4090      
+## starter_offense_p...     -0.7803      0.4353      
+## starter_offense_p...     -0.2055      0.8372      
+## starter_offense_p...     -0.9102      0.3628      
+## starter_offense_p...     -1.6188      0.1055     .
+## starter_offense_p...     -0.7869      0.4314      
+## starter_offense_p...     -0.3381      0.7353      
+## starter_offense_p...     -0.4165      0.6771      
+## starter_offense_p...     -2.4953      0.0126    **
+## starter_offense_p...     -0.2186      0.8270      
+## starter_offense_p...      1.8750      0.0608     *
+## starter_offense_p...     -1.4970      0.1344     .
+## starter_offense_p...     -1.7048      0.0883     *
+## starter_offense_p...     -0.2954      0.7677      
+## starter_offense_p...      0.2265      0.8208      
+## starter_offense_p...      0.0836      0.9334      
+## starter_offense_p...     -1.0596      0.2894      
+## starter_offense_p...     -2.4239      0.0154    **
+## starter_offense_p...     -0.7515      0.4524      
+## starter_offense_p...     -0.0579      0.9538      
+## starter_offense_p...      1.0869      0.2771      
+## starter_offense_p...      0.0689      0.9451      
+## starter_offense_p...     -0.1682      0.8664      
+## starter_offense_p...     -1.8093      0.0705     *
+## starter_offense_p...      0.7762      0.4376      
+## starter_offense_p...      0.6549      0.5126      
+## starter_offense_p...      0.6897      0.4904      
+## starter_offense_p...     -0.8344      0.4041      
+## starter_offense_p...      1.8433      0.0653     *
+## starter_offense_p...      0.3353      0.7374      
+## starter_offense_p...      0.9701      0.3320      
+## starter_offense_p...      0.0810      0.9354      
+## starter_offense_p...      1.4499      0.1471     .
+## starter_offense_p...     -0.0962      0.9233      
+## starter_offense_p...     -0.4445      0.6567      
+## starter_offense_p...     -0.0838      0.9332      
+## starter_offense_p...      1.0097      0.3127      
+## starter_offense_p...      0.6281      0.5300      
+## starter_defense_p...      0.0464      0.9630      
+## starter_defense_p...      0.1972      0.8437      
+## starter_defense_p...      0.2221      0.8243      
+## starter_defense_p...     -0.3399      0.7339      
+## starter_defense_p...      0.6150      0.5386      
+## starter_defense_p...      0.6149      0.5387      
+## starter_defense_p...      0.0443      0.9647      
+## starter_defense_p...      0.4678      0.6400      
+## starter_defense_p...     -1.5264      0.1270     .
+## starter_defense_p...      0.1354      0.8923      
+## starter_defense_p...      1.6303      0.1031     .
+## starter_defense_p...      0.2188      0.8268      
+## starter_defense_p...     -0.3615      0.7178      
+## starter_defense_p...     -0.3918      0.6952      
+## starter_defense_p...     -1.1762      0.2396      
+## starter_defense_p...     -1.4467      0.1480     .
+## starter_defense_p...     -1.5683      0.1169     .
+## starter_defense_p...     -1.2701      0.2041      
+## starter_defense_p...      1.0005      0.3171      
+## starter_defense_p...     -0.6482      0.5169      
+## starter_defense_p...     -0.3859      0.6996      
+## starter_defense_p...     -0.8910      0.3730      
+## starter_defense_p...     -1.3007      0.1934      
+## starter_defense_p...      0.9149      0.3603      
+## starter_defense_p...      0.3539      0.7234      
+## starter_defense_p...      0.5680      0.5701      
+## starter_defense_p...      0.7224      0.4701      
+## starter_defense_p...      0.4251      0.6708      
+## starter_defense_p...     -1.5157      0.1296     .
+## starter_defense_p...     -1.1450      0.2522      
+## starter_defense_p...     -0.4459      0.6557      
+## starter_defense_p...      0.4613      0.6446      
+## starter_defense_p...     -0.1540      0.8776      
+## starter_defense_p...      1.1841      0.2364      
+## starter_defense_p...      0.9913      0.3216      
+## starter_defense_p...      1.3341      0.1822      
+## starter_defense_p...      1.3159      0.1883      
+## starter_defense_p...     -0.4659      0.6413      
+## starter_defense_p...     -0.8304      0.4063      
+## starter_defense_p...      1.7641      0.0778     *
+## starter_defense_p...     -0.1659      0.8682      
+## starter_defense_p...     -0.5525      0.5806      
+## starter_defense_p...     -0.8421      0.3998      
+## starter_defense_p...     -0.9759      0.3292      
+## starter_defense_p...      0.3681      0.7128      
+## starter_defense_p...     -0.9210      0.3571      
+## starter_defense_p...     -1.3422      0.1796      
+## starter_defense_p...     -0.7371      0.4611      
+## starter_defense_p...      1.4842      0.1378     .
+## starter_defense_p...     -0.6833      0.4944      
+## starter_defense_p...     -0.4315      0.6661      
+## starter_defense_p...     -2.0507      0.0403    **
+## starter_defense_p...     -1.7326      0.0832     *
+## starter_defense_p...      0.9839      0.3252      
+## starter_defense_p...     -0.0898      0.9285      
+## starter_defense_p...      0.0433      0.9654      
+## starter_defense_p...     -0.5037      0.6145      
+## starter_defense_p...     -1.3989      0.1619      
+## starter_defense_p...     -0.4877      0.6258      
+## starter_defense_p...     -1.5327      0.1254     .
+## starter_defense_p...      1.5312      0.1258     .
+## starter_defense_p...      1.0474      0.2950      
+## starter_defense_p...      0.0594      0.9526      
+## starter_defense_p...      0.6872      0.4920      
+## starter_defense_p...     -0.2428      0.8082      
+## starter_defense_p...     -0.6437      0.5198      
+## starter_defense_p...     -0.4959      0.6200      
+## starter_defense_p...     -0.5288      0.5970      
+## home_coach.yAndy ...     -2.7350      0.0063   ***
+## home_coach.yAntho...     -1.1176      0.2638      
+## home_coach.yAnton...     -1.1174      0.2638      
+## home_coach.yArthu...     -1.4989      0.1339     .
+## home_coach.yBill ...     -1.0254      0.3052      
+## home_coach.yBill ...     -0.9813      0.3265      
+## home_coach.yBrand...     -0.3922      0.6949      
+## home_coach.yBrian...     -2.7715      0.0056   ***
+## home_coach.yBrian...     -0.8726      0.3829      
+## home_coach.yBruce...     -2.3010      0.0214    **
+## home_coach.yChris...      0.2325      0.8161      
+## home_coach.yDan C...     -2.1690      0.0301    **
+## home_coach.yDan Q...     -1.7803      0.0751     *
+## home_coach.yDarre...     -0.4265      0.6698      
+## home_coach.yDeMec...     -1.3057      0.1917      
+## home_coach.yDenni...     -1.2705      0.2039      
+## home_coach.yDoug ...     -2.4495      0.0143    **
+## home_coach.yDoug ...     -1.6280      0.1036     .
+## home_coach.yFrank...     -2.6316      0.0085   ***
+## home_coach.yGiff ...      0.2287      0.8191      
+## home_coach.yJoe J...     -0.3357      0.7371      
+## home_coach.yJohn ...     -1.8508      0.0643     *
+## home_coach.yJon G...     -1.5232      0.1278     .
+## home_coach.yJonat...     -1.1167      0.2642      
+## home_coach.yJosh ...     -0.9185      0.3584      
+## home_coach.yKevin...     -1.2079      0.2271      
+## home_coach.yKevin...     -2.9804      0.0029   ***
+## home_coach.yKliff...     -0.3624      0.7171      
+## home_coach.yKyle ...     -1.8623      0.0626     *
+## home_coach.yMatt ...     -1.7832      0.0746     *
+## home_coach.yMatt ...     -2.1785      0.0294    **
+## home_coach.yMatt ...     -1.6068      0.1082     .
+## home_coach.yMatt ...      0.0016      0.9987      
+## home_coach.yMatt ...     -3.0054      0.0027   ***
+## home_coach.yMike ...     -1.6000      0.1096     .
+## home_coach.yMike ...     -1.4390      0.1502      
+## home_coach.yMike ...     -1.9376      0.0527     *
+## home_coach.yMike ...     -2.3218      0.0203    **
+## home_coach.yMike ...     -1.8245      0.0681     *
+## home_coach.yNick ...     -1.3374      0.1812      
+## home_coach.yPete ...     -2.0262      0.0428    **
+## home_coach.yRahee...     -2.8394      0.0045   ***
+## home_coach.yRober...     -2.0826      0.0373    **
+## home_coach.yRomeo...     -1.2864      0.1984      
+## home_coach.yRon R...     -1.7913      0.0733     *
+## home_coach.ySean ...     -2.8089      0.0050   ***
+## home_coach.ySean ...     -0.3510      0.7256      
+## home_coach.ySean ...     -1.8451      0.0651     *
+## home_coach.yShane...     -1.0797      0.2803      
+## home_coach.yTodd ...     -2.9363      0.0033   ***
+## home_coach.yVic F...     -1.0178      0.3088      
+## home_coach.yZac T...     -2.7359      0.0062   ***
+## away_coach.yAndy ...     -2.6082      0.0091   ***
+## away_coach.yAntho...     -1.6750      0.0940     *
+## away_coach.yAnton...     -1.9489      0.0514     *
+## away_coach.yArthu...     -2.6543      0.0080   ***
+## away_coach.yBill ...     -1.3757      0.1690      
+## away_coach.yBill ...     -0.7984      0.4247      
+## away_coach.yBrand...     -2.4015      0.0164    **
+## away_coach.yBrian...     -2.6006      0.0093   ***
+## away_coach.yBrian...     -0.6950      0.4871      
+## away_coach.yBruce...     -1.6176      0.1058     .
+## away_coach.yChris...      0.1728      0.8628      
+## away_coach.yDan C...     -2.7487      0.0060   ***
+## away_coach.yDan Q...     -0.2279      0.8197      
+## away_coach.yDarre...     -1.2500      0.2113      
+## away_coach.yDeMec...     -2.5496      0.0108    **
+## away_coach.yDenni...     -2.0001      0.0455    **
+## away_coach.yDoug ...     -3.0334      0.0024   ***
+## away_coach.yDoug ...     -2.5398      0.0111    **
+## away_coach.yFrank...     -2.8813      0.0040   ***
+## away_coach.yJoe J...     -0.4806      0.6308      
+## away_coach.yJohn ...     -2.2000      0.0278    **
+## away_coach.yJon G...     -1.8458      0.0650     *
+## away_coach.yJonat...     -1.6503      0.0989     *
+## away_coach.yJosh ...     -2.2882      0.0222    **
+## away_coach.yKevin...     -2.2034      0.0276    **
+## away_coach.yKevin...     -2.4407      0.0147    **
+## away_coach.yKliff...     -2.2877      0.0222    **
+## away_coach.yKyle ...     -2.9804      0.0029   ***
+## away_coach.yMatt ...     -3.1247      0.0018   ***
+## away_coach.yMatt ...     -3.1525      0.0016   ***
+## away_coach.yMatt ...     -1.5114      0.1307     .
+## away_coach.yMatt ...     -0.0334      0.9733      
+## away_coach.yMatt ...     -3.1382      0.0017   ***
+## away_coach.yMike ...     -2.0217      0.0433    **
+## away_coach.yMike ...     -1.1696      0.2422      
+## away_coach.yMike ...     -2.6546      0.0080   ***
+## away_coach.yMike ...     -1.6828      0.0925     *
+## away_coach.yMike ...     -2.0696      0.0385    **
+## away_coach.yNick ...     -1.4976      0.1343     .
+## away_coach.yPete ...     -2.3129      0.0208    **
+## away_coach.yRahee...     -2.6295      0.0086   ***
+## away_coach.yRober...     -1.8190      0.0690     *
+## away_coach.yRomeo...     -2.6125      0.0090   ***
+## away_coach.yRon R...     -2.4815      0.0131    **
+## away_coach.ySean ...     -2.9396      0.0033   ***
+## away_coach.ySean ...     -1.6893      0.0912     *
+## away_coach.ySean ...     -1.9863      0.0470    **
+## away_coach.yShane...     -2.7426      0.0061   ***
+## away_coach.yTodd ...     -2.9117      0.0036   ***
+## away_coach.yVic F...     -1.0573      0.2904      
+## away_coach.yZac T...     -2.7686      0.0056   ***
+## Bruce_Arians              0.0256      0.9796      
+## Sean_McDermott            1.4011      0.1612      
+## Ron_Rivera                0.6280      0.5300      
+## John_Harbaugh            -0.7098      0.4779      
+## Mike_McCarthy             0.6224      0.5337      
+## Dan_Quinn                 0.6923      0.4888      
+## Bill_OBrien               0.7909      0.4290      
+## Adam_Gase                 0.1626      0.8709      
+## Anthony_Lynn              0.3558      0.7220      
+## Mike_Zimmer               0.8358      0.4033      
+## Mike_Tomlin               0.4330      0.6650      
+## Bill_Belichick            0.4188      0.6753      
+## Sean_Payton               0.6032      0.5464      
+## Todd_Bowles               0.2360      0.8134      
+## Doug_Pederson             1.2563      0.2091      
+## Andy_Reid                 0.7639      0.4450      
+## Kyle_Shanahan             0.3432      0.7315      
+## Pete_Carroll              0.7176      0.4730      
+## Doug_Marrone              1.5356      0.1247     .
+## Sean_McVay                0.4051      0.6854      
+## Matt_Patricia             0.2078      0.8354      
+## Mike_Vrabel               0.4848      0.6278      
+## Frank_Reich               1.1721      0.2412      
+## Jon_Gruden                0.2380      0.8119      
+## Matt_Nagy                 0.9322      0.3513      
+## Kliff_Kingsbury           0.3873      0.6986      
+## Vic_Fangio                0.3445      0.7305      
+## Matt_LaFleur              1.3001      0.1936      
+## Brian_Flores              0.1924      0.8474      
+## Zac_Taylor                1.0835      0.2786      
+## Matt_Rhule                1.3963      0.1627      
+## Kevin_Stefanski           1.7754      0.0759     *
+## Joe_Judge                -0.2532      0.8001      
+## Romeo_Crennel             0.9000      0.3681      
+## Raheem_Morris             1.3551      0.1754      
+## Darrell_Bevell            0.1763      0.8601      
+## Arthur_Smith             -0.7108      0.4773      
+## Brandon_Staley            0.8064      0.4201      
+## Dan_Campbell              1.8102      0.0703     *
+## Robert_Saleh              1.0229      0.3064      
+## Nick_Sirianni             1.3891      0.1649      
+## Josh_McDaniels            0.8395      0.4012      
+## Brian_Daboll              1.2459      0.2129      
+## Matt_Eberflus             0.9681      0.3330      
+## Mike_McDaniel             0.1272      0.8988      
+## Kevin_OConnell            0.8104      0.4177      
+## Dennis_Allen             -0.2307      0.8176      
+## DeMeco_Ryans              0.3962      0.6920      
+## Shane_Steichen            1.4824      0.1383     .
+## Jonathan_Gannon           0.4748      0.6349      
+## Antonio_Pierce            0.2386      0.8115      
+## Chris_Tabor               0.1887      0.8504      
+## yardline_1_10             4.7068      0.0000   ***
+## yardline_11_20            1.1441      0.2526      
+## yardline_21_30            2.2321      0.0256    **
+## yardline_31_40            8.4262      0.0000   ***
+## yardline_41_50            6.4291      0.0000   ***
+## yardline_51_60            2.0062      0.0449    **
+## yardline_61_70           -0.8671      0.3859      
+## yardline_71_80           -2.1041      0.0354    **
+## yardline_81_90           -0.5826      0.5602      
+## is_first_half           -14.6557      0.0000   ***
+## time_in_half             -8.2680      0.0000   ***
+## attendance_raw            0.6873      0.4919      
+## posteam_type_home         0.4950      0.6206      
+## interact_HxA              1.3699      0.1708      
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
 
