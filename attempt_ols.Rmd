@@ -13,6 +13,13 @@ select_data <- fread("predict_select_v2.csv.gz")
 select_data[, c("attendance_raw", "attendance_pct", "my_id") := NULL]
 ```
 
+```{r}
+# Existing code
+select_data[, yardline_31_40 := NULL]
+select_data[, Giff_Smith := NULL]
+```
+
+
 
 ```{r}
 # Load required packages
@@ -55,6 +62,15 @@ format_results(ols_robust, "OLS")
 cat("\nModel Fit Statistics:\n")
 cat("OLS R-squared:", round(summary(ols_model)$r.squared, 4), "\n")
 cat("OLS Adj R-squared:", round(summary(ols_model)$adj.r.squared, 4), "\n")
+```
+
+```{r}
+# Load the car package which has the vif function
+library(car)
+
+# Calculate VIFs for the model
+vifs <- vif(ols_model)
+vifs
 ```
 
 ```{r}

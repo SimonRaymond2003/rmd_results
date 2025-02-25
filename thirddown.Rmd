@@ -63,6 +63,24 @@ for (i in 1:length(t_stats)) {
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 ```
 
+```{r}
+# Load the car package which has the vif function
+library(car)
+
+# Calculate VIFs for the model with GIMR
+vifs <- vif(ols_model)
+
+# Filter to show only VIFs over 5
+high_vifs <- vifs[vifs > 5]
+if(length(high_vifs) > 0) {
+  cat("\nVariables with VIF > 5 (with GIMR):\n")
+  print(high_vifs)
+} else {
+  cat("\nNo variables with VIF > 5 found in the model with GIMR\n")
+}
+
+```
+
 
 ```{r}
 library(caret)

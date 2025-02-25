@@ -18,7 +18,6 @@ select_data[, attempt := as.numeric(as.character(attempt))]
 ```
 
 
-
 ```{r}
 # Commented out original version
 # # Load required libraries
@@ -218,7 +217,7 @@ y <- as.numeric(as.character(select_data$attempt))
 
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.05, by = 0.01),
+  eta = seq(0.001, 0.03, by = 0.01),
   max_depth = seq(5, 5, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
   subsample = seq(1, 1, by = 0.2),
@@ -245,7 +244,7 @@ scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
 #cat("\nPhase 1: Validation Phase\n")
-n_validations <- 10
+n_validations <- 5
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
@@ -303,7 +302,7 @@ best_params_list$objective <- "binary:logistic"
 best_params_list$scale_pos_weight <- scale_pos_weight
 best_params_list$nthread <- nc
 
-for(i in 1:50) {
+for(i in 1:20) {
   # Create test split
   idx <- unique(sample(nrow(xs), nrow(xs), T))
   train_x <- xs[idx, ]
@@ -395,11 +394,23 @@ outcome_data[GIMR_dt, GIMR := i.GIMR, on = "my_id"]
 ```
 
 ```{r}
-#remove columns to prevent perfect colinearity
+# Existing code
 outcome_data <- outcome_data[, my_id := NULL]
 outcome_data[, yardline_31_40 := NULL]
 outcome_data[, year2022_team_CLE := NULL] # tied for most attempts with 31
+
+# Remove all columns with "_present" in the name
+present_cols <- grep("_present", names(outcome_data), value = TRUE)
+for (col in present_cols) {
+  outcome_data[, (col) := NULL]
+}
+#attendance_pct and total
+outcome_data[, attendance_pct := NULL]
+outcome_data[, attendance_raw := NULL]
+#and toital_line
+outcome_data[, vegas_wp_posteam := NULL]
 ```
+
 
 ```{r}
 outcome_data[, conversion := as.numeric(as.character(conversion))]
@@ -446,6 +457,9 @@ for (i in 1:length(t_stats)) {
 }
 
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+
+r_squared <- summary(ols_model)$adj.r.squared
+r_squared
 ```
 
 
@@ -483,3 +497,41 @@ for (i in 1:length(t_stats_no_gimr)) {
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 
 ```
+
+```{r}
+# the r squard value
+r_squared_no_gimr <- summary(ols_model_no_gimr)$adj.r.squared
+r_squared_no_gimr
+
+```
+
+
+```{r}
+# Load the car package which has the vif function
+library(car)
+
+# Calculate VIFs for the model with GIMR
+vifs <- vif(ols_model)
+
+# Filter to show only VIFs over 5
+high_vifs <- vifs[vifs > 5]
+if(length(high_vifs) > 0) {
+  cat("\nVariables with VIF > 5 (with GIMR):\n")
+  print(high_vifs)
+} else {
+  cat("\nNo variables with VIF > 5 found in the model with GIMR\n")
+}
+
+# Calculate VIFs for the model without GIMR
+vifs_no_gimr <- vif(ols_model_no_gimr)
+
+# Filter to show only VIFs over 5
+high_vifs_no_gimr <- vifs_no_gimr[vifs_no_gimr > 5]
+if(length(high_vifs_no_gimr) > 0) {
+  cat("\nVariables with VIF > 5 (without GIMR):\n")
+  print(high_vifs_no_gimr)
+} else {
+  cat("\nNo variables with VIF > 5 found in the model without GIMR\n")
+}
+```
+

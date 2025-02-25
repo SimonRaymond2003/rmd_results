@@ -355,7 +355,7 @@ y <- as.numeric(as.character(outcome_data$conversion))
 
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.05, by = 0.01),
+  eta = seq(0.001, 0.03, by = 0.01),
   max_depth = seq(5, 5, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
   subsample = seq(1, 1, by = 0.2),
@@ -584,7 +584,7 @@ y <- as.numeric(as.character(outcome_data$conversion))
 
 # Create parameter grid - only tune eta and nrounds
 grid <- expand.grid(
-  eta = seq(0.001, 0.05, by = 0.01),
+  eta = seq(0.001, 0.03, by = 0.01),
   nrounds = seq(50, 500, by = 50)
 )
 

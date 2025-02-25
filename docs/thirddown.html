@@ -822,6 +822,136 @@ for (i in 1:length(t_stats)) {
 <pre class="r"><code>cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15&quot;)</code></pre>
 <pre><code>## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
+<pre class="r"><code># Load the car package which has the vif function
+library(car)
+
+# Calculate VIFs for the model with GIMR
+vifs &lt;- vif(ols_model)
+
+# Filter to show only VIFs over 5
+high_vifs &lt;- vifs[vifs &gt; 5]
+if(length(high_vifs) &gt; 0) {
+  cat(&quot;\nVariables with VIF &gt; 5 (with GIMR):\n&quot;)
+  print(high_vifs)
+} else {
+  cat(&quot;\nNo variables with VIF &gt; 5 found in the model with GIMR\n&quot;)
+}</code></pre>
+<pre><code>## 
+## Variables with VIF &gt; 5 (with GIMR):
+##                                                                    vegas_wp 
+##                                                                    5.718063 
+##                                                           prev_shotgun_rate 
+##                                                                   10.270589 
+##                                                        prev_singleback_rate 
+##                                                                    6.344017 
+##                                                             prev_iform_rate 
+##                                                                    5.057958 
+##                                                                shotgun_rate 
+##                                                                   16.940502 
+##                                                                  empty_rate 
+##                                                                   13.032052 
+##                                                                 cover1_rate 
+##                                                                    7.286590 
+##                                                                 cover3_rate 
+##                                                                    7.788241 
+##                                                             home_attendance 
+##                                                                    8.182077 
+##                                                     offense_formation_EMPTY 
+##                                                                    7.147246 
+##                                                   offense_formation_SHOTGUN 
+##                                                                   10.105400 
+##              defense_player_3_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                    6.075893 
+##              defense_player_4_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                    6.450073 
+##             defense_player_10_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                    6.584687 
+##               defense_player_10_coverage_grades_grades_coverage_defense_12w 
+##                                                                    6.128051 
+##             defense_player_11_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   13.861511 
+##               defense_player_11_coverage_grades_grades_coverage_defense_12w 
+##                                                                   13.017227 
+##             defense_player_12_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   15.635985 
+##               defense_player_12_coverage_grades_grades_coverage_defense_12w 
+##                                                                   14.813901 
+##                        defense_player_17_coverage_grades_grades_defense_12w 
+##                                                                   13.945395 
+##               defense_player_17_defensive_grades_grades_defense_penalty_12w 
+##                                                                   14.120478 
+##         defense_player_21_coverage_schemes_zone_grades_coverage_defense_12w 
+##                                                                    8.131388 
+##                defense_player_21_coverage_grades_grades_defense_penalty_12w 
+##                                                                    8.287972 
+##         defense_player_22_coverage_schemes_zone_grades_coverage_defense_12w 
+##                                                                   43.746484 
+##                defense_player_22_coverage_grades_grades_defense_penalty_12w 
+##                                                                   43.951659 
+##                      starter_offense_player_1_rushing_grades_grades_run_12w 
+##                                                                    9.791591 
+##                starter_offense_player_1_passing_depth_short_grades_pass_12w 
+##                                                                   14.577458 
+##           starter_offense_player_8_receiving_depth_short_caught_percent_12w 
+##                                                                    5.671190 
+##              starter_offense_player_8_run_blocking_gap_grades_run_block_12w 
+##                                                                   38.103084 
+##              starter_offense_player_9_run_blocking_gap_grades_run_block_12w 
+##                                                                   35.480816 
+##             starter_offense_player_10_run_blocking_gap_grades_run_block_12w 
+##                                                                   14.990882 
+##                starter_offense_player_17_blocking_grades_grades_offense_12w 
+##                                                                   13.103178 
+##                starter_offense_player_18_blocking_grades_grades_offense_12w 
+##                                                                   12.703005 
+##                starter_offense_player_19_blocking_grades_grades_offense_12w 
+##                                                                   11.936586 
+##                starter_offense_player_20_blocking_grades_grades_offense_12w 
+##                                                                   10.606512 
+##                starter_offense_player_21_blocking_grades_grades_offense_12w 
+##                                                                    9.102195 
+##      starter_defense_player_1_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   10.313227 
+##      starter_defense_player_2_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   11.931672 
+##      starter_defense_player_3_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   13.297242 
+##      starter_defense_player_4_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   12.281785 
+##      starter_defense_player_9_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   14.717728 
+##        starter_defense_player_9_coverage_grades_grades_coverage_defense_12w 
+##                                                                    9.938445 
+##     starter_defense_player_10_pass_rush_grades_grades_pass_rush_defense_12w 
+##                                                                   10.650049 
+##       starter_defense_player_10_coverage_grades_grades_coverage_defense_12w 
+##                                                                    9.751654 
+##       starter_defense_player_11_coverage_grades_grades_coverage_defense_12w 
+##                                                                    5.011771 
+##                starter_defense_player_15_coverage_grades_grades_defense_12w 
+##                                                                   12.581097 
+##       starter_defense_player_15_defensive_grades_grades_defense_penalty_12w 
+##                                                                   11.246906 
+##                starter_defense_player_16_coverage_grades_grades_defense_12w 
+##                                                                    8.820034 
+##       starter_defense_player_16_defensive_grades_grades_defense_penalty_12w 
+##                                                                    8.508878 
+##                starter_defense_player_17_coverage_grades_grades_defense_12w 
+##                                                                    6.704413 
+##       starter_defense_player_17_defensive_grades_grades_defense_penalty_12w 
+##                                                                    7.746767 
+## starter_defense_player_20_coverage_schemes_zone_grades_coverage_defense_12w 
+##                                                                   15.336351 
+##        starter_defense_player_20_coverage_grades_grades_defense_penalty_12w 
+##                                                                    8.819952 
+## starter_defense_player_21_coverage_schemes_zone_grades_coverage_defense_12w 
+##                                                                    7.928515 
+##        starter_defense_player_21_coverage_grades_grades_defense_penalty_12w 
+##                                                                    7.372710 
+## starter_defense_player_22_coverage_schemes_zone_grades_coverage_defense_12w 
+##                                                                    5.503519 
+##        starter_defense_player_22_coverage_grades_grades_defense_penalty_12w 
+##                                                                    6.060126</code></pre>
 <pre class="r"><code>library(caret)
 
 # Create the model matrix (excluding the response variable)
@@ -1255,7 +1385,7 @@ cat(sprintf(&quot;\n\n%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Probit Va
 <pre><code>## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRoaXJkIERvd24gQW5hbHlzaXMiDQpvdXRwdXQ6IGh0bWxfZG9jdW1lbnQNCi0tLQ0KDQpgYGB7cn0NCmxpYnJhcnkoZGF0YS50YWJsZSkgICAgICAgICAgICAgDQpjdGQxIDwtIGZyZWFkKCJwcmVkaWN0X2N0ZDEuY3N2Lmd6IikgICAgICAgICAgICAgICAgICAgICAgICANCg0KYGBgDQoNCmBgYHtyfQ0KI2tpbGwgbXlfaWQNCmN0ZDEkbXlfaWQgPC0gTlVMTA0KY3RkMVssIHllYXIyMDE3X3RlYW1fQVJJIDo9IE5VTExdDQpgYGANCg0KDQoNCmBgYHtyfQ0KIyBUaGVuIHJ1biBPTFMgd2l0aCBHSU1SIGNvcnJlY3Rpb24NCm9sc19tb2RlbCA8LSBsbShjb252ZXJzaW9uIH4gIC4sIGRhdGEgPSBjdGQxKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShzYW5kd2ljaCkNCmxpYnJhcnkobG10ZXN0KQ0KDQojIEdldCBIQzAtYWRqdXN0ZWQgdC12YWx1ZXMgYW5kIHAtdmFsdWVzDQpyb2J1c3RfdGVzdCA8LSBjb2VmdGVzdChvbHNfbW9kZWwsIHZjb3YgPSB2Y292SEMob2xzX21vZGVsLCB0eXBlID0gIkhDMCIpKQ0KdF9zdGF0cyA8LSByb2J1c3RfdGVzdFssICJ0IHZhbHVlIl0NCnBfdmFsdWVzIDwtIHJvYnVzdF90ZXN0WywgIlByKD58dHwpIl0NCg0KIyBGdW5jdGlvbiB0byBhZGQgc2lnbmlmaWNhbmNlIHN0YXJzDQpnZXRfc3RhcnMgPC0gZnVuY3Rpb24ocCkgew0KICAgIGlmIChwIDw9IDAuMDEpIHJldHVybigiKioqIikNCiAgICBpZiAocCA8PSAwLjA1KSByZXR1cm4oIioqIikNCiAgICBpZiAocCA8PSAwLjEpIHJldHVybigiKiIpDQogICAgaWYgKHAgPD0gMC4xNSkgcmV0dXJuKCIuIikNCiAgICByZXR1cm4oIiIpDQp9DQoNCiMgTWF4aW11bSB3aWR0aCBmb3IgdmFyaWFibGUgbmFtZXMNCm5hbWVfd2lkdGggPC0gNjANCg0KIyBQcmludCBoZWFkZXIgd2l0aCBhbGlnbm1lbnQNCmNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICJWYXJpYWJsZSIsICJ0LXZhbHVlIiwgInAtdmFsdWUiLCAic2lnIikpDQpjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiLS0tLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tIikpDQoNCiMgTG9vcCB0aHJvdWdoIGFuZCBwcmludCB2YWx1ZXMNCmZvciAoaSBpbiAxOmxlbmd0aCh0X3N0YXRzKSkgew0KICAgIHZhcl9uYW1lIDwtIHJvd25hbWVzKHJvYnVzdF90ZXN0KVtpXQ0KICAgICMgVHJ1bmNhdGUgbmFtZSBpZiB0b28gbG9uZw0KICAgIGlmIChuY2hhcih2YXJfbmFtZSkgPiBuYW1lX3dpZHRoKSB7DQogICAgICAgIHZhcl9uYW1lIDwtIHBhc3RlMChzdWJzdHIodmFyX25hbWUsIDEsIG5hbWVfd2lkdGgtMyksICIuLi4iKQ0KICAgIH0NCiAgICBjYXQoc3ByaW50ZigiJS0qcyAgJTEwLjRmICAlMTAuNGYgICU0c1xuIiwgDQogICAgICAgICAgICAgICAgbmFtZV93aWR0aCwgdmFyX25hbWUsIA0KICAgICAgICAgICAgICAgIHRfc3RhdHNbaV0sIHBfdmFsdWVzW2ldLA0KICAgICAgICAgICAgICAgIGdldF9zdGFycyhwX3ZhbHVlc1tpXSkpKQ0KfQ0KDQpjYXQoIlxuU2lnbmlmaWNhbmNlIGNvZGVzOiAwICcqKionIDAuMDEgJyoqJyAwLjA1ICcqJyAwLjEgJy4nIDAuMTUiKQ0KYGBgDQoNCg0KYGBge3J9DQpsaWJyYXJ5KGNhcmV0KQ0KDQojIENyZWF0ZSB0aGUgbW9kZWwgbWF0cml4IChleGNsdWRpbmcgdGhlIHJlc3BvbnNlIHZhcmlhYmxlKQ0KWCA8LSBtb2RlbC5tYXRyaXgofiAuIC0gY29udmVyc2lvbiAtIDEsIGRhdGEgPSBjdGQxKSAgIyAtMSByZW1vdmVzIGludGVyY2VwdA0KDQojIEZpbmQgY29sdW1ucyBjYXVzaW5nIGxpbmVhciBkZXBlbmRlbmNpZXMNCmxpbl9jb21ib3MgPC0gZmluZExpbmVhckNvbWJvcyhYKQ0KDQojIFJlbW92ZSBwcm9ibGVtYXRpYyBjb2x1bW5zIGZyb20gdGhlIGRhdGFzZXQNCmlmICghaXMubnVsbChsaW5fY29tYm9zJHJlbW92ZSkpIHsNCiAgY29sc190b19yZW1vdmUgPC0gY29sbmFtZXMoWClbbGluX2NvbWJvcyRyZW1vdmVdDQogIGN0ZDEgPC0gY3RkMVssIChjb2xzX3RvX3JlbW92ZSkgOj0gTlVMTCwgd2l0aCA9IEZBTFNFXQ0KfQ0KYGBgDQoNCg0KYGBge3J9DQojIG5vdyBhIHByb2JpdCBtb2RlbA0KcHJvYml0X21vZGVsIDwtIGdsbShjb252ZXJzaW9uIH4gIC4sIGRhdGEgPSBjdGQxLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gInByb2JpdCIpKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShzYW5kd2ljaCkNCmxpYnJhcnkobG10ZXN0KQ0KDQojIEdldCBIQzAtYWRqdXN0ZWQgei12YWx1ZXMgYW5kIHAtdmFsdWVzIGZvciBwcm9iaXQNCnJvYnVzdF9wcm9iaXRfdGVzdCA8LSBjb2VmdGVzdChwcm9iaXRfbW9kZWwsIHZjb3YgPSB2Y292SEMocHJvYml0X21vZGVsLCB0eXBlID0gIkhDMCIpKQ0Kel9zdGF0cyA8LSByb2J1c3RfcHJvYml0X3Rlc3RbLCAieiB2YWx1ZSJdDQpwX3ZhbHVlcyA8LSByb2J1c3RfcHJvYml0X3Rlc3RbLCAiUHIoPnx6fCkiXQ0KDQojIFJldXNlIHRoZSBzYW1lIGZvcm1hdHRpbmcgZnVuY3Rpb24gYW5kIHByaW50aW5nIGNvZGUNCmdldF9zdGFycyA8LSBmdW5jdGlvbihwKSB7DQogICAgaWYgKHAgPD0gMC4wMSkgcmV0dXJuKCIqKioiKQ0KICAgIGlmIChwIDw9IDAuMDUpIHJldHVybigiKioiKQ0KICAgIGlmIChwIDw9IDAuMSkgcmV0dXJuKCIqIikNCiAgICBpZiAocCA8PSAwLjE1KSByZXR1cm4oIi4iKQ0KICAgIHJldHVybigiIikNCn0NCg0KbmFtZV93aWR0aCA8LSA2MA0KDQojIFByaW50IGhlYWRlciAobm90ZSAiei12YWx1ZSIgaW5zdGVhZCBvZiAidC12YWx1ZSIpDQpjYXQoc3ByaW50ZigiXG5cbiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIlByb2JpdCBWYXJpYWJsZSIsICJ6LXZhbHVlIiwgInAtdmFsdWUiLCAic2lnIikpDQpjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiLS0tLS0tLS0tLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tIikpDQoNCmZvciAoaSBpbiAxOmxlbmd0aCh6X3N0YXRzKSkgew0KICAgIHZhcl9uYW1lIDwtIHJvd25hbWVzKHJvYnVzdF9wcm9iaXRfdGVzdClbaV0NCiAgICBpZiAobmNoYXIodmFyX25hbWUpID4gbmFtZV93aWR0aCkgew0KICAgICAgICB2YXJfbmFtZSA8LSBwYXN0ZTAoc3Vic3RyKHZhcl9uYW1lLCAxLCBuYW1lX3dpZHRoLTMpLCAiLi4uIikNCiAgICB9DQogICAgY2F0KHNwcmludGYoIiUtKnMgICUxMC40ZiAgJTEwLjRmICAlNHNcbiIsIA0KICAgICAgICAgICAgICAgIG5hbWVfd2lkdGgsIHZhcl9uYW1lLCANCiAgICAgICAgICAgICAgICB6X3N0YXRzW2ldLCBwX3ZhbHVlc1tpXSwNCiAgICAgICAgICAgICAgICBnZXRfc3RhcnMocF92YWx1ZXNbaV0pKSkNCn0NCg0KY2F0KCJcblNpZ25pZmljYW5jZSBjb2RlczogMCAnKioqJyAwLjAxICcqKicgMC4wNSAnKicgMC4xICcuJyAwLjE1IikNCmBgYA0KDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRoaXJkIERvd24gQW5hbHlzaXMiDQpvdXRwdXQ6IGh0bWxfZG9jdW1lbnQNCi0tLQ0KDQpgYGB7cn0NCmxpYnJhcnkoZGF0YS50YWJsZSkgICAgICAgICAgICAgDQpjdGQxIDwtIGZyZWFkKCJwcmVkaWN0X2N0ZDEuY3N2Lmd6IikgICAgICAgICAgICAgICAgICAgICAgICANCg0KYGBgDQoNCmBgYHtyfQ0KI2tpbGwgbXlfaWQNCmN0ZDEkbXlfaWQgPC0gTlVMTA0KY3RkMVssIHllYXIyMDE3X3RlYW1fQVJJIDo9IE5VTExdDQpgYGANCg0KDQoNCmBgYHtyfQ0KIyBUaGVuIHJ1biBPTFMgd2l0aCBHSU1SIGNvcnJlY3Rpb24NCm9sc19tb2RlbCA8LSBsbShjb252ZXJzaW9uIH4gIC4sIGRhdGEgPSBjdGQxKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShzYW5kd2ljaCkNCmxpYnJhcnkobG10ZXN0KQ0KDQojIEdldCBIQzAtYWRqdXN0ZWQgdC12YWx1ZXMgYW5kIHAtdmFsdWVzDQpyb2J1c3RfdGVzdCA8LSBjb2VmdGVzdChvbHNfbW9kZWwsIHZjb3YgPSB2Y292SEMob2xzX21vZGVsLCB0eXBlID0gIkhDMCIpKQ0KdF9zdGF0cyA8LSByb2J1c3RfdGVzdFssICJ0IHZhbHVlIl0NCnBfdmFsdWVzIDwtIHJvYnVzdF90ZXN0WywgIlByKD58dHwpIl0NCg0KIyBGdW5jdGlvbiB0byBhZGQgc2lnbmlmaWNhbmNlIHN0YXJzDQpnZXRfc3RhcnMgPC0gZnVuY3Rpb24ocCkgew0KICAgIGlmIChwIDw9IDAuMDEpIHJldHVybigiKioqIikNCiAgICBpZiAocCA8PSAwLjA1KSByZXR1cm4oIioqIikNCiAgICBpZiAocCA8PSAwLjEpIHJldHVybigiKiIpDQogICAgaWYgKHAgPD0gMC4xNSkgcmV0dXJuKCIuIikNCiAgICByZXR1cm4oIiIpDQp9DQoNCiMgTWF4aW11bSB3aWR0aCBmb3IgdmFyaWFibGUgbmFtZXMNCm5hbWVfd2lkdGggPC0gNjANCg0KIyBQcmludCBoZWFkZXIgd2l0aCBhbGlnbm1lbnQNCmNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICJWYXJpYWJsZSIsICJ0LXZhbHVlIiwgInAtdmFsdWUiLCAic2lnIikpDQpjYXQoc3ByaW50ZigiJS0qcyAgJTEwcyAgJTEwcyAgJTRzXG4iLCBuYW1lX3dpZHRoLCAiLS0tLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tIikpDQoNCiMgTG9vcCB0aHJvdWdoIGFuZCBwcmludCB2YWx1ZXMNCmZvciAoaSBpbiAxOmxlbmd0aCh0X3N0YXRzKSkgew0KICAgIHZhcl9uYW1lIDwtIHJvd25hbWVzKHJvYnVzdF90ZXN0KVtpXQ0KICAgICMgVHJ1bmNhdGUgbmFtZSBpZiB0b28gbG9uZw0KICAgIGlmIChuY2hhcih2YXJfbmFtZSkgPiBuYW1lX3dpZHRoKSB7DQogICAgICAgIHZhcl9uYW1lIDwtIHBhc3RlMChzdWJzdHIodmFyX25hbWUsIDEsIG5hbWVfd2lkdGgtMyksICIuLi4iKQ0KICAgIH0NCiAgICBjYXQoc3ByaW50ZigiJS0qcyAgJTEwLjRmICAlMTAuNGYgICU0c1xuIiwgDQogICAgICAgICAgICAgICAgbmFtZV93aWR0aCwgdmFyX25hbWUsIA0KICAgICAgICAgICAgICAgIHRfc3RhdHNbaV0sIHBfdmFsdWVzW2ldLA0KICAgICAgICAgICAgICAgIGdldF9zdGFycyhwX3ZhbHVlc1tpXSkpKQ0KfQ0KDQpjYXQoIlxuU2lnbmlmaWNhbmNlIGNvZGVzOiAwICcqKionIDAuMDEgJyoqJyAwLjA1ICcqJyAwLjEgJy4nIDAuMTUiKQ0KYGBgDQoNCmBgYHtyfQ0KIyBMb2FkIHRoZSBjYXIgcGFja2FnZSB3aGljaCBoYXMgdGhlIHZpZiBmdW5jdGlvbg0KbGlicmFyeShjYXIpDQoNCiMgQ2FsY3VsYXRlIFZJRnMgZm9yIHRoZSBtb2RlbCB3aXRoIEdJTVINCnZpZnMgPC0gdmlmKG9sc19tb2RlbCkNCg0KIyBGaWx0ZXIgdG8gc2hvdyBvbmx5IFZJRnMgb3ZlciA1DQpoaWdoX3ZpZnMgPC0gdmlmc1t2aWZzID4gNV0NCmlmKGxlbmd0aChoaWdoX3ZpZnMpID4gMCkgew0KICBjYXQoIlxuVmFyaWFibGVzIHdpdGggVklGID4gNSAod2l0aCBHSU1SKTpcbiIpDQogIHByaW50KGhpZ2hfdmlmcykNCn0gZWxzZSB7DQogIGNhdCgiXG5ObyB2YXJpYWJsZXMgd2l0aCBWSUYgPiA1IGZvdW5kIGluIHRoZSBtb2RlbCB3aXRoIEdJTVJcbiIpDQp9DQoNCmBgYA0KDQoNCmBgYHtyfQ0KbGlicmFyeShjYXJldCkNCg0KIyBDcmVhdGUgdGhlIG1vZGVsIG1hdHJpeCAoZXhjbHVkaW5nIHRoZSByZXNwb25zZSB2YXJpYWJsZSkNClggPC0gbW9kZWwubWF0cml4KH4gLiAtIGNvbnZlcnNpb24gLSAxLCBkYXRhID0gY3RkMSkgICMgLTEgcmVtb3ZlcyBpbnRlcmNlcHQNCg0KIyBGaW5kIGNvbHVtbnMgY2F1c2luZyBsaW5lYXIgZGVwZW5kZW5jaWVzDQpsaW5fY29tYm9zIDwtIGZpbmRMaW5lYXJDb21ib3MoWCkNCg0KIyBSZW1vdmUgcHJvYmxlbWF0aWMgY29sdW1ucyBmcm9tIHRoZSBkYXRhc2V0DQppZiAoIWlzLm51bGwobGluX2NvbWJvcyRyZW1vdmUpKSB7DQogIGNvbHNfdG9fcmVtb3ZlIDwtIGNvbG5hbWVzKFgpW2xpbl9jb21ib3MkcmVtb3ZlXQ0KICBjdGQxIDwtIGN0ZDFbLCAoY29sc190b19yZW1vdmUpIDo9IE5VTEwsIHdpdGggPSBGQUxTRV0NCn0NCmBgYA0KDQoNCmBgYHtyfQ0KIyBub3cgYSBwcm9iaXQgbW9kZWwNCnByb2JpdF9tb2RlbCA8LSBnbG0oY29udmVyc2lvbiB+ICAuLCBkYXRhID0gY3RkMSwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJwcm9iaXQiKSkNCmBgYA0KDQpgYGB7cn0NCmxpYnJhcnkoc2FuZHdpY2gpDQpsaWJyYXJ5KGxtdGVzdCkNCg0KIyBHZXQgSEMwLWFkanVzdGVkIHotdmFsdWVzIGFuZCBwLXZhbHVlcyBmb3IgcHJvYml0DQpyb2J1c3RfcHJvYml0X3Rlc3QgPC0gY29lZnRlc3QocHJvYml0X21vZGVsLCB2Y292ID0gdmNvdkhDKHByb2JpdF9tb2RlbCwgdHlwZSA9ICJIQzAiKSkNCnpfc3RhdHMgPC0gcm9idXN0X3Byb2JpdF90ZXN0WywgInogdmFsdWUiXQ0KcF92YWx1ZXMgPC0gcm9idXN0X3Byb2JpdF90ZXN0WywgIlByKD58enwpIl0NCg0KIyBSZXVzZSB0aGUgc2FtZSBmb3JtYXR0aW5nIGZ1bmN0aW9uIGFuZCBwcmludGluZyBjb2RlDQpnZXRfc3RhcnMgPC0gZnVuY3Rpb24ocCkgew0KICAgIGlmIChwIDw9IDAuMDEpIHJldHVybigiKioqIikNCiAgICBpZiAocCA8PSAwLjA1KSByZXR1cm4oIioqIikNCiAgICBpZiAocCA8PSAwLjEpIHJldHVybigiKiIpDQogICAgaWYgKHAgPD0gMC4xNSkgcmV0dXJuKCIuIikNCiAgICByZXR1cm4oIiIpDQp9DQoNCm5hbWVfd2lkdGggPC0gNjANCg0KIyBQcmludCBoZWFkZXIgKG5vdGUgInotdmFsdWUiIGluc3RlYWQgb2YgInQtdmFsdWUiKQ0KY2F0KHNwcmludGYoIlxuXG4lLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICJQcm9iaXQgVmFyaWFibGUiLCAiei12YWx1ZSIsICJwLXZhbHVlIiwgInNpZyIpKQ0KY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIi0tLS0tLS0tLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLSIpKQ0KDQpmb3IgKGkgaW4gMTpsZW5ndGgoel9zdGF0cykpIHsNCiAgICB2YXJfbmFtZSA8LSByb3duYW1lcyhyb2J1c3RfcHJvYml0X3Rlc3QpW2ldDQogICAgaWYgKG5jaGFyKHZhcl9uYW1lKSA+IG5hbWVfd2lkdGgpIHsNCiAgICAgICAgdmFyX25hbWUgPC0gcGFzdGUwKHN1YnN0cih2YXJfbmFtZSwgMSwgbmFtZV93aWR0aC0zKSwgIi4uLiIpDQogICAgfQ0KICAgIGNhdChzcHJpbnRmKCIlLSpzICAlMTAuNGYgICUxMC40ZiAgJTRzXG4iLCANCiAgICAgICAgICAgICAgICBuYW1lX3dpZHRoLCB2YXJfbmFtZSwgDQogICAgICAgICAgICAgICAgel9zdGF0c1tpXSwgcF92YWx1ZXNbaV0sDQogICAgICAgICAgICAgICAgZ2V0X3N0YXJzKHBfdmFsdWVzW2ldKSkpDQp9DQoNCmNhdCgiXG5TaWduaWZpY2FuY2UgY29kZXM6IDAgJyoqKicgMC4wMSAnKionIDAuMDUgJyonIDAuMSAnLicgMC4xNSIpDQpgYGANCg0KDQo=</div>
 
 
 </div>
