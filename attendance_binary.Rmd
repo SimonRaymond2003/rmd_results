@@ -2,16 +2,12 @@
 title: "Attendance Binary"
 output: html_document
 ---
-
 ```{r options, include=FALSE}
 options(max.print=10000)
 library(data.table)
 library(sandwich)
 library(lmtest)
 ```
-
-
-
 
 ```{r}
 run_attendance_analysis_v1 <- function(file_path, year) {
@@ -22,6 +18,17 @@ run_attendance_analysis_v1 <- function(file_path, year) {
     # Read data
     attendance_data <- fread(file_path)
     
+    # Remove any columns containing "home_coach" or "away_coach" in their names
+    coach_cols <- grep("home_coach|away_coach", names(attendance_data), value = TRUE)
+    if (length(coach_cols) > 0) {
+        cat(sprintf("\nRemoving %d coach-related columns: %s\n", 
+                   length(coach_cols), 
+                   paste(coach_cols, collapse = ", ")))
+        attendance_data[, (coach_cols) := NULL]
+    } else {
+        cat("\nNo coach-related columns found to remove.\n")
+    }
+    
     # Check 1: Ensure required columns exist
     if (!"home_attendance" %in% colnames(attendance_data)) {
         stop("Error: 'home_attendance' column not found in the dataset.")
@@ -31,8 +38,8 @@ run_attendance_analysis_v1 <- function(file_path, year) {
     }
     
     # Remove attendance_pct and attendance_raw (irrelevant for this version)
-    attendance_data$attendance_pct <- NULL
-    attendance_data$attendance_raw <- NULL
+    if ("attendance_pct" %in% names(attendance_data)) attendance_data$attendance_pct <- NULL
+    if ("attendance_raw" %in% names(attendance_data)) attendance_data$attendance_raw <- NULL
     
     # Create interaction term
     attendance_data$interact_HxA <- attendance_data$home_attendance * attendance_data$posteam_type_home
@@ -50,11 +57,12 @@ run_attendance_analysis_v1 <- function(file_path, year) {
                                  "posteam_type_home", 
                                  "interact_HxA"))
     
-    # Remove my_id
-    attendance_data$my_id <- NULL
+    # Remove my_id if it exists
+    if ("my_id" %in% names(attendance_data)) attendance_data$my_id <- NULL
     
     # Check 3: Verify final dataset structure
     cat("\nFinal dataset structure:\n")
+    print(str(attendance_data))
     
     # Run OLS
     ols_model <- lm(attempt ~ ., data = attendance_data)
@@ -102,11 +110,8 @@ run_attendance_analysis_v1 <- function(file_path, year) {
 ```{r}
 # Years to analyze
 years <- c(2017, 2018, 2019, 2021, 2022, 2023)
-
 # Store results for all years
 results_list_v1 <- list()
-
-
 # Run analysis for each year using Version 1
 for (year in years) {
     file_path <- sprintf("predict_attendance_%s_vs_2020.csv.gz", year)
@@ -116,8 +121,6 @@ for (year in years) {
         cat(sprintf("\nWarning: File for year %s not found\n", year))
     }
 }
-
-
 ```
 
 
