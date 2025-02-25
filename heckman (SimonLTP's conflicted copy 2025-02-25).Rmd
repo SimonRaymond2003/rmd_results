@@ -57,7 +57,7 @@ scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
 #cat("\nPhase 1: Validation Phase\n")
-n_validations <- 5
+n_validations <- 1
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
@@ -207,23 +207,147 @@ outcome_data[GIMR_dt, GIMR := i.GIMR, on = "my_id"]
 ```
 
 ```{r}
-# # Existing code
-# outcome_data <- outcome_data[, my_id := NULL]
-# outcome_data[, yardline_31_40 := NULL]
-# outcome_data[, year2022_team_CLE := NULL] # tied for most attempts with 31
+# Existing code
+outcome_data <- outcome_data[, my_id := NULL]
+outcome_data[, yardline_31_40 := NULL]
+outcome_data[, year2022_team_CLE := NULL] # tied for most attempts with 31
 
 # Remove all columns with "_present" in the name
 present_cols <- grep("_present", names(outcome_data), value = TRUE)
 for (col in present_cols) {
   outcome_data[, (col) := NULL]
 }
-# #attendance_pct and total
-# outcome_data[, attendance_pct := NULL]
-# outcome_data[, attendance_raw := NULL]
-# #and toital_line
-# outcome_data[, vegas_wp_posteam := NULL]
+#attendance_pct and total
+outcome_data[, attendance_pct := NULL]
+outcome_data[, attendance_raw := NULL]
+#and toital_line
+outcome_data[, vegas_wp_posteam := NULL]
 ```
 
+
+```{r}
+outcome_data[, conversion := as.numeric(as.character(conversion))]
+# Then run OLS with GIMR correction
+ols_model <- lm(conversion ~  ., data = outcome_data)
+```
+
+```{r}
+library(sandwich)
+library(lmtest)
+
+# Get HC0-adjusted t-values and p-values
+robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
+t_stats <- robust_test[, "t value"]
+p_values <- robust_test[, "Pr(>|t|)"]
+
+# Function to add significance stars
+get_stars <- function(p) {
+    if (p <= 0.01) return("***")
+    if (p <= 0.05) return("**")
+    if (p <= 0.1) return("*")
+    if (p <= 0.15) return(".")
+    return("")
+}
+
+# Maximum width for variable names
+name_width <- 60
+
+# Print header with alignment
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
+
+# Loop through and print values
+for (i in 1:length(t_stats)) {
+    var_name <- rownames(robust_test)[i]
+    # Truncate name if too long
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                t_stats[i], p_values[i],
+                get_stars(p_values[i])))
+}
+
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+
+r_squared <- summary(ols_model)$adj.r.squared
+r_squared
+```
+
+
+```{r}
+# Create a copy of outcome_data without GIMR
+outcome_data_no_gimr <- copy(outcome_data)
+outcome_data_no_gimr[, GIMR := NULL]
+outcome_data_no_gimr[, my_id := NULL]
+
+# Run OLS without GIMR correction
+ols_model_no_gimr <- lm(conversion ~ ., data = outcome_data_no_gimr)
+
+# Get HC0-adjusted t-values and p-values
+robust_test_no_gimr <- coeftest(ols_model_no_gimr, vcov = vcovHC(ols_model_no_gimr, type = "HC0"))
+t_stats_no_gimr <- robust_test_no_gimr[, "t value"]
+p_values_no_gimr <- robust_test_no_gimr[, "Pr(>|t|)"]
+
+# Print header with alignment
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
+
+# Loop through and print values
+for (i in 1:length(t_stats_no_gimr)) {
+    var_name <- rownames(robust_test_no_gimr)[i]
+    # Truncate name if too long
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                t_stats_no_gimr[i], p_values_no_gimr[i],
+                get_stars(p_values_no_gimr[i])))
+}
+
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+
+```
+
+```{r}
+# the r squard value
+r_squared_no_gimr <- summary(ols_model_no_gimr)$adj.r.squared
+r_squared_no_gimr
+
+```
+
+
+```{r}
+# Load the car package which has the vif function
+library(car)
+
+# Calculate VIFs for the model with GIMR
+vifs <- vif(ols_model)
+
+# Filter to show only VIFs over 5
+high_vifs <- vifs[vifs > 5]
+if(length(high_vifs) > 0) {
+  cat("\nVariables with VIF > 5 (with GIMR):\n")
+  print(high_vifs)
+} else {
+  cat("\nNo variables with VIF > 5 found in the model with GIMR\n")
+}
+
+# Calculate VIFs for the model without GIMR
+vifs_no_gimr <- vif(ols_model_no_gimr)
+
+# Filter to show only VIFs over 5
+high_vifs_no_gimr <- vifs_no_gimr[vifs_no_gimr > 5]
+if(length(high_vifs_no_gimr) > 0) {
+  cat("\nVariables with VIF > 5 (without GIMR):\n")
+  print(high_vifs_no_gimr)
+} else {
+  cat("\nNo variables with VIF > 5 found in the model without GIMR\n")
+}
+```
+#########################################
 
 ```{r}
 # Original code up to where the model building starts remains the same
@@ -365,5 +489,35 @@ cat("Starter Model with GIMR:", r2_starter, "\n")
 cat("Player Model without GIMR:", r2_player_no_gimr, "\n")
 cat("Starter Model without GIMR:", r2_starter_no_gimr, "\n")
 
+# Plot comparison of models
+model_names <- c("Player+GIMR", "Starter+GIMR", "Player", "Starter")
+r2_values <- c(r2_player, r2_starter, r2_player_no_gimr, r2_starter_no_gimr)
+colors <- c("darkblue", "lightblue", "darkred", "lightcoral")
+
+barplot(r2_values, names.arg = model_names, col = colors,
+        main = "Model Comparison - Adjusted R-squared",
+        ylab = "Adjusted R-squared", ylim = c(0, max(r2_values) * 1.1),
+        cex.names = 0.8)
+
+# Add GIMR coefficient comparison for models with GIMR
+cat("\n\n", paste(rep("=", 80), collapse=""), "\n")
+cat("GIMR COEFFICIENT COMPARISON\n")
+cat(paste(rep("=", 80), collapse=""), "\n\n")
+
+gimr_coef_player <- coef(ols_model_player)["GIMR"]
+gimr_tstat_player <- coeftest(ols_model_player, vcov = vcovHC(ols_model_player, type = "HC0"))["GIMR", "t value"]
+gimr_pval_player <- coeftest(ols_model_player, vcov = vcovHC(ols_model_player, type = "HC0"))["GIMR", "Pr(>|t|)"]
+
+gimr_coef_starter <- coef(ols_model_starter)["GIMR"]
+gimr_tstat_starter <- coeftest(ols_model_starter, vcov = vcovHC(ols_model_starter, type = "HC0"))["GIMR", "t value"]
+gimr_pval_starter <- coeftest(ols_model_starter, vcov = vcovHC(ols_model_starter, type = "HC0"))["GIMR", "Pr(>|t|)"]
+
+cat("Player Model - GIMR coefficient:", gimr_coef_player, "\n")
+cat("Player Model - GIMR t-statistic:", gimr_tstat_player, "\n")
+cat("Player Model - GIMR p-value:", gimr_pval_player, "\n\n")
+
+cat("Starter Model - GIMR coefficient:", gimr_coef_starter, "\n")
+cat("Starter Model - GIMR t-statistic:", gimr_tstat_starter, "\n")
+cat("Starter Model - GIMR p-value:", gimr_pval_starter, "\n")
 ```
 

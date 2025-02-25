@@ -1,12 +1,11 @@
 ---
-title: "Third Down Analysis"
+title: "Third Down Analysis with Regular and Starter Players"
 output: html_document
 ---
 
 ```{r}
 library(data.table)             
 ctd1 <- fread("predict_ctd1.csv.gz")                        
-
 ```
 
 ```{r}
@@ -15,22 +14,48 @@ ctd1$my_id <- NULL
 ctd1[, year2017_team_ARI := NULL]
 ```
 
+```{r}
+# Identify player columns
+all_cols <- colnames(ctd1)
+
+# Create regex patterns to identify regular and starter player variables
+offense_player_pattern <- "^offense_player_\\d+_"
+defense_player_pattern <- "^defense_player_\\d+_"
+starter_offense_pattern <- "^starter_offense_player_\\d+_"
+starter_defense_pattern <- "^starter_defense_player_\\d+_"
+
+# Get columns for each type
+offense_player_cols <- grep(offense_player_pattern, all_cols, value = TRUE)
+defense_player_cols <- grep(defense_player_pattern, all_cols, value = TRUE)
+starter_offense_cols <- grep(starter_offense_pattern, all_cols, value = TRUE)
+starter_defense_cols <- grep(starter_defense_pattern, all_cols, value = TRUE)
+
+# All player columns
+regular_player_cols <- c(offense_player_cols, defense_player_cols)
+starter_player_cols <- c(starter_offense_cols, starter_defense_cols)
+all_player_cols <- c(regular_player_cols, starter_player_cols)
+
+# Non-player columns (common to both datasets)
+common_cols <- setdiff(all_cols, all_player_cols)
+
+# Create two datasets
+regular_data <- ctd1[, c(common_cols, regular_player_cols), with = FALSE]
+starter_data <- ctd1[, c(common_cols, starter_player_cols), with = FALSE]
+```
 
 
 ```{r}
-# Then run OLS with GIMR correction
-ols_model <- lm(conversion ~  ., data = ctd1)
+# Then run OLS with regular players
+ols_regular <- lm(conversion ~ ., data = regular_data)
 ```
 
 ```{r}
 library(sandwich)
 library(lmtest)
-
 # Get HC0-adjusted t-values and p-values
-robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
-t_stats <- robust_test[, "t value"]
-p_values <- robust_test[, "Pr(>|t|)"]
-
+robust_regular_test <- coeftest(ols_regular, vcov = vcovHC(ols_regular, type = "HC0"))
+t_stats_regular <- robust_regular_test[, "t value"]
+p_values_regular <- robust_regular_test[, "Pr(>|t|)"]
 # Function to add significance stars
 get_stars <- function(p) {
     if (p <= 0.01) return("***")
@@ -39,107 +64,207 @@ get_stars <- function(p) {
     if (p <= 0.15) return(".")
     return("")
 }
-
 # Maximum width for variable names
 name_width <- 60
-
 # Print header with alignment
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Regular Players OLS Variable", "t-value", "p-value", "sig"))
 cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
-
 # Loop through and print values
-for (i in 1:length(t_stats)) {
-    var_name <- rownames(robust_test)[i]
+for (i in 1:length(t_stats_regular)) {
+    var_name <- rownames(robust_regular_test)[i]
     # Truncate name if too long
     if (nchar(var_name) > name_width) {
         var_name <- paste0(substr(var_name, 1, name_width-3), "...")
     }
     cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
                 name_width, var_name, 
-                t_stats[i], p_values[i],
-                get_stars(p_values[i])))
+                t_stats_regular[i], p_values_regular[i],
+                get_stars(p_values_regular[i])))
 }
-
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 ```
 
 ```{r}
 # Load the car package which has the vif function
 library(car)
-
-# Calculate VIFs for the model with GIMR
-vifs <- vif(ols_model)
-
+# Calculate VIFs for the model with regular players
+vifs_regular <- vif(ols_regular)
 # Filter to show only VIFs over 5
-high_vifs <- vifs[vifs > 5]
-if(length(high_vifs) > 0) {
-  cat("\nVariables with VIF > 5 (with GIMR):\n")
-  print(high_vifs)
+high_vifs_regular <- vifs_regular[vifs_regular > 5]
+if(length(high_vifs_regular) > 0) {
+  cat("\nRegular Players: Variables with VIF > 5:\n")
+  print(high_vifs_regular)
 } else {
-  cat("\nNo variables with VIF > 5 found in the model with GIMR\n")
+  cat("\nNo variables with VIF > 5 found in the Regular Players model\n")
 }
-
 ```
-
 
 ```{r}
 library(caret)
-
-# Create the model matrix (excluding the response variable)
-X <- model.matrix(~ . - conversion - 1, data = ctd1)  # -1 removes intercept
-
+# Create the model matrix for regular data (excluding the response variable)
+X_regular <- model.matrix(~ . - conversion - 1, data = regular_data)  # -1 removes intercept
 # Find columns causing linear dependencies
-lin_combos <- findLinearCombos(X)
-
+lin_combos_regular <- findLinearCombos(X_regular)
 # Remove problematic columns from the dataset
-if (!is.null(lin_combos$remove)) {
-  cols_to_remove <- colnames(X)[lin_combos$remove]
-  ctd1 <- ctd1[, (cols_to_remove) := NULL, with = FALSE]
+if (!is.null(lin_combos_regular$remove)) {
+  cols_to_remove <- colnames(X_regular)[lin_combos_regular$remove]
+  cat("Removed from regular data:", paste(cols_to_remove, collapse=", "), "\n")
+  regular_data <- regular_data[, (cols_to_remove) := NULL, with = FALSE]
 }
 ```
 
 
 ```{r}
-# now a probit model
-probit_model <- glm(conversion ~  ., data = ctd1, family = binomial(link = "probit"))
+# Then run OLS with starter players
+ols_starter <- lm(conversion ~ ., data = starter_data)
 ```
 
 ```{r}
-library(sandwich)
-library(lmtest)
+# Get HC0-adjusted t-values and p-values
+robust_starter_test <- coeftest(ols_starter, vcov = vcovHC(ols_starter, type = "HC0"))
+t_stats_starter <- robust_starter_test[, "t value"]
+p_values_starter <- robust_starter_test[, "Pr(>|t|)"]
 
-# Get HC0-adjusted z-values and p-values for probit
-robust_probit_test <- coeftest(probit_model, vcov = vcovHC(probit_model, type = "HC0"))
-z_stats <- robust_probit_test[, "z value"]
-p_values <- robust_probit_test[, "Pr(>|z|)"]
-
-# Reuse the same formatting function and printing code
-get_stars <- function(p) {
-    if (p <= 0.01) return("***")
-    if (p <= 0.05) return("**")
-    if (p <= 0.1) return("*")
-    if (p <= 0.15) return(".")
-    return("")
-}
-
-name_width <- 60
-
-# Print header (note "z-value" instead of "t-value")
-cat(sprintf("\n\n%-*s  %10s  %10s  %4s\n", name_width, "Probit Variable", "z-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------------", "-------", "-------", "----"))
-
-for (i in 1:length(z_stats)) {
-    var_name <- rownames(robust_probit_test)[i]
+# Print header with alignment
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Starter Players OLS Variable", "t-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
+# Loop through and print values
+for (i in 1:length(t_stats_starter)) {
+    var_name <- rownames(robust_starter_test)[i]
+    # Truncate name if too long
     if (nchar(var_name) > name_width) {
         var_name <- paste0(substr(var_name, 1, name_width-3), "...")
     }
     cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
                 name_width, var_name, 
-                z_stats[i], p_values[i],
-                get_stars(p_values[i])))
+                t_stats_starter[i], p_values_starter[i],
+                get_stars(p_values_starter[i])))
 }
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+```
 
+```{r}
+# Calculate VIFs for the model with starter players
+vifs_starter <- vif(ols_starter)
+# Filter to show only VIFs over 5
+high_vifs_starter <- vifs_starter[vifs_starter > 5]
+if(length(high_vifs_starter) > 0) {
+  cat("\nStarter Players: Variables with VIF > 5:\n")
+  print(high_vifs_starter)
+} else {
+  cat("\nNo variables with VIF > 5 found in the Starter Players model\n")
+}
+```
+
+```{r}
+# Create the model matrix for starter data (excluding the response variable)
+X_starter <- model.matrix(~ . - conversion - 1, data = starter_data)  # -1 removes intercept
+# Find columns causing linear dependencies
+lin_combos_starter <- findLinearCombos(X_starter)
+# Remove problematic columns from the dataset
+if (!is.null(lin_combos_starter$remove)) {
+  cols_to_remove <- colnames(X_starter)[lin_combos_starter$remove]
+  cat("Removed from starter data:", paste(cols_to_remove, collapse=", "), "\n")
+  starter_data <- starter_data[, (cols_to_remove) := NULL, with = FALSE]
+}
+```
+
+
+```{r}
+# Probit model with regular players
+probit_regular <- glm(conversion ~ ., data = regular_data, family = binomial(link = "probit"))
+```
+
+```{r}
+# Get HC0-adjusted z-values and p-values for regular probit
+robust_probit_regular <- coeftest(probit_regular, vcov = vcovHC(probit_regular, type = "HC0"))
+z_stats_regular <- robust_probit_regular[, "z value"]
+p_values_regular <- robust_probit_regular[, "Pr(>|z|)"]
+
+# Print header (note "z-value" instead of "t-value")
+cat(sprintf("\n\n%-*s  %10s  %10s  %4s\n", name_width, "Regular Players Probit Variable", "z-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------------", "-------", "-------", "----"))
+for (i in 1:length(z_stats_regular)) {
+    var_name <- rownames(robust_probit_regular)[i]
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                z_stats_regular[i], p_values_regular[i],
+                get_stars(p_values_regular[i])))
+}
 cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
 ```
 
 
+```{r}
+# Probit model with starter players
+probit_starter <- glm(conversion ~ ., data = starter_data, family = binomial(link = "probit"))
+```
+
+```{r}
+# Get HC0-adjusted z-values and p-values for starter probit
+robust_probit_starter <- coeftest(probit_starter, vcov = vcovHC(probit_starter, type = "HC0"))
+z_stats_starter <- robust_probit_starter[, "z value"]
+p_values_starter <- robust_probit_starter[, "Pr(>|z|)"]
+
+# Print header (note "z-value" instead of "t-value")
+cat(sprintf("\n\n%-*s  %10s  %10s  %4s\n", name_width, "Starter Players Probit Variable", "z-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------------", "-------", "-------", "----"))
+for (i in 1:length(z_stats_starter)) {
+    var_name <- rownames(robust_probit_starter)[i]
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                z_stats_starter[i], p_values_starter[i],
+                get_stars(p_values_starter[i])))
+}
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+```
+
+
+```{r}
+# Model comparison summary
+cat("\n\n--- Model Comparison Summary ---\n")
+cat("OLS Regular Players R-squared:", round(summary(ols_regular)$r.squared, 4), "\n")
+cat("OLS Starter Players R-squared:", round(summary(ols_starter)$r.squared, 4), "\n")
+cat("OLS Regular Players Adj R-squared:", round(summary(ols_regular)$adj.r.squared, 4), "\n")
+cat("OLS Starter Players Adj R-squared:", round(summary(ols_starter)$adj.r.squared, 4), "\n\n")
+
+cat("Probit Regular Players AIC:", round(probit_regular$aic, 2), "\n")
+cat("Probit Starter Players AIC:", round(probit_starter$aic, 2), "\n")
+cat("Probit Regular Players McFadden's Pseudo R²:", round(1 - probit_regular$deviance/probit_regular$null.deviance, 4), "\n")
+cat("Probit Starter Players McFadden's Pseudo R²:", round(1 - probit_starter$deviance/probit_starter$null.deviance, 4), "\n")
+```
+
+
+```{r}
+# Function to get top coefficients by absolute value
+get_top_coefficients <- function(model_results, n = 10) {
+  coefs <- model_results[, "Estimate"]
+  # Remove intercept
+  coefs <- coefs[names(coefs) != "(Intercept)"]
+  # Sort by absolute value
+  sorted_indices <- order(abs(coefs), decreasing = TRUE)
+  top_coefs <- coefs[sorted_indices[1:min(n, length(sorted_indices))]]
+  return(top_coefs)
+}
+
+# Display top coefficients for each model
+cat("\n\nTop 10 Influential Variables by Absolute Coefficient Value\n")
+
+cat("\nOLS Regular Players:\n")
+print(get_top_coefficients(robust_regular_test))
+
+cat("\nOLS Starter Players:\n")
+print(get_top_coefficients(robust_starter_test))
+
+cat("\nProbit Regular Players:\n")
+print(get_top_coefficients(robust_probit_regular))
+
+cat("\nProbit Starter Players:\n")
+print(get_top_coefficients(robust_probit_starter))
+```

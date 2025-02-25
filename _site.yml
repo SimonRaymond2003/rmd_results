@@ -10,25 +10,15 @@ navbar:
     - text: "XGBoost Prediction"
       href: xgboost.html
     - text: "Attendance Impact Binary"
-      href: attendance_binary.html                                                                                
-    - text: "Attendance Impact Percentages"
-      href: attendance_pcts.html
-    - text: "Attendance Impact Totals"
-      href: attendance_totals.html
+      href: attendance_binary.html 
     - text: "Third Down Analysis"
       href: thirddown.html
     - text: "Attempts OLS"
       href: attempt_ols.html
-    - text: "Writing Introduction"
-      href: Introduction.html
-    - text: "Writing Data"
-      href: Data.html
-    - text: "Writing Methodology"
-      href: Methodology.html
-    - text: "Writing Results"
-      href: Results.html
     - text: "Robustness Checks"
       href: robustness_checks.html
+    - text: "Writing"
+      href: Writing.html
       
 output:
   html_document:

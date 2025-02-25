@@ -1,8 +1,9 @@
 ---
-title: "Introduction"
+title: "Writing"
 output: html_document
-date: "2025-02-09"
+date: "2025-02-25"
 ---
+
 
 # hook and context
 
@@ -48,6 +49,52 @@ The gap in the current research revolves around the lack in quality data. Curren
 # motivation 
 
 # roadmap
+
+data 
+
+# sources
+
+# variable selection
+
+# current look
+
+
+# how are we trying to approach this
+
+# explain different tools and models
+
+# results 
+
+3 interpretation
+*ATTEMPTS*
+
+- ydstogo: As yards-to-go increases, the probability of an attempt significantly decreases
+- posteam_timeouts_remaining: As the number of timeouts remaining increases, the probability of an attempt significantly decreases. This makes sense and line up with how the defteam timeouts are not significant.
+- week hass small positive relationship. It is not incredibly significant. 
+- wind is a small negative influeance. NOT WHAT I EXPECTED BECAUSE OF KICKERS
+- vegas_wp strong negative relationship. this is fair. vegas wp posteam however is not even close to being significant. if a team is better AS A WHOLE. Then does not neccasarly effect attempt percentage.
+- total_line SMALL significance. If the total line goes up. teams score more. better offense relative to the defenses. THIS DOES NOT MAKE SENSE.
+-score_diff neative sign(MAKES SENSE)
+
+run pct.... overall if u run more u attempt less.  these is significant on first down but very significant on 4th down.  (CHECK HOW CALCULATED
+
+overall win pct of a coach is insignificant.. however when it is team specific it is a very strong positive relationship. prev_win_pct was very small positivly significant
+
+prev_stop_rate_pass is significant negatively... this makes sense.
+
+success rates by formation seem to have negative significants (DOES NOT MAKE SENSE) mabye the people who success more attempt less? kill desperation attempts?
+
+def_stop_rate_run is positivly significant. so if a def stops the run well then i am gonna attempt me??? (LOOK AT MORE)
+
+
+
+
+
+
+
+
+
+
 
 
 
