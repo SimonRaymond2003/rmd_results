@@ -6,7 +6,13 @@ output: html_document
 
 This section is for notes. The interpretation will be as I go but I want this to be a general outline.
 
-PLAYERS ARE PUT INTO THEIR SLOTS BASED ON SNAP COUNT
+The key points about how down4_pct is calculated:\
+
+- It only includes actual running and passing plays (excludes punts, field goals, etc.)\
+- Counts the cumulative number of run plays on 4th down\
+- The calculation is cumulative, meaning it includes all previous weeks of the season
+
+PLAYERS ARE PUT INTO THEIR SLOTS BASED ON SNAP COUNT. THE STARTERS ARE DECIDED ON SNAP COUNT OF THE LAST GAME AND ONLY THE LAST GAME.
 
 
 * **QB (Slots 1-3):** Quarterbacks. Most plays will only have one QB on the field (slot 1)
@@ -18,7 +24,7 @@ PLAYERS ARE PUT INTO THEIR SLOTS BASED ON SNAP COUNT
 
 * **DL (Slots 1-8):** Defensive line. This includes defensive ends (DE), defensive tackles (DT), and nose tackles (NT). 
 * **LB (Slots 9-14):** Linebackers. This can include middle linebackers (MLB), inside linebackers (ILB), and outside linebackers (OLB).
-* **CB (Slots 15-19):** Cornerbacks. T
+* **CB (Slots 15-19):** Cornerbacks.
 * **S (Slots 20-23):** Safeties. This includes free safeties (FS) and strong safeties (SS).
 
 I am gonna place a few experiments here.
@@ -34,27 +40,24 @@ outcome_data <- fread("predict_outcome.csv.gz")
 select_data <- fread("predict_select.csv.gz")
 
 # Create new data.tables with specific variables
-select_vegas <- select_data[, .(attempt, vegas_wp, vegas_wp_posteam, total_line)]
-outcome_vegas <- outcome_data[, .(conversion, vegas_wp, vegas_wp_posteam, total_line)]
+select_vegas <- select_data[, .(attempt, vegas_wp, total_line)]
+outcome_vegas <- outcome_data[, .(conversion, vegas_wp, total_line)]
 ```
 
 ```{r}
 # Run OLS models for select_data
 model1_select <- lm(attempt ~ vegas_wp, data = select_vegas)
-model2_select <- lm(attempt ~ vegas_wp_posteam, data = select_vegas)
 model3_select <- lm(attempt ~ total_line, data = select_vegas)
 
 # Run OLS models for outcome_data
 model1_outcome <- lm(conversion ~ vegas_wp, data = outcome_vegas)
-model2_outcome <- lm(conversion ~ vegas_wp_posteam, data = outcome_vegas)
 model3_outcome <- lm(conversion ~ total_line, data = outcome_vegas)
 
 # Display summaries
 summary(model1_select)
-summary(model2_select)
 summary(model3_select)
 summary(model1_outcome)
-summary(model2_outcome)
 summary(model3_outcome)
 ```
+
 

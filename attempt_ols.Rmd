@@ -40,7 +40,7 @@ format_results <- function(model_results, model_name) {
                 ifelse(p_val < 0.15, ".", ""))))
         
         cat(sprintf("%-30s %12.4f %12.4f %6s\n",
-            substr(rownames(model_results)[i], 1, 30),
+            substr(rownames(model_results)[i], 1, 60),
             model_results[i, "Estimate"],
             model_results[i, "t value"],
             stars))
@@ -57,5 +57,63 @@ cat("OLS R-squared:", round(summary(ols_model)$r.squared, 4), "\n")
 cat("OLS Adj R-squared:", round(summary(ols_model)$adj.r.squared, 4), "\n")
 ```
 
+```{r}
+library(caret)
+
+# Create the model matrix (excluding the response variable)
+X <- model.matrix(~ . - attempt - 1, data = select_data)  # -1 removes intercept
+
+# Find columns causing linear dependencies
+lin_combos <- findLinearCombos(X)
+
+# Remove problematic columns from the dataset
+if (!is.null(lin_combos$remove)) {
+  cols_to_remove <- colnames(X)[lin_combos$remove]
+  select_data <- select_data[, (cols_to_remove) := NULL, with = FALSE]
+}
+```
+
+```{r}
+# now a probit model
+probit_model <- glm(attempt ~  ., data = select_data, family = binomial(link = "probit"))
+```
+
+```{r}
+library(sandwich)
+library(lmtest)
+
+# Get HC0-adjusted z-values and p-values for probit
+robust_probit_test <- coeftest(probit_model, vcov = vcovHC(probit_model, type = "HC0"))
+z_stats <- robust_probit_test[, "z value"]
+p_values <- robust_probit_test[, "Pr(>|z|)"]
+
+# Reuse the same formatting function and printing code
+get_stars <- function(p) {
+    if (p <= 0.01) return("***")
+    if (p <= 0.05) return("**")
+    if (p <= 0.1) return("*")
+    if (p <= 0.15) return(".")
+    return("")
+}
+
+name_width <- 60
+
+# Print header (note "z-value" instead of "t-value")
+cat(sprintf("\n\n%-*s  %10s  %10s  %4s\n", name_width, "Probit Variable", "z-value", "p-value", "sig"))
+cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------------", "-------", "-------", "----"))
+
+for (i in 1:length(z_stats)) {
+    var_name <- rownames(robust_probit_test)[i]
+    if (nchar(var_name) > name_width) {
+        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    }
+    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
+                name_width, var_name, 
+                z_stats[i], p_values[i],
+                get_stars(p_values[i])))
+}
+
+cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+```
 
 
