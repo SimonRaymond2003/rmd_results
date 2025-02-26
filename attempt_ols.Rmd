@@ -11,13 +11,6 @@ select_data <- fread("predict_select_v2.csv.gz")
 select_data[, c("attendance_raw", "attendance_pct", "my_id") := NULL]
 ```
 
-```{r}
-# Option 1: Using data.table approach
-cols_to_remove_home <- grep("home_coach", names(select_data), value = TRUE)
-cols_to_remove_away <- grep("away_coach", names(select_data), value = TRUE)
-select_data[, c(cols_to_remove_home, cols_to_remove_away) := NULL]
-```
-
 
 ```{r}
 # Existing code

@@ -14,6 +14,54 @@ select_data <- fread("predict_select.csv.gz")
 ```
 
 ```{r}
+#' Filter for specific player data (offense or defense)
+# filter_specific_player <- function(data, side = "offense", player = 1) {
+#   # Create a copy to avoid modifying the original
+#   dt <- copy(data)
+#   
+#   # Build patterns for columns to keep
+#   # We want to keep 3 types of columns:
+#   # 1. Regular player column: side_player_number_*
+#   # 2. Player present column: side_player_number_present
+#   # 3. Starter player column: starter_side_player_number_*
+#   
+#   # Identify all player-related columns (both normal and starter)
+#   all_player_cols <- grep("player_", names(dt), value = TRUE)
+#   
+#   # Create patterns for the 3 types of columns we want to keep
+#   player_pattern <- paste0("^", side, "_player_", player, "_")
+#   present_pattern <- paste0("^", side, "_player_", player, "_present$")
+#   starter_pattern <- paste0("^starter_", side, "_player_", player, "_")
+#   
+#   # Combine patterns
+#   keep_pattern <- paste(player_pattern, present_pattern, starter_pattern, sep = "|")
+#   
+#   # Find columns to keep
+#   cols_to_keep <- grep(keep_pattern, all_player_cols, value = TRUE)
+#   
+#   # Find all player columns to remove (all player columns except those to keep)
+#   cols_to_remove <- setdiff(all_player_cols, cols_to_keep)
+#   
+#   # Remove unwanted player columns
+#   for (col in cols_to_remove) {
+#     dt[, (col) := NULL]
+#   }
+#   
+#   # Return filtered data
+#   return(dt)
+# }
+# 
+# # Filter to keep only offense player 1 columns
+# outcome_data <- filter_specific_player(outcome_data, side = "offense", player = 1)
+# 
+# # Show remaining player columns
+# remaining_player_cols <- grep("player_", names(outcome_data), value = TRUE)
+# print("Remaining player columns:")
+# print(remaining_player_cols)
+```
+
+
+```{r}
 select_data[, attempt := as.numeric(as.character(attempt))]
 ```
 
@@ -217,27 +265,17 @@ present_cols <- grep("_present", names(outcome_data), value = TRUE)
 for (col in present_cols) {
   outcome_data[, (col) := NULL]
 }
-# #attendance_pct and total
-# outcome_data[, attendance_pct := NULL]
-# outcome_data[, attendance_raw := NULL]
-# #and toital_line
-# outcome_data[, vegas_wp_posteam := NULL]
 ```
 
 
 ```{r}
-# Original code up to where the model building starts remains the same
-# After you've added GIMR to outcome_data by matching on my_id
 
 # Create copies of outcome_data for different models
 outcome_data_player <- copy(outcome_data)
 outcome_data_starter <- copy(outcome_data)
-outcome_data_player_no_gimr <- copy(outcome_data)
-outcome_data_starter_no_gimr <- copy(outcome_data)
 
 # Remove specific columns as in original code
-for (dt in list(outcome_data_player, outcome_data_starter, 
-                outcome_data_player_no_gimr, outcome_data_starter_no_gimr)) {
+for (dt in list(outcome_data_player, outcome_data_starter)) {
   dt[, my_id := NULL]
   dt[, yardline_31_40 := NULL]
   dt[, year2022_team_CLE := NULL] # tied for most attempts with 31
@@ -252,23 +290,16 @@ for (dt in list(outcome_data_player, outcome_data_starter,
 player_cols <- grep("^starter_", names(outcome_data_player), value = TRUE)
 for (col in player_cols) {
   outcome_data_player[, (col) := NULL]
-  outcome_data_player_no_gimr[, (col) := NULL]
 }
 
 # For starter models, remove player columns
 starter_cols <- grep("^(offense|defense)_player_", names(outcome_data_starter), value = TRUE)
 for (col in starter_cols) {
   outcome_data_starter[, (col) := NULL]
-  outcome_data_starter_no_gimr[, (col) := NULL]
 }
 
-# Remove GIMR from no_gimr models
-outcome_data_player_no_gimr[, GIMR := NULL]
-outcome_data_starter_no_gimr[, GIMR := NULL]
-
 # Ensure conversion is numeric
-for (dt in list(outcome_data_player, outcome_data_starter, 
-                outcome_data_player_no_gimr, outcome_data_starter_no_gimr)) {
+for (dt in list(outcome_data_player, outcome_data_starter)) {
   dt[, conversion := as.numeric(as.character(conversion))]
 }
 
@@ -277,12 +308,6 @@ ols_model_player <- lm(conversion ~ ., data = outcome_data_player)
 
 # MODEL 2: Starter model with GIMR
 ols_model_starter <- lm(conversion ~ ., data = outcome_data_starter)
-
-# MODEL 3: Player model without GIMR
-ols_model_player_no_gimr <- lm(conversion ~ ., data = outcome_data_player_no_gimr)
-
-# MODEL 4: Starter model without GIMR
-ols_model_starter_no_gimr <- lm(conversion ~ ., data = outcome_data_starter_no_gimr)
 
 # Function to analyze and print model results
 analyze_model <- function(model, model_name) {
@@ -350,11 +375,9 @@ analyze_model <- function(model, model_name) {
   return(r_squared)
 }
 
-# Analyze all models
+# Analyze models with GIMR only
 r2_player <- analyze_model(ols_model_player, "Player Model with GIMR")
 r2_starter <- analyze_model(ols_model_starter, "Starter Model with GIMR")
-r2_player_no_gimr <- analyze_model(ols_model_player_no_gimr, "Player Model without GIMR")
-r2_starter_no_gimr <- analyze_model(ols_model_starter_no_gimr, "Starter Model without GIMR")
 
 # Compare R-squared values
 cat("\n\n", paste(rep("=", 80), collapse=""), "\n")
@@ -362,8 +385,6 @@ cat("MODEL COMPARISON - Adjusted R-squared values\n")
 cat(paste(rep("=", 80), collapse=""), "\n\n")
 cat("Player Model with GIMR:", r2_player, "\n")
 cat("Starter Model with GIMR:", r2_starter, "\n")
-cat("Player Model without GIMR:", r2_player_no_gimr, "\n")
-cat("Starter Model without GIMR:", r2_starter_no_gimr, "\n")
 
 ```
 

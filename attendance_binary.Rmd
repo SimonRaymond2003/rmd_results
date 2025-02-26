@@ -18,16 +18,6 @@ run_attendance_analysis_v1 <- function(file_path, year) {
     # Read data
     attendance_data <- fread(file_path)
     
-    # Remove any columns containing "home_coach" or "away_coach" in their names
-    coach_cols <- grep("home_coach|away_coach", names(attendance_data), value = TRUE)
-    if (length(coach_cols) > 0) {
-        cat(sprintf("\nRemoving %d coach-related columns: %s\n", 
-                   length(coach_cols), 
-                   paste(coach_cols, collapse = ", ")))
-        attendance_data[, (coach_cols) := NULL]
-    } else {
-        cat("\nNo coach-related columns found to remove.\n")
-    }
     
     # Check 1: Ensure required columns exist
     if (!"home_attendance" %in% colnames(attendance_data)) {
@@ -59,10 +49,7 @@ run_attendance_analysis_v1 <- function(file_path, year) {
     
     # Remove my_id if it exists
     if ("my_id" %in% names(attendance_data)) attendance_data$my_id <- NULL
-    
-    # Check 3: Verify final dataset structure
-    cat("\nFinal dataset structure:\n")
-    print(str(attendance_data))
+  
     
     # Run OLS
     ols_model <- lm(attempt ~ ., data = attendance_data)
@@ -82,7 +69,7 @@ run_attendance_analysis_v1 <- function(file_path, year) {
     }
     
     # Print results
-    name_width <- 20
+    name_width <- 60
     cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
     cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
     
