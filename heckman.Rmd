@@ -105,7 +105,7 @@ scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
 #cat("\nPhase 1: Validation Phase\n")
-n_validations <- 5
+n_validations <- 3
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
