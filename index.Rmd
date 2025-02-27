@@ -38,10 +38,12 @@ library(data.table)
 # Read the data files
 outcome_data <- fread("predict_outcome.csv.gz")
 select_data <- fread("predict_select.csv.gz")
+ctd1 <- fread("predict_ctd1.csv.gz")
 
 # Create new data.tables with specific variables
 select_vegas <- select_data[, .(attempt, vegas_wp, total_line)]
 outcome_vegas <- outcome_data[, .(conversion, vegas_wp, total_line)]
+ctd1_vegas <- ctd1[, .(conversion, vegas_wp, total_line)]
 ```
 
 ```{r}
@@ -53,11 +55,19 @@ model3_select <- lm(attempt ~ total_line, data = select_vegas)
 model1_outcome <- lm(conversion ~ vegas_wp, data = outcome_vegas)
 model3_outcome <- lm(conversion ~ total_line, data = outcome_vegas)
 
+model1_ctd1 <- lm(conversion ~ vegas_wp, data = ctd1_vegas)
+model3_ctd1 <- lm(conversion ~ total_line, data = ctd1_vegas)
+
 # Display summaries
 summary(model1_select)
 summary(model3_select)
 summary(model1_outcome)
 summary(model3_outcome)
+summary(model1_ctd1)
+summary(model3_ctd1)
+```
+
+```{r}
 ```
 
 
