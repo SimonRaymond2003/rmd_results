@@ -14,6 +14,12 @@ select_data <- fread("predict_select.csv.gz")
 ```
 
 ```{r}
+select_data[, score_diff := as.integer(score_diff > 0)]
+```
+
+
+
+```{r}
 #' Filter for specific player data (offense or defense)
 # filter_specific_player <- function(data, side = "offense", player = 1) {
 #   # Create a copy to avoid modifying the original
