@@ -18,55 +18,6 @@ select_data[, score_diff := as.integer(score_diff > 0)]
 ```
 
 
-
-```{r}
-#' Filter for specific player data (offense or defense)
-# filter_specific_player <- function(data, side = "offense", player = 1) {
-#   # Create a copy to avoid modifying the original
-#   dt <- copy(data)
-#   
-#   # Build patterns for columns to keep
-#   # We want to keep 3 types of columns:
-#   # 1. Regular player column: side_player_number_*
-#   # 2. Player present column: side_player_number_present
-#   # 3. Starter player column: starter_side_player_number_*
-#   
-#   # Identify all player-related columns (both normal and starter)
-#   all_player_cols <- grep("player_", names(dt), value = TRUE)
-#   
-#   # Create patterns for the 3 types of columns we want to keep
-#   player_pattern <- paste0("^", side, "_player_", player, "_")
-#   present_pattern <- paste0("^", side, "_player_", player, "_present$")
-#   starter_pattern <- paste0("^starter_", side, "_player_", player, "_")
-#   
-#   # Combine patterns
-#   keep_pattern <- paste(player_pattern, present_pattern, starter_pattern, sep = "|")
-#   
-#   # Find columns to keep
-#   cols_to_keep <- grep(keep_pattern, all_player_cols, value = TRUE)
-#   
-#   # Find all player columns to remove (all player columns except those to keep)
-#   cols_to_remove <- setdiff(all_player_cols, cols_to_keep)
-#   
-#   # Remove unwanted player columns
-#   for (col in cols_to_remove) {
-#     dt[, (col) := NULL]
-#   }
-#   
-#   # Return filtered data
-#   return(dt)
-# }
-# 
-# # Filter to keep only offense player 1 columns
-# outcome_data <- filter_specific_player(outcome_data, side = "offense", player = 1)
-# 
-# # Show remaining player columns
-# remaining_player_cols <- grep("player_", names(outcome_data), value = TRUE)
-# print("Remaining player columns:")
-# print(remaining_player_cols)
-```
-
-
 ```{r}
 select_data[, attempt := as.numeric(as.character(attempt))]
 ```
@@ -84,15 +35,15 @@ y <- as.numeric(as.character(select_data$attempt))
 
 # Create parameter grid
 grid <- expand.grid(
-  eta = seq(0.001, 0.03, by = 0.01),
-  max_depth = seq(5, 5, by = 2),
+  eta = seq(0.001, 0.05, by = 0.01),
+  max_depth = seq(5, 7, by = 2),
   min_child_weight = seq(1, 1, by = 1),        
   subsample = seq(1, 1, by = 0.2),
   colsample_bytree = seq(1, 1, by = 0.2),
   lambda = seq(1, 1, by = 1),                
   alpha = seq(0, 0, by = 1),                  
   gamma = seq(0, 0, by = 0.1),               
-  nrounds = seq(100, 250, by = 50)
+  nrounds = seq(100, 300, by = 50)
 )
 
 
@@ -111,7 +62,7 @@ scale_pos_weight <- sum(y == 0) / sum(y == 1)
 
 # Validation phase
 #cat("\nPhase 1: Validation Phase\n")
-n_validations <- 3
+n_validations <- 5
 validation_results <- matrix(nrow = nrow(rgrid), ncol = n_validations)
 
 for (j in 1:nrow(rgrid)) {
