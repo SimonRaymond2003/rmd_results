@@ -48,7 +48,7 @@ The gap in the current research revolves around the lack in quality data. Curren
 
 # motivation 
 
-# roadmap
+# roadmap 
 
 data 
 
@@ -59,9 +59,25 @@ data
 # current look
 
 
+
+
+
+
+
+
 # how are we trying to approach this
 
 # explain different tools and models
+
+# exogenous variables
+
+try the third down when you cant kick it
+
+
+In the dealings with a form of sample selection correction there is always the fear of our exogenous variables not being truly exogenous. While the variables of score_diff and kicker_grades_12w are to be defended by theory, in this case there is the luxury of partially using empirical proof. This means that exogenous variables can be run on third down conversions as well as fourth down conversions. This is due to how third downs have similar features to fourth downs in the sense that they are often treated as a "last chance"
+
+However key distinction between
+
 
 # results 
 

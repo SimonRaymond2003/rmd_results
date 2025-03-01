@@ -19,6 +19,8 @@ navbar:
       href: robustness_checks.html
     - text: "Writing"
       href: Writing.html
+    - text: "Proof of exogeniety"
+      href: kicker_exogenous.html
       
 output:
   html_document:

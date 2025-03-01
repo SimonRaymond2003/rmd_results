@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Attendance Binary</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">4th Downs in the NFL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="heckman.html">Heckman Selection</a>
+</li>
+<li>
+  <a href="xgboost.html">XGBoost Prediction</a>
+</li>
+<li>
+  <a href="attendance_binary.html">Attendance Impact Binary</a>
+</li>
+<li>
+  <a href="thirddown.html">Third Down Analysis</a>
+</li>
+<li>
+  <a href="attempt_ols.html">Attempts OLS</a>
+</li>
+<li>
+  <a href="robustness_checks.html">Robustness Checks</a>
+</li>
+<li>
+  <a href="Writing.html">Writing</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Attendance Binary</h1>
+
+</div>
+
+
+<pre class="r"><code>run_attendance_analysis_v1 &lt;- function(file_path, year) {
+    cat(&quot;\n\n========================================&quot;)
+    cat(sprintf(&quot;\nAnalyzing %s vs 2020\n&quot;, year))
+    cat(&quot;========================================\n\n&quot;)
+    
+    # Read data
+    attendance_data &lt;- fread(file_path)
+    
+    
+    # Check 1: Ensure required columns exist
+    if (!&quot;home_attendance&quot; %in% colnames(attendance_data)) {
+        stop(&quot;Error: &#39;home_attendance&#39; column not found in the dataset.&quot;)
+    }
+    if (!&quot;posteam_type_home&quot; %in% colnames(attendance_data)) {
+        stop(&quot;Error: &#39;posteam_type_home&#39; column not found in the dataset.&quot;)
+    }
+    
+    # Remove attendance_pct and attendance_raw (irrelevant for this version)
+    if (&quot;attendance_pct&quot; %in% names(attendance_data)) attendance_data$attendance_pct &lt;- NULL
+    if (&quot;attendance_raw&quot; %in% names(attendance_data)) attendance_data$attendance_raw &lt;- NULL
+    
+    # Create interaction term
+    attendance_data$interact_HxA &lt;- attendance_data$home_attendance * attendance_data$posteam_type_home
+    
+    # Check 2: Verify interaction term creation
+    if (!&quot;interact_HxA&quot; %in% colnames(attendance_data)) {
+        stop(&quot;Error: &#39;interact_HxA&#39; column was not created.&quot;)
+    }
+    
+    # Reorder columns
+    other_cols &lt;- setdiff(names(attendance_data), 
+                         c(&quot;home_attendance&quot;, &quot;posteam_type_home&quot;, &quot;interact_HxA&quot;))
+    setcolorder(attendance_data, c(other_cols, 
+                                 &quot;home_attendance&quot;, 
+                                 &quot;posteam_type_home&quot;, 
+                                 &quot;interact_HxA&quot;))
+    
+    # Remove my_id if it exists
+    if (&quot;my_id&quot; %in% names(attendance_data)) attendance_data$my_id &lt;- NULL
+  
+    
+    # Run OLS
+    ols_model &lt;- lm(attempt ~ ., data = attendance_data)
+    
+    # Get robust statistics
+    robust_test &lt;- coeftest(ols_model, vcov = vcovHC(ols_model, type = &quot;HC0&quot;))
+    t_stats &lt;- robust_test[, &quot;t value&quot;]
+    p_values &lt;- robust_test[, &quot;Pr(&gt;|t|)&quot;]
+    
+    # Function to add significance stars
+    get_stars &lt;- function(p) {
+        if (p &lt;= 0.01) return(&quot;***&quot;)
+        if (p &lt;= 0.05) return(&quot;**&quot;)
+        if (p &lt;= 0.1) return(&quot;*&quot;)
+        if (p &lt;= 0.15) return(&quot;.&quot;)
+        return(&quot;&quot;)
+    }
+    
+    # Print results
+    name_width &lt;- 60
+    cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;Variable&quot;, &quot;t-value&quot;, &quot;p-value&quot;, &quot;sig&quot;))
+    cat(sprintf(&quot;%-*s  %10s  %10s  %4s\n&quot;, name_width, &quot;---------&quot;, &quot;-------&quot;, &quot;-------&quot;, &quot;----&quot;))
+    
+    for (i in 1:length(t_stats)) {
+        var_name &lt;- rownames(robust_test)[i]
+        if (nchar(var_name) &gt; name_width) {
+            var_name &lt;- paste0(substr(var_name, 1, name_width-3), &quot;...&quot;)
+        }
+        cat(sprintf(&quot;%-*s  %10.4f  %10.4f  %4s\n&quot;, 
+                    name_width, var_name, 
+                    t_stats[i], p_values[i],
+                    get_stars(p_values[i])))
+    }
+    cat(&quot;\nSignificance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15\n&quot;)
+    
+    # Return key statistics for potential further analysis
+    return(list(
+        year = year,
+        model = ols_model,
+        robust_test = robust_test
+    ))
+}</code></pre>
+<pre class="r"><code># Years to analyze
+years &lt;- c(2017, 2018, 2019, 2021, 2022, 2023)
+# Store results for all years
+results_list_v1 &lt;- list()
+# Run analysis for each year using Version 1
+for (year in years) {
+    file_path &lt;- sprintf(&quot;predict_attendance_%s_vs_2020.csv.gz&quot;, year)
+    if (file.exists(file_path)) {
+        results_list_v1[[as.character(year)]] &lt;- run_attendance_analysis_v1(file_path, year)
+    } else {
+        cat(sprintf(&quot;\nWarning: File for year %s not found\n&quot;, year))
+    }
+}</code></pre>
+<pre><code>## 
+## 
+## ========================================
+## Analyzing 2017 vs 2020
+## ========================================
+## 
+## Variable                                                         t-value     p-value   sig
+## ---------                                                        -------     -------  ----
+## (Intercept)                                                       1.4624      0.1437     .
+## ydstogo                                                         -21.1728      0.0000   ***
+## posteam_timeouts_remaining                                       -6.6639      0.0000   ***
+## defteam_timeouts_remaining                                       -0.4816      0.6301      
+## week                                                              0.1907      0.8488      
+## temp                                                             -0.4751      0.6348      
+## wind                                                             -0.4638      0.6428      
+## vegas_wp                                                         -9.2874      0.0000   ***
+## spread_line                                                       1.4974      0.1343     .
+## total_line                                                       -2.7379      0.0062   ***
+## score_diff                                                       -0.6378      0.5236      
+## roof_outdoors                                                    -0.8339      0.4044      
+## down1_pct                                                         0.1610      0.8721      
+## down2_pct                                                        -1.6497      0.0991     *
+## down3_pct                                                        -0.2416      0.8091      
+## down4_pct                                                        -0.4850      0.6277      
+## prep_days                                                        -3.1114      0.0019   ***
+## overall_win_pct                                                  -1.4828      0.1382     .
+## team_win_pct                                                      2.2396      0.0252    **
+## prev_win_pct                                                     -0.2443      0.8070      
+## prev_shotgun_rate                                                -0.8599      0.3899      
+## prev_singleback_rate                                             -0.7675      0.4428      
+## prev_empty_rate                                                   0.4882      0.6254      
+## prev_iform_rate                                                  -1.9240      0.0544     *
+## prev_shotgun_success                                              1.6554      0.0979     *
+## prev_singleback_success                                          -1.3033      0.1925      
+## prev_empty_success                                                0.6050      0.5452      
+## prev_iform_success                                                0.5654      0.5719      
+## prev_stop_rate_run                                                0.8803      0.3787      
+## prev_stop_rate_pass                                              -1.2084      0.2270      
+## shotgun_rate                                                      0.4926      0.6223      
+## singleback_rate                                                  -0.1570      0.8752      
+## empty_rate                                                        1.0976      0.2724      
+## iform_rate                                                        0.0349      0.9721      
+## shotgun_success                                                   2.2608      0.0238    **
+## singleback_success                                               -0.3072      0.7587      
+## empty_success                                                     0.8422      0.3997      
+## iform_success                                                    -0.5197      0.6033      
+## def_stop_rate_run                                                 0.1486      0.8819      
+## def_stop_rate_pass                                               -3.7377      0.0002   ***
+## avg_pass_rushers                                                  0.3384      0.7351      
+## avg_box_defenders                                                -0.0413      0.9670      
+## cover0_rate                                                      -0.0103      0.9917      
+## cover1_rate                                                       1.3940      0.1633      
+## cover2_rate                                                      -0.1135      0.9096      
+## cover3_rate                                                      -0.3177      0.7507      
+## cover4_rate                                                      -0.1034      0.9177      
+## cover6_rate                                                      -1.4784      0.1393     .
+## two_man_rate                                                     -0.7310      0.4648      
+## prevent_rate                                                      0.5129      0.6081      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w      0.7825      0.4339      
+## starter_offense_player_1_passing_depth_medium_grades_pass...      0.2503      0.8023      
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w       1.1729      0.2409      
+## starter_offense_player_1_rushing_grades_grades_run_12w           -1.5286      0.1264     .
+## starter_offense_player_4_rushing_grades_first_downs_12w           0.1535      0.8780      
+## starter_offense_player_4_receiving_vs_scheme_zone_grades_...      0.2387      0.8114      
+## starter_offense_player_4_pass_blocking_true_pass_set_grad...     -1.4944      0.1351     .
+## starter_offense_player_4_rushing_grades_yards_after_conta...      1.4551      0.1457     .
+## starter_offense_player_8_receiving_depth_short_avg_depth_...      1.3133      0.1891      
+## starter_offense_player_8_blocking_grades_block_percent_12w       -0.4165      0.6771      
+## starter_offense_player_8_receiving_grades_targets_12w            -0.6894      0.4906      
+## starter_offense_player_8_receiving_grades_yards_per_recep...     -1.3202      0.1868      
+## starter_offense_player_9_receiving_depth_short_avg_depth_...      1.0437      0.2967      
+## starter_offense_player_9_blocking_grades_block_percent_12w        0.4015      0.6881      
+## starter_offense_player_9_receiving_grades_targets_12w             0.5441      0.5864      
+## starter_offense_player_9_receiving_grades_yards_per_recep...      1.7060      0.0881     *
+## starter_offense_player_10_receiving_depth_short_avg_depth...      1.1884      0.2347      
+## starter_offense_player_10_blocking_grades_block_percent_12w       1.9132      0.0558     *
+## starter_offense_player_10_receiving_grades_targets_12w           -0.1407      0.8881      
+## starter_offense_player_10_receiving_grades_yards_per_rece...     -1.2449      0.2132      
+## starter_offense_player_14_blocking_grades_snap_counts_blo...     -1.1806      0.2378      
+## starter_offense_player_14_receiving_vs_scheme_zone_caught...     -0.2312      0.8172      
+## starter_offense_player_14_receiving_depth_center_short_pa...     -0.1548      0.8770      
+## starter_offense_player_14_receiving_concept_slot_targets_12w     -1.1946      0.2323      
+## starter_offense_player_17_run_blocking_snap_counts_run_bl...     -0.9996      0.3175      
+## starter_offense_player_17_blocking_grades_grades_offense_12w     -0.8955      0.3706      
+## starter_offense_player_17_blocking_grades_pbe_2w                 -0.1640      0.8697      
+## starter_offense_player_18_run_blocking_snap_counts_run_bl...      0.3506      0.7259      
+## starter_offense_player_18_blocking_grades_grades_offense_12w     -0.7802      0.4353      
+## starter_offense_player_18_blocking_grades_pbe_2w                 -1.5380      0.1241     .
+## starter_offense_player_19_run_blocking_snap_counts_run_bl...     -0.8696      0.3846      
+## starter_offense_player_19_blocking_grades_grades_offense_12w      0.0211      0.9832      
+## starter_offense_player_19_blocking_grades_pbe_2w                  2.5908      0.0096   ***
+## starter_offense_player_20_run_blocking_snap_counts_run_bl...      0.9782      0.3280      
+## starter_offense_player_20_blocking_grades_grades_offense_12w      1.5552      0.1199     .
+## starter_offense_player_20_blocking_grades_pbe_2w                 -0.9673      0.3334      
+## starter_offense_player_21_run_blocking_snap_counts_run_bl...     -0.7538      0.4510      
+## starter_offense_player_21_blocking_grades_grades_offense_12w      0.2735      0.7845      
+## starter_offense_player_21_blocking_grades_pbe_2w                  0.3597      0.7191      
+## starter_defense_player_1_pass_rushing_productivity_prp_12w       -0.2072      0.8359      
+## starter_defense_player_1_pass_rushing_productivity_hurrie...     -1.2367      0.2163      
+## starter_defense_player_1_defensive_grades_grades_defense_...     -1.3016      0.1931      
+## starter_defense_player_1_run_defense_grades_stops_12w             0.2900      0.7718      
+## starter_defense_player_1_run_defense_grades_tackles_12w          -0.5600      0.5755      
+## starter_defense_player_2_pass_rushing_productivity_prp_12w        0.3129      0.7544      
+## starter_defense_player_2_pass_rushing_productivity_hurrie...     -0.6491      0.5163      
+## starter_defense_player_2_defensive_grades_grades_defense_...     -0.7223      0.4701      
+## starter_defense_player_2_run_defense_grades_stops_12w             0.4887      0.6251      
+## starter_defense_player_2_run_defense_grades_tackles_12w          -0.3606      0.7184      
+## starter_defense_player_3_pass_rushing_productivity_prp_12w        0.5856      0.5582      
+## starter_defense_player_3_pass_rushing_productivity_hurrie...     -0.0690      0.9450      
+## starter_defense_player_3_defensive_grades_grades_defense_...      1.5158      0.1296     .
+## starter_defense_player_3_run_defense_grades_stops_12w             0.2166      0.8285      
+## starter_defense_player_3_run_defense_grades_tackles_12w          -0.1111      0.9115      
+## starter_defense_player_4_pass_rushing_productivity_prp_12w        0.8667      0.3861      
+## starter_defense_player_4_pass_rushing_productivity_hurrie...     -1.3586      0.1743      
+## starter_defense_player_4_defensive_grades_grades_defense_...     -2.2537      0.0242    **
+## starter_defense_player_4_run_defense_grades_stops_12w             1.5035      0.1328     .
+## starter_defense_player_4_run_defense_grades_tackles_12w          -0.8108      0.4175      
+## starter_defense_player_9_pass_rushing_productivity_prp_12w        0.5909      0.5546      
+## starter_defense_player_9_pass_rushing_productivity_hurrie...     -0.7104      0.4775      
+## starter_defense_player_9_defensive_grades_grades_defense_...     -0.8430      0.3993      
+## starter_defense_player_9_run_defense_grades_stops_12w            -0.0321      0.9744      
+## starter_defense_player_9_run_defense_grades_tackles_12w           0.2592      0.7955      
+## starter_defense_player_9_defensive_grades_snap_counts_cov...     -1.6323      0.1027     .
+## starter_defense_player_9_coverage_schemes_zone_stops_12w         -0.3067      0.7591      
+## starter_defense_player_10_pass_rushing_productivity_prp_12w      -0.5338      0.5935      
+## starter_defense_player_10_pass_rushing_productivity_hurri...      0.3643      0.7157      
+## starter_defense_player_10_defensive_grades_grades_defense...     -0.3838      0.7011      
+## starter_defense_player_10_run_defense_grades_stops_12w           -0.2401      0.8103      
+## starter_defense_player_10_run_defense_grades_tackles_12w          0.2494      0.8031      
+## starter_defense_player_10_defensive_grades_snap_counts_co...      1.0358      0.3003      
+## starter_defense_player_10_coverage_schemes_zone_stops_12w        -0.5108      0.6095      
+## starter_defense_player_11_pass_rushing_productivity_prp_12w       1.9352      0.0530     *
+## starter_defense_player_11_pass_rushing_productivity_hurri...     -1.3939      0.1634      
+## starter_defense_player_11_defensive_grades_grades_defense...      0.8678      0.3856      
+## starter_defense_player_11_run_defense_grades_stops_12w            1.0281      0.3039      
+## starter_defense_player_11_run_defense_grades_tackles_12w         -0.6640      0.5067      
+## starter_defense_player_11_defensive_grades_snap_counts_co...     -1.5031      0.1329     .
+## starter_defense_player_11_coverage_schemes_zone_stops_12w         0.9904      0.3220      
+## starter_defense_player_12_pass_rushing_productivity_prp_12w      -1.8940      0.0583     *
+## starter_defense_player_12_pass_rushing_productivity_hurri...      0.6081      0.5432      
+## starter_defense_player_12_defensive_grades_grades_defense...      0.9042      0.3659      
+## starter_defense_player_12_run_defense_grades_stops_12w           -0.8820      0.3778      
+## starter_defense_player_12_run_defense_grades_tackles_12w          0.9057      0.3651      
+## starter_defense_player_12_defensive_grades_snap_counts_co...     -1.5213      0.1282     .
+## starter_defense_player_12_coverage_schemes_zone_stops_12w        -0.0994      0.9208      
+## starter_defense_player_15_defensive_grades_grades_defense...     -0.8318      0.4056      
+## starter_defense_player_15_run_defense_grades_tackles_12w          0.2194      0.8263      
+## starter_defense_player_15_coverage_schemes_man_coverage_s...     -0.0561      0.9553      
+## starter_defense_player_15_coverage_grades_stops_12w               1.0964      0.2729      
+## starter_defense_player_15_slot_coverage_targets_12w               1.9240      0.0544     *
+## starter_defense_player_15_defensive_grades_missed_tackle_...      2.9367      0.0033   ***
+## starter_defense_player_16_defensive_grades_grades_defense...     -0.0012      0.9990      
+## starter_defense_player_16_run_defense_grades_tackles_12w          1.8962      0.0580     *
+## starter_defense_player_16_coverage_schemes_man_coverage_s...     -0.5498      0.5825      
+## starter_defense_player_16_coverage_grades_stops_12w              -0.6053      0.5450      
+## starter_defense_player_16_slot_coverage_targets_12w              -0.0929      0.9260      
+## starter_defense_player_16_defensive_grades_missed_tackle_...     -0.6158      0.5380      
+## starter_defense_player_17_defensive_grades_grades_defense...     -0.6178      0.5367      
+## starter_defense_player_17_run_defense_grades_tackles_12w         -0.4413      0.6590      
+## starter_defense_player_17_coverage_schemes_man_coverage_s...     -0.5752      0.5652      
+## starter_defense_player_17_coverage_grades_stops_12w              -1.9057      0.0567     *
+## starter_defense_player_17_slot_coverage_targets_12w               1.3726      0.1699      
+## starter_defense_player_17_defensive_grades_missed_tackle_...     -0.5345      0.5930      
+## starter_defense_player_20_defensive_grades_grades_defense...      0.4814      0.6302      
+## starter_defense_player_20_run_defense_grades_tackles_12w         -0.7570      0.4491      
+## starter_defense_player_20_coverage_grades_stops_12w               0.1613      0.8718      
+## starter_defense_player_20_slot_coverage_targets_12w               2.0354      0.0418    **
+## starter_defense_player_20_defensive_grades_missed_tackle_...     -1.1851      0.2360      
+## starter_defense_player_21_defensive_grades_grades_defense...      0.4402      0.6598      
+## starter_defense_player_21_run_defense_grades_tackles_12w         -1.1259      0.2602      
+## starter_defense_player_21_coverage_grades_stops_12w               0.4130      0.6796      
+## starter_defense_player_21_slot_coverage_targets_12w              -1.3957      0.1628      
+## starter_defense_player_21_defensive_grades_missed_tackle_...     -1.0136      0.3108      
+## starter_defense_player_22_defensive_grades_grades_defense...     -0.6793      0.4970      
+## starter_defense_player_22_run_defense_grades_tackles_12w         -0.2388      0.8112      
+## starter_defense_player_22_coverage_grades_stops_12w              -0.7065      0.4799      
+## starter_defense_player_22_slot_coverage_targets_12w               0.6538      0.5132      
+## starter_defense_player_22_defensive_grades_missed_tackle_...     -0.1333      0.8939      
+## Chuck_Pagano                                                     -0.0822      0.9345      
+## Bruce_Arians                                                     -0.3904      0.6962      
+## Sean_McDermott                                                    1.1402      0.2542      
+## Ron_Rivera                                                        1.1240      0.2611      
+## John_Fox                                                          0.5867      0.5574      
+## Dirk_Koetter                                                     -0.2027      0.8394      
+## Hue_Jackson                                                       0.0028      0.9977      
+## John_Harbaugh                                                     0.7012      0.4832      
+## Jason_Garrett                                                     0.4086      0.6829      
+## Vance_Joseph                                                      1.3100      0.1902      
+## Ben_McAdoo                                                        0.4732      0.6361      
+## Jim_Caldwell                                                      0.0391      0.9688      
+## Mike_McCarthy                                                     1.1021      0.2704      
+## Dan_Quinn                                                         0.6086      0.5428      
+## Marvin_Lewis                                                      0.1168      0.9070      
+## Bill_OBrien                                                      -0.3742      0.7083      
+## Adam_Gase                                                        -0.2053      0.8374      
+## Anthony_Lynn                                                      0.8969      0.3698      
+## Mike_Zimmer                                                       1.0791      0.2806      
+## Mike_Tomlin                                                       0.9672      0.3335      
+## Bill_Belichick                                                    1.4453      0.1484     .
+## Sean_Payton                                                       0.1324      0.8947      
+## Jack_Del_Rio                                                      0.6794      0.4969      
+## Todd_Bowles                                                      -0.2638      0.7920      
+## Doug_Pederson                                                     1.5026      0.1330     .
+## Andy_Reid                                                         0.7068      0.4797      
+## Kyle_Shanahan                                                     0.6526      0.5140      
+## Pete_Carroll                                                      0.6676      0.5044      
+## Mike_Mularkey                                                     2.0988      0.0359    **
+## Doug_Marrone                                                     -0.0877      0.9301      
+## Jay_Gruden                                                        0.2945      0.7684      
+## Sean_McVay                                                        0.4985      0.6182      
+## Steve_Spagnuolo                                                   0.3601      0.7188      
+## Matt_Patricia                                                    -0.2724      0.7854      
+## Mike_Vrabel                                                       1.3834      0.1666      
+## Frank_Reich                                                       0.6742      0.5002      
+## Jon_Gruden                                                        1.0353      0.3006      
+## Matt_Nagy                                                         0.5404      0.5890      
+## Kliff_Kingsbury                                                   0.1741      0.8618      
+## Vic_Fangio                                                        0.4310      0.6665      
+## Matt_LaFleur                                                      1.1050      0.2692      
+## Brian_Flores                                                      0.2306      0.8177      
+## Zac_Taylor                                                       -0.5488      0.5831      
+## Matt_Rhule                                                        0.2183      0.8272      
+## Kevin_Stefanski                                                   1.3115      0.1897      
+## Joe_Judge                                                        -0.1416      0.8874      
+## Romeo_Crennel                                                    -0.9944      0.3201      
+## Raheem_Morris                                                     0.5924      0.5536      
+## yardline_1_10                                                     5.0361      0.0000   ***
+## yardline_11_20                                                    2.8037      0.0051   ***
+## yardline_21_30                                                    2.5478      0.0109    **
+## yardline_31_40                                                    9.9057      0.0000   ***
+## yardline_41_50                                                    6.5543      0.0000   ***
+## yardline_51_60                                                    1.6963      0.0899     *
+## yardline_61_70                                                   -0.3032      0.7618      
+## yardline_71_80                                                   -1.8798      0.0602     *
+## yardline_81_90                                                   -0.2468      0.8051      
+## is_first_half                                                   -14.4513      0.0000   ***
+## time_in_half                                                     -6.8376      0.0000   ***
+## home_attendance                                                  -1.4816      0.1385     .
+## posteam_type_home                                                 0.2403      0.8101      
+## interact_HxA                                                      1.0240      0.3059      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2018 vs 2020
+## ========================================
+## 
+## Variable                                                         t-value     p-value   sig
+## ---------                                                        -------     -------  ----
+## (Intercept)                                                       1.4910      0.1360     .
+## ydstogo                                                         -24.7694      0.0000   ***
+## posteam_timeouts_remaining                                       -5.3721      0.0000   ***
+## defteam_timeouts_remaining                                        0.4007      0.6887      
+## week                                                              1.1555      0.2479      
+## temp                                                             -2.5649      0.0103    **
+## wind                                                              0.0981      0.9219      
+## vegas_wp                                                         -8.9443      0.0000   ***
+## spread_line                                                       0.5183      0.6042      
+## total_line                                                       -1.2344      0.2171      
+## score_diff                                                       -0.8785      0.3797      
+## roof_outdoors                                                     0.5855      0.5582      
+## down1_pct                                                         0.4350      0.6636      
+## down2_pct                                                        -0.2384      0.8116      
+## down3_pct                                                         0.5630      0.5735      
+## down4_pct                                                         0.8972      0.3697      
+## prep_days                                                        -2.1339      0.0329    **
+## overall_win_pct                                                   0.6867      0.4923      
+## team_win_pct                                                      0.0696      0.9445      
+## prev_win_pct                                                     -1.1102      0.2669      
+## prev_shotgun_rate                                                 1.7215      0.0852     *
+## prev_singleback_rate                                              0.5121      0.6086      
+## prev_empty_rate                                                   0.9739      0.3301      
+## prev_iform_rate                                                   1.5748      0.1154     .
+## prev_shotgun_success                                              1.1989      0.2306      
+## prev_singleback_success                                           0.7052      0.4807      
+## prev_empty_success                                               -0.1742      0.8617      
+## prev_iform_success                                               -0.2031      0.8391      
+## prev_stop_rate_run                                                1.9132      0.0558     *
+## prev_stop_rate_pass                                              -0.9501      0.3421      
+## shotgun_rate                                                     -0.3133      0.7541      
+## singleback_rate                                                  -1.1941      0.2325      
+## empty_rate                                                       -0.6429      0.5203      
+## iform_rate                                                        0.2782      0.7809      
+## shotgun_success                                                  -0.4512      0.6519      
+## singleback_success                                                0.8572      0.3914      
+## empty_success                                                     0.5608      0.5750      
+## iform_success                                                    -0.2628      0.7927      
+## def_stop_rate_run                                                -0.6677      0.5043      
+## def_stop_rate_pass                                               -3.5119      0.0004   ***
+## avg_pass_rushers                                                  0.1624      0.8710      
+## avg_box_defenders                                                 0.6332      0.5266      
+## cover0_rate                                                       0.9178      0.3587      
+## cover1_rate                                                       1.9553      0.0506     *
+## cover2_rate                                                       0.3478      0.7280      
+## cover3_rate                                                       0.2979      0.7658      
+## cover4_rate                                                       0.7391      0.4599      
+## cover6_rate                                                      -0.7719      0.4402      
+## two_man_rate                                                     -0.9505      0.3419      
+## prevent_rate                                                      0.1357      0.8921      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w     -0.4671      0.6405      
+## starter_offense_player_1_passing_depth_medium_grades_pass...     -0.5716      0.5676      
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w       1.2821      0.1999      
+## starter_offense_player_1_rushing_grades_grades_run_12w           -2.3520      0.0187    **
+## starter_offense_player_4_rushing_grades_first_downs_12w           1.6425      0.1005     .
+## starter_offense_player_4_receiving_vs_scheme_zone_grades_...     -0.8940      0.3714      
+## starter_offense_player_4_pass_blocking_true_pass_set_grad...     -1.9021      0.0572     *
+## starter_offense_player_4_rushing_grades_yards_after_conta...     -0.5464      0.5848      
+## starter_offense_player_8_receiving_depth_short_avg_depth_...      0.7533      0.4513      
+## starter_offense_player_8_blocking_grades_block_percent_12w        0.4278      0.6688      
+## starter_offense_player_8_receiving_grades_targets_12w            -0.5545      0.5793      
+## starter_offense_player_8_receiving_grades_yards_per_recep...      0.5197      0.6033      
+## starter_offense_player_9_receiving_depth_short_avg_depth_...      1.6655      0.0959     *
+## starter_offense_player_9_blocking_grades_block_percent_12w       -2.3718      0.0177    **
+## starter_offense_player_9_receiving_grades_targets_12w            -0.8490      0.3959      
+## starter_offense_player_9_receiving_grades_yards_per_recep...      0.9934      0.3205      
+## starter_offense_player_10_receiving_depth_short_avg_depth...     -0.3028      0.7620      
+## starter_offense_player_10_blocking_grades_block_percent_12w      -0.2263      0.8209      
+## starter_offense_player_10_receiving_grades_targets_12w           -0.7634      0.4453      
+## starter_offense_player_10_receiving_grades_yards_per_rece...      0.6901      0.4902      
+## starter_offense_player_14_blocking_grades_snap_counts_blo...      0.1883      0.8507      
+## starter_offense_player_14_receiving_vs_scheme_zone_caught...     -0.2304      0.8178      
+## starter_offense_player_14_receiving_depth_center_short_pa...     -1.1121      0.2661      
+## starter_offense_player_14_receiving_concept_slot_targets_12w      1.1522      0.2493      
+## starter_offense_player_17_run_blocking_snap_counts_run_bl...     -1.0400      0.2984      
+## starter_offense_player_17_blocking_grades_grades_offense_12w      0.6647      0.5063      
+## starter_offense_player_17_blocking_grades_pbe_2w                 -0.1214      0.9034      
+## starter_offense_player_18_run_blocking_snap_counts_run_bl...     -0.7201      0.4715      
+## starter_offense_player_18_blocking_grades_grades_offense_12w     -0.4070      0.6840      
+## starter_offense_player_18_blocking_grades_pbe_2w                  0.2436      0.8075      
+## starter_offense_player_19_run_blocking_snap_counts_run_bl...     -0.8444      0.3985      
+## starter_offense_player_19_blocking_grades_grades_offense_12w      0.3462      0.7292      
+## starter_offense_player_19_blocking_grades_pbe_2w                  0.3100      0.7566      
+## starter_offense_player_20_run_blocking_snap_counts_run_bl...      1.5359      0.1246     .
+## starter_offense_player_20_blocking_grades_grades_offense_12w      0.1519      0.8792      
+## starter_offense_player_20_blocking_grades_pbe_2w                 -0.3111      0.7558      
+## starter_offense_player_21_run_blocking_snap_counts_run_bl...     -0.3910      0.6958      
+## starter_offense_player_21_blocking_grades_grades_offense_12w      0.6342      0.5260      
+## starter_offense_player_21_blocking_grades_pbe_2w                 -0.0662      0.9472      
+## starter_defense_player_1_pass_rushing_productivity_prp_12w        0.6969      0.4859      
+## starter_defense_player_1_pass_rushing_productivity_hurrie...     -0.5807      0.5615      
+## starter_defense_player_1_defensive_grades_grades_defense_...      0.6409      0.5216      
+## starter_defense_player_1_run_defense_grades_stops_12w            -0.4224      0.6727      
+## starter_defense_player_1_run_defense_grades_tackles_12w           0.0443      0.9647      
+## starter_defense_player_2_pass_rushing_productivity_prp_12w       -0.0401      0.9680      
+## starter_defense_player_2_pass_rushing_productivity_hurrie...      0.5639      0.5728      
+## starter_defense_player_2_defensive_grades_grades_defense_...      0.8308      0.4061      
+## starter_defense_player_2_run_defense_grades_stops_12w            -0.1427      0.8865      
+## starter_defense_player_2_run_defense_grades_tackles_12w           0.1094      0.9129      
+## starter_defense_player_3_pass_rushing_productivity_prp_12w        1.8811      0.0600     *
+## starter_defense_player_3_pass_rushing_productivity_hurrie...     -0.8177      0.4135      
+## starter_defense_player_3_defensive_grades_grades_defense_...      2.1372      0.0326    **
+## starter_defense_player_3_run_defense_grades_stops_12w            -0.2029      0.8392      
+## starter_defense_player_3_run_defense_grades_tackles_12w           0.0616      0.9509      
+## starter_defense_player_4_pass_rushing_productivity_prp_12w        0.7386      0.4602      
+## starter_defense_player_4_pass_rushing_productivity_hurrie...     -0.1422      0.8869      
+## starter_defense_player_4_defensive_grades_grades_defense_...     -1.1844      0.2363      
+## starter_defense_player_4_run_defense_grades_stops_12w             0.8187      0.4130      
+## starter_defense_player_4_run_defense_grades_tackles_12w          -0.6742      0.5002      
+## starter_defense_player_9_pass_rushing_productivity_prp_12w        0.9696      0.3323      
+## starter_defense_player_9_pass_rushing_productivity_hurrie...     -0.7944      0.4270      
+## starter_defense_player_9_defensive_grades_grades_defense_...      1.1002      0.2713      
+## starter_defense_player_9_run_defense_grades_stops_12w            -0.3451      0.7300      
+## starter_defense_player_9_run_defense_grades_tackles_12w           0.5146      0.6069      
+## starter_defense_player_9_defensive_grades_snap_counts_cov...     -0.5930      0.5532      
+## starter_defense_player_9_coverage_schemes_zone_stops_12w         -1.0054      0.3147      
+## starter_defense_player_10_pass_rushing_productivity_prp_12w      -0.8716      0.3835      
+## starter_defense_player_10_pass_rushing_productivity_hurri...      1.1359      0.2560      
+## starter_defense_player_10_defensive_grades_grades_defense...      0.5814      0.5610      
+## starter_defense_player_10_run_defense_grades_stops_12w           -2.7147      0.0067   ***
+## starter_defense_player_10_run_defense_grades_tackles_12w          2.9995      0.0027   ***
+## starter_defense_player_10_defensive_grades_snap_counts_co...      0.0178      0.9858      
+## starter_defense_player_10_coverage_schemes_zone_stops_12w        -0.2213      0.8249      
+## starter_defense_player_11_pass_rushing_productivity_prp_12w      -0.6487      0.5166      
+## starter_defense_player_11_pass_rushing_productivity_hurri...      0.0854      0.9319      
+## starter_defense_player_11_defensive_grades_grades_defense...     -0.1524      0.8788      
+## starter_defense_player_11_run_defense_grades_stops_12w           -0.8910      0.3729      
+## starter_defense_player_11_run_defense_grades_tackles_12w          0.0605      0.9518      
+## starter_defense_player_11_defensive_grades_snap_counts_co...     -1.6458      0.0999     *
+## starter_defense_player_11_coverage_schemes_zone_stops_12w         2.3779      0.0174    **
+## starter_defense_player_12_pass_rushing_productivity_prp_12w      -1.7753      0.0759     *
+## starter_defense_player_12_pass_rushing_productivity_hurri...      1.1570      0.2473      
+## starter_defense_player_12_defensive_grades_grades_defense...      0.4940      0.6213      
+## starter_defense_player_12_run_defense_grades_stops_12w           -0.3011      0.7633      
+## starter_defense_player_12_run_defense_grades_tackles_12w          0.8883      0.3744      
+## starter_defense_player_12_defensive_grades_snap_counts_co...     -2.7264      0.0064   ***
+## starter_defense_player_12_coverage_schemes_zone_stops_12w        -0.0948      0.9245      
+## starter_defense_player_15_defensive_grades_grades_defense...     -1.5068      0.1319     .
+## starter_defense_player_15_run_defense_grades_tackles_12w         -0.7121      0.4765      
+## starter_defense_player_15_coverage_schemes_man_coverage_s...      0.7425      0.4578      
+## starter_defense_player_15_coverage_grades_stops_12w               1.1780      0.2389      
+## starter_defense_player_15_slot_coverage_targets_12w               2.2325      0.0256    **
+## starter_defense_player_15_defensive_grades_missed_tackle_...      0.7890      0.4302      
+## starter_defense_player_16_defensive_grades_grades_defense...     -0.8666      0.3862      
+## starter_defense_player_16_run_defense_grades_tackles_12w          1.4959      0.1347     .
+## starter_defense_player_16_coverage_schemes_man_coverage_s...     -0.1002      0.9202      
+## starter_defense_player_16_coverage_grades_stops_12w              -0.9997      0.3175      
+## starter_defense_player_16_slot_coverage_targets_12w              -1.8038      0.0713     *
+## starter_defense_player_16_defensive_grades_missed_tackle_...     -1.3565      0.1750      
+## starter_defense_player_17_defensive_grades_grades_defense...      0.2419      0.8088      
+## starter_defense_player_17_run_defense_grades_tackles_12w         -0.9543      0.3399      
+## starter_defense_player_17_coverage_schemes_man_coverage_s...      0.2263      0.8210      
+## starter_defense_player_17_coverage_grades_stops_12w              -1.8662      0.0621     *
+## starter_defense_player_17_slot_coverage_targets_12w               1.1788      0.2385      
+## starter_defense_player_17_defensive_grades_missed_tackle_...      1.8081      0.0706     *
+## starter_defense_player_20_defensive_grades_grades_defense...     -0.0590      0.9529      
+## starter_defense_player_20_run_defense_grades_tackles_12w         -0.6352      0.5253      
+## starter_defense_player_20_coverage_grades_stops_12w               1.0797      0.2803      
+## starter_defense_player_20_slot_coverage_targets_12w              -0.0412      0.9672      
+## starter_defense_player_20_defensive_grades_missed_tackle_...      0.1418      0.8873      
+## starter_defense_player_21_defensive_grades_grades_defense...      1.3495      0.1772      
+## starter_defense_player_21_run_defense_grades_tackles_12w         -0.4953      0.6204      
+## starter_defense_player_21_coverage_grades_stops_12w               1.7357      0.0827     *
+## starter_defense_player_21_slot_coverage_targets_12w              -0.2318      0.8167      
+## starter_defense_player_21_defensive_grades_missed_tackle_...     -1.4780      0.1394     .
+## starter_defense_player_22_defensive_grades_grades_defense...     -3.2974      0.0010   ***
+## starter_defense_player_22_run_defense_grades_tackles_12w          0.5970      0.5505      
+## starter_defense_player_22_coverage_grades_stops_12w               1.3679      0.1714      
+## starter_defense_player_22_slot_coverage_targets_12w              -0.1240      0.9013      
+## starter_defense_player_22_defensive_grades_missed_tackle_...     -0.0530      0.9577      
+## Bruce_Arians                                                     -0.0438      0.9651      
+## Sean_McDermott                                                    0.0274      0.9781      
+## Ron_Rivera                                                        0.7454      0.4561      
+## Dirk_Koetter                                                      0.4237      0.6718      
+## Hue_Jackson                                                      -0.3576      0.7206      
+## John_Harbaugh                                                     1.0884      0.2764      
+## Jason_Garrett                                                     0.5781      0.5632      
+## Vance_Joseph                                                      0.7676      0.4427      
+## Mike_McCarthy                                                    -0.0932      0.9257      
+## Dan_Quinn                                                         1.3369      0.1813      
+## Marvin_Lewis                                                      0.4373      0.6619      
+## Bill_OBrien                                                       0.0408      0.9674      
+## Adam_Gase                                                         0.3034      0.7616      
+## Anthony_Lynn                                                      0.2664      0.7899      
+## Mike_Zimmer                                                       1.6726      0.0945     *
+## Mike_Tomlin                                                       0.3785      0.7051      
+## Bill_Belichick                                                    0.0078      0.9937      
+## Sean_Payton                                                       0.8955      0.3706      
+## Todd_Bowles                                                      -0.3683      0.7127      
+## Doug_Pederson                                                     0.5227      0.6012      
+## Andy_Reid                                                        -0.1136      0.9096      
+## Kyle_Shanahan                                                     0.1551      0.8768      
+## Pete_Carroll                                                      0.1232      0.9020      
+## Doug_Marrone                                                      0.0794      0.9367      
+## Jay_Gruden                                                        0.3829      0.7018      
+## Sean_McVay                                                        0.8177      0.4136      
+## Steve_Wilks                                                       0.4472      0.6548      
+## Matt_Patricia                                                     0.7673      0.4429      
+## Mike_Vrabel                                                       0.4523      0.6511      
+## Frank_Reich                                                       0.4973      0.6190      
+## Pat_Shurmur                                                       0.5758      0.5648      
+## Jon_Gruden                                                        0.2322      0.8164      
+## Matt_Nagy                                                         0.5398      0.5893      
+## Gregg_Williams                                                    0.6164      0.5377      
+## Joe_Philbin                                                      -0.3789      0.7048      
+## Kliff_Kingsbury                                                   0.1831      0.8547      
+## Vic_Fangio                                                       -0.0755      0.9398      
+## Matt_LaFleur                                                      0.9422      0.3461      
+## Brian_Flores                                                     -0.1644      0.8694      
+## Zac_Taylor                                                        0.2255      0.8216      
+## Matt_Rhule                                                       -0.0379      0.9698      
+## Kevin_Stefanski                                                   0.9065      0.3647      
+## Joe_Judge                                                        -0.2767      0.7820      
+## Romeo_Crennel                                                    -0.1990      0.8423      
+## Raheem_Morris                                                     0.4297      0.6675      
+## yardline_1_10                                                     4.9567      0.0000   ***
+## yardline_11_20                                                    1.5034      0.1328     .
+## yardline_21_30                                                    1.6030      0.1090     .
+## yardline_31_40                                                    8.4422      0.0000   ***
+## yardline_41_50                                                    6.0597      0.0000   ***
+## yardline_51_60                                                    1.4091      0.1589      
+## yardline_61_70                                                   -1.1152      0.2648      
+## yardline_71_80                                                   -2.2270      0.0260    **
+## yardline_81_90                                                   -0.2173      0.8280      
+## is_first_half                                                   -14.8396      0.0000   ***
+## time_in_half                                                     -8.4901      0.0000   ***
+## home_attendance                                                  -1.5211      0.1283     .
+## posteam_type_home                                                -0.1015      0.9191      
+## interact_HxA                                                      1.9670      0.0492    **
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2019 vs 2020
+## ========================================
+## 
+## Variable                                                         t-value     p-value   sig
+## ---------                                                        -------     -------  ----
+## (Intercept)                                                       1.6559      0.0978     *
+## ydstogo                                                         -25.3252      0.0000   ***
+## posteam_timeouts_remaining                                       -6.4348      0.0000   ***
+## defteam_timeouts_remaining                                       -0.0421      0.9664      
+## week                                                              0.7688      0.4420      
+## temp                                                             -0.4521      0.6512      
+## wind                                                             -0.1701      0.8649      
+## vegas_wp                                                         -8.4837      0.0000   ***
+## spread_line                                                       0.4727      0.6365      
+## total_line                                                       -2.0630      0.0392    **
+## score_diff                                                       -1.3929      0.1637      
+## roof_outdoors                                                     0.1157      0.9079      
+## down1_pct                                                         1.3457      0.1784      
+## down2_pct                                                        -2.7846      0.0054   ***
+## down3_pct                                                        -0.5991      0.5491      
+## down4_pct                                                         1.0306      0.3028      
+## prep_days                                                        -1.8999      0.0575     *
+## overall_win_pct                                                  -0.0482      0.9615      
+## team_win_pct                                                      0.5719      0.5674      
+## prev_win_pct                                                     -0.9458      0.3443      
+## prev_shotgun_rate                                                 0.6619      0.5081      
+## prev_singleback_rate                                              0.4700      0.6384      
+## prev_empty_rate                                                   0.4519      0.6513      
+## prev_iform_rate                                                   1.4224      0.1550      
+## prev_shotgun_success                                              1.1833      0.2367      
+## prev_singleback_success                                           0.4969      0.6193      
+## prev_empty_success                                               -1.2414      0.2145      
+## prev_iform_success                                               -0.1233      0.9019      
+## prev_stop_rate_run                                               -0.6000      0.5485      
+## prev_stop_rate_pass                                              -0.3313      0.7404      
+## shotgun_rate                                                      0.4881      0.6255      
+## singleback_rate                                                  -1.0549      0.2915      
+## empty_rate                                                        0.4643      0.6425      
+## iform_rate                                                       -0.4949      0.6207      
+## shotgun_success                                                   0.5797      0.5622      
+## singleback_success                                                1.0213      0.3072      
+## empty_success                                                    -0.7051      0.4808      
+## iform_success                                                     0.5150      0.6066      
+## def_stop_rate_run                                                -0.9064      0.3648      
+## def_stop_rate_pass                                               -3.6997      0.0002   ***
+## avg_pass_rushers                                                 -0.1759      0.8604      
+## avg_box_defenders                                                 0.3561      0.7218      
+## cover0_rate                                                       0.6703      0.5027      
+## cover1_rate                                                       1.0763      0.2818      
+## cover2_rate                                                       0.2035      0.8388      
+## cover3_rate                                                       0.0967      0.9230      
+## cover4_rate                                                       0.9961      0.3192      
+## cover6_rate                                                      -1.0881      0.2766      
+## two_man_rate                                                      1.2896      0.1972      
+## prevent_rate                                                     -0.2008      0.8409      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w      1.0278      0.3041      
+## starter_offense_player_1_passing_depth_medium_grades_pass...      0.5161      0.6058      
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w       0.7763      0.4376      
+## starter_offense_player_1_rushing_grades_grades_run_12w           -0.6414      0.5213      
+## starter_offense_player_4_rushing_grades_first_downs_12w           0.0014      0.9989      
+## starter_offense_player_4_receiving_vs_scheme_zone_grades_...      0.4021      0.6876      
+## starter_offense_player_4_pass_blocking_true_pass_set_grad...     -1.7574      0.0789     *
+## starter_offense_player_4_rushing_grades_yards_after_conta...     -0.6056      0.5448      
+## starter_offense_player_8_receiving_depth_short_avg_depth_...      1.6293      0.1033     .
+## starter_offense_player_8_blocking_grades_block_percent_12w       -0.5112      0.6092      
+## starter_offense_player_8_receiving_grades_targets_12w             0.3591      0.7195      
+## starter_offense_player_8_receiving_grades_yards_per_recep...     -1.2418      0.2143      
+## starter_offense_player_9_receiving_depth_short_avg_depth_...      0.1660      0.8681      
+## starter_offense_player_9_blocking_grades_block_percent_12w       -1.1162      0.2644      
+## starter_offense_player_9_receiving_grades_targets_12w            -0.7669      0.4431      
+## starter_offense_player_9_receiving_grades_yards_per_recep...      0.9178      0.3588      
+## starter_offense_player_10_receiving_depth_short_avg_depth...      0.0919      0.9268      
+## starter_offense_player_10_blocking_grades_block_percent_12w       0.1675      0.8670      
+## starter_offense_player_10_receiving_grades_targets_12w           -0.3422      0.7322      
+## starter_offense_player_10_receiving_grades_yards_per_rece...     -0.2709      0.7865      
+## starter_offense_player_14_blocking_grades_snap_counts_blo...      0.1987      0.8425      
+## starter_offense_player_14_receiving_vs_scheme_zone_caught...     -0.9783      0.3279      
+## starter_offense_player_14_receiving_depth_center_short_pa...      0.0411      0.9673      
+## starter_offense_player_14_receiving_concept_slot_targets_12w     -0.2668      0.7896      
+## starter_offense_player_17_run_blocking_snap_counts_run_bl...      0.4761      0.6340      
+## starter_offense_player_17_blocking_grades_grades_offense_12w     -0.2235      0.8232      
+## starter_offense_player_17_blocking_grades_pbe_2w                 -0.3619      0.7174      
+## starter_offense_player_18_run_blocking_snap_counts_run_bl...      0.9006      0.3679      
+## starter_offense_player_18_blocking_grades_grades_offense_12w     -0.0569      0.9546      
+## starter_offense_player_18_blocking_grades_pbe_2w                 -0.2645      0.7914      
+## starter_offense_player_19_run_blocking_snap_counts_run_bl...     -0.6676      0.5044      
+## starter_offense_player_19_blocking_grades_grades_offense_12w      0.4840      0.6284      
+## starter_offense_player_19_blocking_grades_pbe_2w                  1.9372      0.0528     *
+## starter_offense_player_20_run_blocking_snap_counts_run_bl...      0.9670      0.3336      
+## starter_offense_player_20_blocking_grades_grades_offense_12w      1.1715      0.2414      
+## starter_offense_player_20_blocking_grades_pbe_2w                  1.7714      0.0765     *
+## starter_offense_player_21_run_blocking_snap_counts_run_bl...      1.7465      0.0808     *
+## starter_offense_player_21_blocking_grades_grades_offense_12w     -0.6542      0.5130      
+## starter_offense_player_21_blocking_grades_pbe_2w                 -3.7502      0.0002   ***
+## starter_defense_player_1_pass_rushing_productivity_prp_12w        0.7840      0.4330      
+## starter_defense_player_1_pass_rushing_productivity_hurrie...     -1.6376      0.1016     .
+## starter_defense_player_1_defensive_grades_grades_defense_...     -1.0698      0.2847      
+## starter_defense_player_1_run_defense_grades_stops_12w             1.0216      0.3070      
+## starter_defense_player_1_run_defense_grades_tackles_12w          -1.5695      0.1166     .
+## starter_defense_player_2_pass_rushing_productivity_prp_12w        0.1876      0.8512      
+## starter_defense_player_2_pass_rushing_productivity_hurrie...      0.3401      0.7338      
+## starter_defense_player_2_defensive_grades_grades_defense_...      0.8864      0.3754      
+## starter_defense_player_2_run_defense_grades_stops_12w             1.0996      0.2716      
+## starter_defense_player_2_run_defense_grades_tackles_12w          -1.6781      0.0934     *
+## starter_defense_player_3_pass_rushing_productivity_prp_12w       -0.1692      0.8656      
+## starter_defense_player_3_pass_rushing_productivity_hurrie...     -0.2145      0.8301      
+## starter_defense_player_3_defensive_grades_grades_defense_...      2.2956      0.0217    **
+## starter_defense_player_3_run_defense_grades_stops_12w            -0.4453      0.6561      
+## starter_defense_player_3_run_defense_grades_tackles_12w          -0.0110      0.9912      
+## starter_defense_player_4_pass_rushing_productivity_prp_12w        1.1179      0.2637      
+## starter_defense_player_4_pass_rushing_productivity_hurrie...     -0.3090      0.7573      
+## starter_defense_player_4_defensive_grades_grades_defense_...     -0.7303      0.4652      
+## starter_defense_player_4_run_defense_grades_stops_12w             2.3546      0.0186    **
+## starter_defense_player_4_run_defense_grades_tackles_12w          -2.2605      0.0238    **
+## starter_defense_player_9_pass_rushing_productivity_prp_12w       -0.0160      0.9872      
+## starter_defense_player_9_pass_rushing_productivity_hurrie...     -0.9338      0.3504      
+## starter_defense_player_9_defensive_grades_grades_defense_...     -1.2113      0.2258      
+## starter_defense_player_9_run_defense_grades_stops_12w            -0.0896      0.9286      
+## starter_defense_player_9_run_defense_grades_tackles_12w          -0.2344      0.8147      
+## starter_defense_player_9_defensive_grades_snap_counts_cov...     -0.7114      0.4769      
+## starter_defense_player_9_coverage_schemes_zone_stops_12w          0.2422      0.8086      
+## starter_defense_player_10_pass_rushing_productivity_prp_12w      -1.1363      0.2559      
+## starter_defense_player_10_pass_rushing_productivity_hurri...      1.2939      0.1957      
+## starter_defense_player_10_defensive_grades_grades_defense...     -1.0242      0.3058      
+## starter_defense_player_10_run_defense_grades_stops_12w           -0.5855      0.5582      
+## starter_defense_player_10_run_defense_grades_tackles_12w          0.3469      0.7287      
+## starter_defense_player_10_defensive_grades_snap_counts_co...      0.7059      0.4803      
+## starter_defense_player_10_coverage_schemes_zone_stops_12w         0.0585      0.9533      
+## starter_defense_player_11_pass_rushing_productivity_prp_12w      -0.3596      0.7191      
+## starter_defense_player_11_pass_rushing_productivity_hurri...     -0.8048      0.4210      
+## starter_defense_player_11_defensive_grades_grades_defense...     -0.0842      0.9329      
+## starter_defense_player_11_run_defense_grades_stops_12w           -0.4112      0.6810      
+## starter_defense_player_11_run_defense_grades_tackles_12w          0.2054      0.8373      
+## starter_defense_player_11_defensive_grades_snap_counts_co...     -0.6165      0.5376      
+## starter_defense_player_11_coverage_schemes_zone_stops_12w         0.8619      0.3888      
+## starter_defense_player_12_pass_rushing_productivity_prp_12w      -1.9957      0.0460    **
+## starter_defense_player_12_pass_rushing_productivity_hurri...     -0.0666      0.9469      
+## starter_defense_player_12_defensive_grades_grades_defense...     -0.3609      0.7182      
+## starter_defense_player_12_run_defense_grades_stops_12w           -0.1631      0.8705      
+## starter_defense_player_12_run_defense_grades_tackles_12w          0.1343      0.8932      
+## starter_defense_player_12_defensive_grades_snap_counts_co...     -0.4397      0.6602      
+## starter_defense_player_12_coverage_schemes_zone_stops_12w         1.3909      0.1643      
+## starter_defense_player_15_defensive_grades_grades_defense...     -1.1854      0.2359      
+## starter_defense_player_15_run_defense_grades_tackles_12w         -0.0364      0.9709      
+## starter_defense_player_15_coverage_schemes_man_coverage_s...      0.5944      0.5523      
+## starter_defense_player_15_coverage_grades_stops_12w               1.1332      0.2572      
+## starter_defense_player_15_slot_coverage_targets_12w               0.1908      0.8487      
+## starter_defense_player_15_defensive_grades_missed_tackle_...     -0.1107      0.9119      
+## starter_defense_player_16_defensive_grades_grades_defense...     -0.3036      0.7615      
+## starter_defense_player_16_run_defense_grades_tackles_12w          1.5701      0.1164     .
+## starter_defense_player_16_coverage_schemes_man_coverage_s...      0.9823      0.3260      
+## starter_defense_player_16_coverage_grades_stops_12w              -0.1521      0.8791      
+## starter_defense_player_16_slot_coverage_targets_12w              -0.1230      0.9021      
+## starter_defense_player_16_defensive_grades_missed_tackle_...     -1.8352      0.0665     *
+## starter_defense_player_17_defensive_grades_grades_defense...     -0.6097      0.5421      
+## starter_defense_player_17_run_defense_grades_tackles_12w         -1.2249      0.2207      
+## starter_defense_player_17_coverage_schemes_man_coverage_s...      1.6934      0.0904     *
+## starter_defense_player_17_coverage_grades_stops_12w               0.4997      0.6173      
+## starter_defense_player_17_slot_coverage_targets_12w              -0.0727      0.9421      
+## starter_defense_player_17_defensive_grades_missed_tackle_...      0.1355      0.8922      
+## starter_defense_player_20_defensive_grades_grades_defense...      1.3935      0.1635      
+## starter_defense_player_20_run_defense_grades_tackles_12w          0.2770      0.7818      
+## starter_defense_player_20_coverage_grades_stops_12w               1.0445      0.2963      
+## starter_defense_player_20_slot_coverage_targets_12w              -0.8313      0.4058      
+## starter_defense_player_20_defensive_grades_missed_tackle_...      2.4021      0.0163    **
+## starter_defense_player_21_defensive_grades_grades_defense...     -0.3839      0.7011      
+## starter_defense_player_21_run_defense_grades_tackles_12w         -1.5109      0.1308     .
+## starter_defense_player_21_coverage_grades_stops_12w               1.1967      0.2315      
+## starter_defense_player_21_slot_coverage_targets_12w               0.1345      0.8930      
+## starter_defense_player_21_defensive_grades_missed_tackle_...      0.0205      0.9836      
+## starter_defense_player_22_defensive_grades_grades_defense...     -1.9660      0.0493    **
+## starter_defense_player_22_run_defense_grades_tackles_12w          0.8802      0.3788      
+## starter_defense_player_22_coverage_grades_stops_12w               0.4017      0.6879      
+## starter_defense_player_22_slot_coverage_targets_12w               0.1338      0.8936      
+## starter_defense_player_22_defensive_grades_missed_tackle_...      0.2151      0.8297      
+## Bruce_Arians                                                     -0.7569      0.4491      
+## Sean_McDermott                                                    0.5027      0.6152      
+## Ron_Rivera                                                        0.2356      0.8137      
+## John_Harbaugh                                                     0.8338      0.4044      
+## Jason_Garrett                                                     0.1060      0.9156      
+## Mike_McCarthy                                                     0.2535      0.7999      
+## Dan_Quinn                                                         0.5913      0.5544      
+## Bill_OBrien                                                       0.9775      0.3283      
+## Adam_Gase                                                         0.1606      0.8724      
+## Anthony_Lynn                                                      0.2972      0.7663      
+## Mike_Zimmer                                                       0.8984      0.3690      
+## Mike_Tomlin                                                       0.2306      0.8176      
+## Bill_Belichick                                                   -0.2822      0.7778      
+## Sean_Payton                                                       0.4348      0.6637      
+## Doug_Pederson                                                     0.9970      0.3188      
+## Andy_Reid                                                         0.4515      0.6516      
+## Kyle_Shanahan                                                    -0.7880      0.4307      
+## Pete_Carroll                                                      0.7835      0.4334      
+## Doug_Marrone                                                      0.2484      0.8038      
+## Jay_Gruden                                                       -0.4620      0.6441      
+## Sean_McVay                                                        0.2986      0.7653      
+## Matt_Patricia                                                    -0.1309      0.8958      
+## Mike_Vrabel                                                      -0.1616      0.8716      
+## Frank_Reich                                                       0.9146      0.3604      
+## Pat_Shurmur                                                       1.0278      0.3041      
+## Jon_Gruden                                                       -0.5971      0.5504      
+## Matt_Nagy                                                         0.3009      0.7635      
+## Kliff_Kingsbury                                                   0.5929      0.5532      
+## Vic_Fangio                                                       -0.7188      0.4723      
+## Freddie_Kitchens                                                  0.2317      0.8168      
+## Matt_LaFleur                                                      0.9674      0.3334      
+## Brian_Flores                                                      0.3573      0.7209      
+## Zac_Taylor                                                        0.3655      0.7147      
+## Bill_Callahan                                                    -0.7731      0.4395      
+## Matt_Rhule                                                        0.1797      0.8574      
+## Kevin_Stefanski                                                   1.0881      0.2766      
+## Joe_Judge                                                        -0.6231      0.5333      
+## Romeo_Crennel                                                     0.7440      0.4569      
+## Raheem_Morris                                                    -0.0323      0.9742      
+## yardline_1_10                                                     6.0112      0.0000   ***
+## yardline_11_20                                                    2.2284      0.0259    **
+## yardline_21_30                                                    3.1881      0.0014   ***
+## yardline_31_40                                                   10.7930      0.0000   ***
+## yardline_41_50                                                    7.8695      0.0000   ***
+## yardline_51_60                                                    2.1855      0.0289    **
+## yardline_61_70                                                    0.2029      0.8392      
+## yardline_71_80                                                   -0.4732      0.6361      
+## yardline_81_90                                                    1.5174      0.1292     .
+## is_first_half                                                   -16.1960      0.0000   ***
+## time_in_half                                                     -7.7245      0.0000   ***
+## home_attendance                                                  -1.9101      0.0562     *
+## posteam_type_home                                                -0.1830      0.8548      
+## interact_HxA                                                      2.4557      0.0141    **
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2021 vs 2020
+## ========================================
+## 
+## Variable                                                         t-value     p-value   sig
+## ---------                                                        -------     -------  ----
+## (Intercept)                                                       3.2792      0.0010   ***
+## ydstogo                                                         -26.9052      0.0000   ***
+## posteam_timeouts_remaining                                       -6.4803      0.0000   ***
+## defteam_timeouts_remaining                                       -0.4259      0.6702      
+## week                                                              1.1832      0.2368      
+## temp                                                             -1.0732      0.2832      
+## wind                                                             -0.8185      0.4131      
+## vegas_wp                                                         -7.1256      0.0000   ***
+## spread_line                                                      -0.1189      0.9054      
+## total_line                                                       -0.5253      0.5994      
+## score_diff                                                       -3.3550      0.0008   ***
+## roof_outdoors                                                     1.7859      0.0742     *
+## down1_pct                                                         0.6957      0.4866      
+## down2_pct                                                        -1.9267      0.0541     *
+## down3_pct                                                        -0.0867      0.9309      
+## down4_pct                                                         0.9000      0.3681      
+## prep_days                                                        -0.8454      0.3979      
+## overall_win_pct                                                  -0.9088      0.3635      
+## team_win_pct                                                      1.3029      0.1926      
+## prev_win_pct                                                      0.7820      0.4342      
+## prev_shotgun_rate                                                 0.1358      0.8920      
+## prev_singleback_rate                                              0.3589      0.7197      
+## prev_empty_rate                                                  -0.5752      0.5651      
+## prev_iform_rate                                                  -0.7453      0.4561      
+## prev_shotgun_success                                              0.9133      0.3611      
+## prev_singleback_success                                          -0.6164      0.5376      
+## prev_empty_success                                               -0.5697      0.5689      
+## prev_iform_success                                                0.9207      0.3572      
+## prev_stop_rate_run                                                0.3704      0.7111      
+## prev_stop_rate_pass                                              -0.0404      0.9678      
+## shotgun_rate                                                      0.2491      0.8033      
+## singleback_rate                                                  -0.9505      0.3419      
+## empty_rate                                                        0.9298      0.3525      
+## iform_rate                                                       -0.8679      0.3855      
+## shotgun_success                                                   0.0705      0.9438      
+## singleback_success                                                0.6837      0.4942      
+## empty_success                                                     1.3429      0.1793      
+## iform_success                                                    -0.2005      0.8411      
+## def_stop_rate_run                                                -0.2583      0.7962      
+## def_stop_rate_pass                                               -2.0740      0.0381    **
+## avg_pass_rushers                                                  0.0680      0.9458      
+## avg_box_defenders                                                 0.2675      0.7891      
+## cover0_rate                                                      -0.2813      0.7785      
+## cover1_rate                                                       0.6860      0.4927      
+## cover2_rate                                                      -0.5938      0.5527      
+## cover3_rate                                                      -1.3528      0.1762      
+## cover4_rate                                                       0.0134      0.9893      
+## cover6_rate                                                      -1.0218      0.3069      
+## two_man_rate                                                     -1.1101      0.2670      
+## prevent_rate                                                     -0.6653      0.5059      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w      1.4356      0.1511      
+## starter_offense_player_1_passing_depth_medium_grades_pass...     -0.4718      0.6371      
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w       0.7878      0.4308      
+## starter_offense_player_1_rushing_grades_grades_run_12w            0.8553      0.3924      
+## starter_offense_player_4_rushing_grades_first_downs_12w          -0.0691      0.9449      
+## starter_offense_player_4_receiving_vs_scheme_zone_grades_...      0.9566      0.3388      
+## starter_offense_player_4_pass_blocking_true_pass_set_grad...     -0.1084      0.9137      
+## starter_offense_player_4_rushing_grades_yards_after_conta...      0.9591      0.3375      
+## starter_offense_player_8_receiving_depth_short_avg_depth_...      1.0329      0.3017      
+## starter_offense_player_8_blocking_grades_block_percent_12w        0.9330      0.3509      
+## starter_offense_player_8_receiving_grades_targets_12w             0.0460      0.9633      
+## starter_offense_player_8_receiving_grades_yards_per_recep...     -2.0155      0.0439    **
+## starter_offense_player_9_receiving_depth_short_avg_depth_...      1.6248      0.1042     .
+## starter_offense_player_9_blocking_grades_block_percent_12w       -1.9158      0.0554     *
+## starter_offense_player_9_receiving_grades_targets_12w            -0.4184      0.6757      
+## starter_offense_player_9_receiving_grades_yards_per_recep...     -0.0577      0.9540      
+## starter_offense_player_10_receiving_depth_short_avg_depth...     -1.8714      0.0613     *
+## starter_offense_player_10_blocking_grades_block_percent_12w       1.0109      0.3121      
+## starter_offense_player_10_receiving_grades_targets_12w            0.3058      0.7598      
+## starter_offense_player_10_receiving_grades_yards_per_rece...      1.1342      0.2568      
+## starter_offense_player_14_blocking_grades_snap_counts_blo...     -0.8440      0.3987      
+## starter_offense_player_14_receiving_vs_scheme_zone_caught...     -0.8780      0.3800      
+## starter_offense_player_14_receiving_depth_center_short_pa...     -1.5622      0.1183     .
+## starter_offense_player_14_receiving_concept_slot_targets_12w      1.3866      0.1656      
+## starter_offense_player_17_run_blocking_snap_counts_run_bl...     -0.7818      0.4344      
+## starter_offense_player_17_blocking_grades_grades_offense_12w      0.2693      0.7877      
+## starter_offense_player_17_blocking_grades_pbe_2w                 -1.1856      0.2358      
+## starter_offense_player_18_run_blocking_snap_counts_run_bl...      0.3731      0.7091      
+## starter_offense_player_18_blocking_grades_grades_offense_12w      0.1338      0.8935      
+## starter_offense_player_18_blocking_grades_pbe_2w                 -1.3149      0.1886      
+## starter_offense_player_19_run_blocking_snap_counts_run_bl...     -1.8572      0.0633     *
+## starter_offense_player_19_blocking_grades_grades_offense_12w      1.8041      0.0713     *
+## starter_offense_player_19_blocking_grades_pbe_2w                  0.5709      0.5681      
+## starter_offense_player_20_run_blocking_snap_counts_run_bl...      0.6283      0.5298      
+## starter_offense_player_20_blocking_grades_grades_offense_12w     -0.1277      0.8984      
+## starter_offense_player_20_blocking_grades_pbe_2w                  1.0963      0.2730      
+## starter_offense_player_21_run_blocking_snap_counts_run_bl...      0.8279      0.4078      
+## starter_offense_player_21_blocking_grades_grades_offense_12w      1.0667      0.2861      
+## starter_offense_player_21_blocking_grades_pbe_2w                 -0.2956      0.7675      
+## starter_defense_player_1_pass_rushing_productivity_prp_12w        0.8620      0.3887      
+## starter_defense_player_1_pass_rushing_productivity_hurrie...     -0.5882      0.5564      
+## starter_defense_player_1_defensive_grades_grades_defense_...      0.5844      0.5590      
+## starter_defense_player_1_run_defense_grades_stops_12w             0.2439      0.8073      
+## starter_defense_player_1_run_defense_grades_tackles_12w           0.0742      0.9409      
+## starter_defense_player_2_pass_rushing_productivity_prp_12w       -0.3094      0.7570      
+## starter_defense_player_2_pass_rushing_productivity_hurrie...      0.3880      0.6980      
+## starter_defense_player_2_defensive_grades_grades_defense_...     -0.0258      0.9794      
+## starter_defense_player_2_run_defense_grades_stops_12w             0.9646      0.3348      
+## starter_defense_player_2_run_defense_grades_tackles_12w          -1.5614      0.1185     .
+## starter_defense_player_3_pass_rushing_productivity_prp_12w        0.9362      0.3492      
+## starter_defense_player_3_pass_rushing_productivity_hurrie...      0.0736      0.9413      
+## starter_defense_player_3_defensive_grades_grades_defense_...      2.2123      0.0270    **
+## starter_defense_player_3_run_defense_grades_stops_12w            -2.4101      0.0160    **
+## starter_defense_player_3_run_defense_grades_tackles_12w           2.9156      0.0036   ***
+## starter_defense_player_4_pass_rushing_productivity_prp_12w        1.0235      0.3061      
+## starter_defense_player_4_pass_rushing_productivity_hurrie...     -0.3706      0.7109      
+## starter_defense_player_4_defensive_grades_grades_defense_...      1.1286      0.2591      
+## starter_defense_player_4_run_defense_grades_stops_12w            -0.6814      0.4957      
+## starter_defense_player_4_run_defense_grades_tackles_12w           1.1141      0.2653      
+## starter_defense_player_9_pass_rushing_productivity_prp_12w        0.6251      0.5319      
+## starter_defense_player_9_pass_rushing_productivity_hurrie...      0.2714      0.7861      
+## starter_defense_player_9_defensive_grades_grades_defense_...     -0.2505      0.8022      
+## starter_defense_player_9_run_defense_grades_stops_12w             0.4290      0.6679      
+## starter_defense_player_9_run_defense_grades_tackles_12w          -1.0224      0.3066      
+## starter_defense_player_9_defensive_grades_snap_counts_cov...      0.5867      0.5575      
+## starter_defense_player_9_coverage_schemes_zone_stops_12w          0.6356      0.5251      
+## starter_defense_player_10_pass_rushing_productivity_prp_12w       0.2972      0.7663      
+## starter_defense_player_10_pass_rushing_productivity_hurri...     -0.1770      0.8596      
+## starter_defense_player_10_defensive_grades_grades_defense...      0.6291      0.5293      
+## starter_defense_player_10_run_defense_grades_stops_12w            0.4278      0.6688      
+## starter_defense_player_10_run_defense_grades_tackles_12w          0.9663      0.3339      
+## starter_defense_player_10_defensive_grades_snap_counts_co...     -0.7439      0.4570      
+## starter_defense_player_10_coverage_schemes_zone_stops_12w        -1.6347      0.1022     .
+## starter_defense_player_11_pass_rushing_productivity_prp_12w       0.7084      0.4787      
+## starter_defense_player_11_pass_rushing_productivity_hurri...     -0.3546      0.7229      
+## starter_defense_player_11_defensive_grades_grades_defense...     -0.6964      0.4862      
+## starter_defense_player_11_run_defense_grades_stops_12w            0.0434      0.9654      
+## starter_defense_player_11_run_defense_grades_tackles_12w         -0.2609      0.7942      
+## starter_defense_player_11_defensive_grades_snap_counts_co...     -1.3253      0.1851      
+## starter_defense_player_11_coverage_schemes_zone_stops_12w         2.4478      0.0144    **
+## starter_defense_player_12_pass_rushing_productivity_prp_12w      -0.1826      0.8551      
+## starter_defense_player_12_pass_rushing_productivity_hurri...     -0.8332      0.4048      
+## starter_defense_player_12_defensive_grades_grades_defense...     -0.7654      0.4441      
+## starter_defense_player_12_run_defense_grades_stops_12w            0.7520      0.4521      
+## starter_defense_player_12_run_defense_grades_tackles_12w         -0.1320      0.8950      
+## starter_defense_player_12_defensive_grades_snap_counts_co...     -1.0009      0.3169      
+## starter_defense_player_12_coverage_schemes_zone_stops_12w        -2.1337      0.0329    **
+## starter_defense_player_15_defensive_grades_grades_defense...     -0.2039      0.8385      
+## starter_defense_player_15_run_defense_grades_tackles_12w          0.6775      0.4981      
+## starter_defense_player_15_coverage_schemes_man_coverage_s...     -0.5702      0.5686      
+## starter_defense_player_15_coverage_grades_stops_12w               1.1355      0.2562      
+## starter_defense_player_15_slot_coverage_targets_12w               0.9270      0.3539      
+## starter_defense_player_15_defensive_grades_missed_tackle_...      1.3385      0.1808      
+## starter_defense_player_16_defensive_grades_grades_defense...     -1.8772      0.0605     *
+## starter_defense_player_16_run_defense_grades_tackles_12w          1.7852      0.0743     *
+## starter_defense_player_16_coverage_schemes_man_coverage_s...      0.1490      0.8816      
+## starter_defense_player_16_coverage_grades_stops_12w               0.5285      0.5971      
+## starter_defense_player_16_slot_coverage_targets_12w              -1.0751      0.2824      
+## starter_defense_player_16_defensive_grades_missed_tackle_...     -0.3619      0.7175      
+## starter_defense_player_17_defensive_grades_grades_defense...     -0.9165      0.3594      
+## starter_defense_player_17_run_defense_grades_tackles_12w         -1.1407      0.2540      
+## starter_defense_player_17_coverage_schemes_man_coverage_s...      0.4768      0.6335      
+## starter_defense_player_17_coverage_grades_stops_12w              -1.6829      0.0924     *
+## starter_defense_player_17_slot_coverage_targets_12w               0.9816      0.3263      
+## starter_defense_player_17_defensive_grades_missed_tackle_...      0.6622      0.5079      
+## starter_defense_player_20_defensive_grades_grades_defense...     -0.0979      0.9220      
+## starter_defense_player_20_run_defense_grades_tackles_12w         -0.2525      0.8007      
+## starter_defense_player_20_coverage_grades_stops_12w               1.4285      0.1532      
+## starter_defense_player_20_slot_coverage_targets_12w              -0.9284      0.3532      
+## starter_defense_player_20_defensive_grades_missed_tackle_...      0.8647      0.3873      
+## starter_defense_player_21_defensive_grades_grades_defense...     -1.2680      0.2048      
+## starter_defense_player_21_run_defense_grades_tackles_12w         -1.9698      0.0489    **
+## starter_defense_player_21_coverage_grades_stops_12w               1.2306      0.2185      
+## starter_defense_player_21_slot_coverage_targets_12w              -0.1629      0.8706      
+## starter_defense_player_21_defensive_grades_missed_tackle_...     -0.3695      0.7117      
+## starter_defense_player_22_defensive_grades_grades_defense...     -1.6840      0.0922     *
+## starter_defense_player_22_run_defense_grades_tackles_12w          2.0864      0.0370    **
+## starter_defense_player_22_coverage_grades_stops_12w              -0.5623      0.5739      
+## starter_defense_player_22_slot_coverage_targets_12w               0.3883      0.6978      
+## starter_defense_player_22_defensive_grades_missed_tackle_...      0.4222      0.6729      
+## Bruce_Arians                                                     -1.3376      0.1811      
+## Sean_McDermott                                                   -0.3319      0.7400      
+## Ron_Rivera                                                       -0.5078      0.6116      
+## John_Harbaugh                                                     0.0544      0.9566      
+## Mike_McCarthy                                                    -0.5920      0.5539      
+## Dan_Quinn                                                         0.6776      0.4981      
+## Bill_OBrien                                                      -0.2475      0.8045      
+## Adam_Gase                                                        -0.9232      0.3559      
+## Anthony_Lynn                                                      0.3738      0.7086      
+## Mike_Zimmer                                                       1.0485      0.2944      
+## Mike_Tomlin                                                      -0.1932      0.8468      
+## Bill_Belichick                                                   -0.4475      0.6545      
+## Sean_Payton                                                      -0.6724      0.5014      
+## Doug_Pederson                                                    -0.0947      0.9246      
+## Andy_Reid                                                        -0.8887      0.3742      
+## Kyle_Shanahan                                                    -0.6540      0.5132      
+## Pete_Carroll                                                     -1.5799      0.1142     .
+## Doug_Marrone                                                     -0.7306      0.4651      
+## Sean_McVay                                                       -0.1985      0.8427      
+## Matt_Patricia                                                    -0.1387      0.8897      
+## Mike_Vrabel                                                      -0.2318      0.8167      
+## Frank_Reich                                                      -0.5832      0.5598      
+## Jon_Gruden                                                        0.1243      0.9011      
+## Matt_Nagy                                                         0.1746      0.8614      
+## Kliff_Kingsbury                                                   0.1911      0.8485      
+## Vic_Fangio                                                       -0.7280      0.4667      
+## Matt_LaFleur                                                     -0.3094      0.7570      
+## Brian_Flores                                                     -0.2537      0.7997      
+## Zac_Taylor                                                       -0.7157      0.4742      
+## Matt_Rhule                                                       -0.4673      0.6403      
+## Kevin_Stefanski                                                   0.3908      0.6960      
+## Joe_Judge                                                        -1.0829      0.2789      
+## Romeo_Crennel                                                    -0.8928      0.3720      
+## Raheem_Morris                                                    -0.0577      0.9540      
+## Darrell_Bevell                                                   -0.7628      0.4456      
+## Arthur_Smith                                                     -0.4746      0.6351      
+## Brandon_Staley                                                    1.8306      0.0672     *
+## Urban_Meyer                                                      -0.3216      0.7478      
+## Dan_Campbell                                                      0.6787      0.4974      
+## David_Culley                                                     -0.6496      0.5159      
+## Robert_Saleh                                                     -0.3353      0.7374      
+## Nick_Sirianni                                                    -0.6443      0.5194      
+## yardline_1_10                                                     4.9194      0.0000   ***
+## yardline_11_20                                                    1.4760      0.1400     .
+## yardline_21_30                                                    2.3464      0.0190    **
+## yardline_31_40                                                    8.8743      0.0000   ***
+## yardline_41_50                                                    7.2243      0.0000   ***
+## yardline_51_60                                                    1.4296      0.1529      
+## yardline_61_70                                                   -0.9813      0.3265      
+## yardline_71_80                                                   -2.0790      0.0377    **
+## yardline_81_90                                                    0.4912      0.6233      
+## is_first_half                                                   -14.8987      0.0000   ***
+## time_in_half                                                     -6.9199      0.0000   ***
+## home_attendance                                                  -0.2260      0.8212      
+## posteam_type_home                                                -0.5592      0.5760      
+## interact_HxA                                                      2.1678      0.0302    **
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2022 vs 2020
+## ========================================
+## 
+## Variable                                                         t-value     p-value   sig
+## ---------                                                        -------     -------  ----
+## (Intercept)                                                       1.5714      0.1161     .
+## ydstogo                                                         -27.9493      0.0000   ***
+## posteam_timeouts_remaining                                       -5.6883      0.0000   ***
+## defteam_timeouts_remaining                                       -1.2924      0.1962      
+## week                                                             -0.9235      0.3558      
+## temp                                                             -1.0141      0.3105      
+## wind                                                             -1.1406      0.2541      
+## vegas_wp                                                         -9.1445      0.0000   ***
+## spread_line                                                       0.6199      0.5354      
+## total_line                                                       -0.8763      0.3809      
+## score_diff                                                       -1.5631      0.1181     .
+## roof_outdoors                                                     1.1550      0.2481      
+## down1_pct                                                         0.9975      0.3186      
+## down2_pct                                                        -2.7071      0.0068   ***
+## down3_pct                                                         1.1138      0.2654      
+## down4_pct                                                        -0.1960      0.8447      
+## prep_days                                                        -1.6341      0.1023     .
+## overall_win_pct                                                   0.4281      0.6686      
+## team_win_pct                                                      0.0504      0.9598      
+## prev_win_pct                                                     -0.0681      0.9457      
+## prev_shotgun_rate                                                 0.6737      0.5005      
+## prev_singleback_rate                                              0.3145      0.7532      
+## prev_empty_rate                                                   0.4093      0.6824      
+## prev_iform_rate                                                  -0.5236      0.6006      
+## prev_shotgun_success                                              0.4179      0.6760      
+## prev_singleback_success                                          -0.6763      0.4989      
+## prev_empty_success                                               -0.6161      0.5378      
+## prev_iform_success                                               -1.5891      0.1121     .
+## prev_stop_rate_run                                                2.3887      0.0169    **
+## prev_stop_rate_pass                                              -2.0666      0.0388    **
+## shotgun_rate                                                      1.4767      0.1398     .
+## singleback_rate                                                   1.6219      0.1049     .
+## empty_rate                                                        2.0979      0.0360    **
+## iform_rate                                                       -0.1713      0.8640      
+## shotgun_success                                                   0.4530      0.6506      
+## singleback_success                                               -0.4309      0.6665      
+## empty_success                                                     0.3855      0.6999      
+## iform_success                                                     1.4783      0.1394     .
+## def_stop_rate_run                                                -0.2175      0.8278      
+## def_stop_rate_pass                                               -3.8360      0.0001   ***
+## avg_pass_rushers                                                 -0.8982      0.3691      
+## avg_box_defenders                                                 0.5096      0.6104      
+## cover0_rate                                                      -0.2341      0.8149      
+## cover1_rate                                                       0.4728      0.6363      
+## cover2_rate                                                      -0.3090      0.7573      
+## cover3_rate                                                      -0.8476      0.3967      
+## cover4_rate                                                       0.1693      0.8656      
+## cover6_rate                                                      -1.3404      0.1801      
+## two_man_rate                                                     -1.2756      0.2022      
+## prevent_rate                                                     -0.4159      0.6775      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w     -1.0062      0.3144      
+## starter_offense_player_1_passing_depth_medium_grades_pass...      0.3195      0.7493      
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w       0.6088      0.5427      
+## starter_offense_player_1_rushing_grades_grades_run_12w            0.5362      0.5918      
+## starter_offense_player_4_rushing_grades_first_downs_12w           0.4309      0.6665      
+## starter_offense_player_4_receiving_vs_scheme_zone_grades_...      1.5908      0.1117     .
+## starter_offense_player_4_pass_blocking_true_pass_set_grad...     -0.7060      0.4802      
+## starter_offense_player_4_rushing_grades_yards_after_conta...      0.1467      0.8834      
+## starter_offense_player_8_receiving_depth_short_avg_depth_...      2.0955      0.0362    **
+## starter_offense_player_8_blocking_grades_block_percent_12w        0.1866      0.8520      
+## starter_offense_player_8_receiving_grades_targets_12w            -0.6086      0.5428      
+## starter_offense_player_8_receiving_grades_yards_per_recep...     -1.4459      0.1482     .
+## starter_offense_player_9_receiving_depth_short_avg_depth_...      0.9124      0.3616      
+## starter_offense_player_9_blocking_grades_block_percent_12w       -2.2493      0.0245    **
+## starter_offense_player_9_receiving_grades_targets_12w            -1.7328      0.0832     *
+## starter_offense_player_9_receiving_grades_yards_per_recep...     -0.2512      0.8017      
+## starter_offense_player_10_receiving_depth_short_avg_depth...     -0.2739      0.7842      
+## starter_offense_player_10_blocking_grades_block_percent_12w      -0.5469      0.5845      
+## starter_offense_player_10_receiving_grades_targets_12w           -0.5692      0.5692      
+## starter_offense_player_10_receiving_grades_yards_per_rece...     -0.9571      0.3385      
+## starter_offense_player_14_blocking_grades_snap_counts_blo...      1.0469      0.2952      
+## starter_offense_player_14_receiving_vs_scheme_zone_caught...      0.9112      0.3622      
+## starter_offense_player_14_receiving_depth_center_short_pa...      0.7431      0.4575      
+## starter_offense_player_14_receiving_concept_slot_targets_12w      0.9421      0.3462      
+## starter_offense_player_17_run_blocking_snap_counts_run_bl...     -0.5401      0.5891      
+## starter_offense_player_17_blocking_grades_grades_offense_12w     -1.1333      0.2571      
+## starter_offense_player_17_blocking_grades_pbe_2w                  0.0444      0.9646      
+## starter_offense_player_18_run_blocking_snap_counts_run_bl...      2.2092      0.0272    **
+## starter_offense_player_18_blocking_grades_grades_offense_12w     -0.5281      0.5974      
+## starter_offense_player_18_blocking_grades_pbe_2w                 -0.4374      0.6618      
+## starter_offense_player_19_run_blocking_snap_counts_run_bl...     -1.6724      0.0945     *
+## starter_offense_player_19_blocking_grades_grades_offense_12w     -0.0436      0.9652      
+## starter_offense_player_19_blocking_grades_pbe_2w                  2.5741      0.0101    **
+## starter_offense_player_20_run_blocking_snap_counts_run_bl...      0.9091      0.3633      
+## starter_offense_player_20_blocking_grades_grades_offense_12w      0.4584      0.6467      
+## starter_offense_player_20_blocking_grades_pbe_2w                 -0.2722      0.7854      
+## starter_offense_player_21_run_blocking_snap_counts_run_bl...     -0.0868      0.9308      
+## starter_offense_player_21_blocking_grades_grades_offense_12w      1.3752      0.1691      
+## starter_offense_player_21_blocking_grades_pbe_2w                 -2.5606      0.0105    **
+## starter_defense_player_1_pass_rushing_productivity_prp_12w        0.4034      0.6867      
+## starter_defense_player_1_pass_rushing_productivity_hurrie...     -2.3419      0.0192    **
+## starter_defense_player_1_defensive_grades_grades_defense_...     -1.9837      0.0473    **
+## starter_defense_player_1_run_defense_grades_stops_12w             0.2501      0.8025      
+## starter_defense_player_1_run_defense_grades_tackles_12w           0.1557      0.8763      
+## starter_defense_player_2_pass_rushing_productivity_prp_12w        0.3557      0.7221      
+## starter_defense_player_2_pass_rushing_productivity_hurrie...      0.1229      0.9022      
+## starter_defense_player_2_defensive_grades_grades_defense_...     -1.6201      0.1053     .
+## starter_defense_player_2_run_defense_grades_stops_12w             1.6508      0.0988     *
+## starter_defense_player_2_run_defense_grades_tackles_12w          -1.1295      0.2587      
+## starter_defense_player_3_pass_rushing_productivity_prp_12w        0.8291      0.4071      
+## starter_defense_player_3_pass_rushing_productivity_hurrie...      0.4576      0.6472      
+## starter_defense_player_3_defensive_grades_grades_defense_...      0.3488      0.7272      
+## starter_defense_player_3_run_defense_grades_stops_12w             0.1242      0.9011      
+## starter_defense_player_3_run_defense_grades_tackles_12w          -0.4095      0.6822      
+## starter_defense_player_4_pass_rushing_productivity_prp_12w        0.9559      0.3392      
+## starter_defense_player_4_pass_rushing_productivity_hurrie...     -0.4666      0.6408      
+## starter_defense_player_4_defensive_grades_grades_defense_...     -0.3602      0.7187      
+## starter_defense_player_4_run_defense_grades_stops_12w             1.5378      0.1241     .
+## starter_defense_player_4_run_defense_grades_tackles_12w          -1.2856      0.1986      
+## starter_defense_player_9_pass_rushing_productivity_prp_12w        0.0644      0.9486      
+## starter_defense_player_9_pass_rushing_productivity_hurrie...     -0.1865      0.8521      
+## starter_defense_player_9_defensive_grades_grades_defense_...     -0.4020      0.6877      
+## starter_defense_player_9_run_defense_grades_stops_12w             0.3030      0.7619      
+## starter_defense_player_9_run_defense_grades_tackles_12w          -0.0597      0.9524      
+## starter_defense_player_9_defensive_grades_snap_counts_cov...      0.2408      0.8097      
+## starter_defense_player_9_coverage_schemes_zone_stops_12w         -1.2186      0.2230      
+## starter_defense_player_10_pass_rushing_productivity_prp_12w      -1.3654      0.1722      
+## starter_defense_player_10_pass_rushing_productivity_hurri...      0.2639      0.7919      
+## starter_defense_player_10_defensive_grades_grades_defense...      0.0357      0.9715      
+## starter_defense_player_10_run_defense_grades_stops_12w           -1.3664      0.1718      
+## starter_defense_player_10_run_defense_grades_tackles_12w          1.2185      0.2231      
+## starter_defense_player_10_defensive_grades_snap_counts_co...      0.7444      0.4567      
+## starter_defense_player_10_coverage_schemes_zone_stops_12w        -0.7411      0.4586      
+## starter_defense_player_11_pass_rushing_productivity_prp_12w      -0.1530      0.8784      
+## starter_defense_player_11_pass_rushing_productivity_hurri...      0.0310      0.9753      
+## starter_defense_player_11_defensive_grades_grades_defense...      1.7317      0.0834     *
+## starter_defense_player_11_run_defense_grades_stops_12w           -0.9686      0.3328      
+## starter_defense_player_11_run_defense_grades_tackles_12w          1.7289      0.0839     *
+## starter_defense_player_11_defensive_grades_snap_counts_co...     -1.6818      0.0927     *
+## starter_defense_player_11_coverage_schemes_zone_stops_12w         0.7941      0.4272      
+## starter_defense_player_12_pass_rushing_productivity_prp_12w      -1.4346      0.1514      
+## starter_defense_player_12_pass_rushing_productivity_hurri...     -1.0741      0.2828      
+## starter_defense_player_12_defensive_grades_grades_defense...      2.4585      0.0140    **
+## starter_defense_player_12_run_defense_grades_stops_12w           -0.1008      0.9198      
+## starter_defense_player_12_run_defense_grades_tackles_12w          0.4406      0.6595      
+## starter_defense_player_12_defensive_grades_snap_counts_co...     -0.9981      0.3183      
+## starter_defense_player_12_coverage_schemes_zone_stops_12w         0.5350      0.5926      
+## starter_defense_player_15_defensive_grades_grades_defense...     -0.6655      0.5057      
+## starter_defense_player_15_run_defense_grades_tackles_12w          0.0449      0.9642      
+## starter_defense_player_15_coverage_schemes_man_coverage_s...     -0.2767      0.7820      
+## starter_defense_player_15_coverage_grades_stops_12w               2.9620      0.0031   ***
+## starter_defense_player_15_slot_coverage_targets_12w               0.7454      0.4561      
+## starter_defense_player_15_defensive_grades_missed_tackle_...      1.1290      0.2590      
+## starter_defense_player_16_defensive_grades_grades_defense...     -0.7813      0.4347      
+## starter_defense_player_16_run_defense_grades_tackles_12w          1.2232      0.2213      
+## starter_defense_player_16_coverage_schemes_man_coverage_s...     -0.1373      0.8908      
+## starter_defense_player_16_coverage_grades_stops_12w               0.2295      0.8185      
+## starter_defense_player_16_slot_coverage_targets_12w               0.2299      0.8182      
+## starter_defense_player_16_defensive_grades_missed_tackle_...     -1.2760      0.2020      
+## starter_defense_player_17_defensive_grades_grades_defense...     -0.0706      0.9437      
+## starter_defense_player_17_run_defense_grades_tackles_12w         -1.1972      0.2313      
+## starter_defense_player_17_coverage_schemes_man_coverage_s...      1.5859      0.1128     .
+## starter_defense_player_17_coverage_grades_stops_12w              -1.2190      0.2229      
+## starter_defense_player_17_slot_coverage_targets_12w               1.1655      0.2439      
+## starter_defense_player_17_defensive_grades_missed_tackle_...      0.7942      0.4271      
+## starter_defense_player_20_defensive_grades_grades_defense...      2.2161      0.0267    **
+## starter_defense_player_20_run_defense_grades_tackles_12w         -1.0619      0.2883      
+## starter_defense_player_20_coverage_grades_stops_12w               1.1848      0.2361      
+## starter_defense_player_20_slot_coverage_targets_12w               0.4100      0.6818      
+## starter_defense_player_20_defensive_grades_missed_tackle_...      0.1406      0.8882      
+## starter_defense_player_21_defensive_grades_grades_defense...     -0.4839      0.6285      
+## starter_defense_player_21_run_defense_grades_tackles_12w         -1.1244      0.2609      
+## starter_defense_player_21_coverage_grades_stops_12w               0.2389      0.8112      
+## starter_defense_player_21_slot_coverage_targets_12w              -0.2202      0.8257      
+## starter_defense_player_21_defensive_grades_missed_tackle_...     -0.6743      0.5001      
+## starter_defense_player_22_defensive_grades_grades_defense...     -1.1935      0.2327      
+## starter_defense_player_22_run_defense_grades_tackles_12w          0.7434      0.4573      
+## starter_defense_player_22_coverage_grades_stops_12w              -0.1289      0.8975      
+## starter_defense_player_22_slot_coverage_targets_12w               0.8115      0.4171      
+## starter_defense_player_22_defensive_grades_missed_tackle_...     -0.6414      0.5213      
+## Bruce_Arians                                                     -0.7470      0.4551      
+## Sean_McDermott                                                    0.4375      0.6617      
+## Ron_Rivera                                                       -0.4882      0.6255      
+## John_Harbaugh                                                     0.4849      0.6278      
+## Mike_McCarthy                                                    -0.5909      0.5546      
+## Dan_Quinn                                                         1.1662      0.2436      
+## Bill_OBrien                                                      -0.1929      0.8470      
+## Adam_Gase                                                        -0.8941      0.3713      
+## Anthony_Lynn                                                     -0.0632      0.9496      
+## Mike_Zimmer                                                       1.2843      0.1991      
+## Mike_Tomlin                                                      -0.4574      0.6474      
+## Bill_Belichick                                                   -0.2457      0.8059      
+## Sean_Payton                                                      -0.0057      0.9954      
+## Todd_Bowles                                                       0.1965      0.8443      
+## Doug_Pederson                                                    -0.2114      0.8326      
+## Andy_Reid                                                         0.1646      0.8693      
+## Kyle_Shanahan                                                     0.2697      0.7874      
+## Pete_Carroll                                                     -0.2007      0.8410      
+## Doug_Marrone                                                     -0.5536      0.5799      
+## Sean_McVay                                                       -0.5124      0.6084      
+## Steve_Wilks                                                       0.0358      0.9714      
+## Matt_Patricia                                                    -0.4045      0.6859      
+## Mike_Vrabel                                                       0.2675      0.7891      
+## Frank_Reich                                                       0.1367      0.8913      
+## Jon_Gruden                                                        0.2378      0.8120      
+## Matt_Nagy                                                        -0.4065      0.6844      
+## Kliff_Kingsbury                                                  -0.4057      0.6850      
+## Vic_Fangio                                                        0.0030      0.9976      
+## Matt_LaFleur                                                      0.6445      0.5193      
+## Brian_Flores                                                     -0.7891      0.4301      
+## Zac_Taylor                                                       -1.0930      0.2744      
+## Matt_Rhule                                                        0.2015      0.8403      
+## Kevin_Stefanski                                                   0.7986      0.4245      
+## Joe_Judge                                                        -1.1341      0.2568      
+## Romeo_Crennel                                                    -0.8815      0.3781      
+## Raheem_Morris                                                     0.6298      0.5289      
+## Darrell_Bevell                                                   -0.3856      0.6998      
+## Arthur_Smith                                                      0.1121      0.9108      
+## Brandon_Staley                                                   -0.3504      0.7260      
+## Dan_Campbell                                                      0.9274      0.3538      
+## Robert_Saleh                                                     -0.2377      0.8121      
+## Nick_Sirianni                                                     0.8146      0.4154      
+## Josh_McDaniels                                                    0.0126      0.9900      
+## Brian_Daboll                                                     -0.3651      0.7150      
+## Matt_Eberflus                                                    -0.2552      0.7986      
+## Lovie_Smith                                                      -0.0641      0.9489      
+## Nathaniel_Hackett                                                -0.2755      0.7829      
+## Mike_McDaniel                                                     0.2924      0.7700      
+## Kevin_OConnell                                                    0.7471      0.4550      
+## Dennis_Allen                                                     -0.3660      0.7144      
+## Jeff_Saturday                                                     1.1249      0.2607      
+## yardline_1_10                                                     5.5622      0.0000   ***
+## yardline_11_20                                                    2.8296      0.0047   ***
+## yardline_21_30                                                    3.2710      0.0011   ***
+## yardline_31_40                                                    9.7366      0.0000   ***
+## yardline_41_50                                                    7.5623      0.0000   ***
+## yardline_51_60                                                    2.0252      0.0429    **
+## yardline_61_70                                                   -0.5090      0.6108      
+## yardline_71_80                                                   -1.5687      0.1168     .
+## yardline_81_90                                                    0.6153      0.5383      
+## is_first_half                                                   -14.2097      0.0000   ***
+## time_in_half                                                     -6.9804      0.0000   ***
+## home_attendance                                                  -1.0491      0.2942      
+## posteam_type_home                                                 0.0639      0.9490      
+## interact_HxA                                                      2.4899      0.0128    **
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
+## 
+## 
+## ========================================
+## Analyzing 2023 vs 2020
+## ========================================
+## 
+## Variable                                                         t-value     p-value   sig
+## ---------                                                        -------     -------  ----
+## (Intercept)                                                       0.2952      0.7679      
+## ydstogo                                                         -27.2706      0.0000   ***
+## posteam_timeouts_remaining                                       -6.4055      0.0000   ***
+## defteam_timeouts_remaining                                        1.7064      0.0880     *
+## week                                                              0.9052      0.3654      
+## temp                                                             -1.2634      0.2065      
+## wind                                                              1.8415      0.0656     *
+## vegas_wp                                                         -8.6595      0.0000   ***
+## spread_line                                                       1.3439      0.1790      
+## total_line                                                       -0.9322      0.3513      
+## score_diff                                                       -1.0354      0.3005      
+## roof_outdoors                                                    -2.0795      0.0376    **
+## down1_pct                                                         1.4324      0.1521      
+## down2_pct                                                        -1.2935      0.1959      
+## down3_pct                                                         0.2631      0.7925      
+## down4_pct                                                         0.1686      0.8661      
+## prep_days                                                        -0.4900      0.6242      
+## overall_win_pct                                                  -0.7881      0.4307      
+## team_win_pct                                                      0.6355      0.5251      
+## prev_win_pct                                                     -0.0660      0.9474      
+## prev_shotgun_rate                                                 0.0593      0.9527      
+## prev_singleback_rate                                              0.0361      0.9712      
+## prev_empty_rate                                                   1.0260      0.3049      
+## prev_iform_rate                                                  -1.9386      0.0526     *
+## prev_shotgun_success                                              1.7234      0.0849     *
+## prev_singleback_success                                          -1.7022      0.0888     *
+## prev_empty_success                                               -1.1626      0.2451      
+## prev_iform_success                                                0.5808      0.5614      
+## prev_stop_rate_run                                                1.3996      0.1617      
+## prev_stop_rate_pass                                               0.7454      0.4560      
+## shotgun_rate                                                      1.7450      0.0810     *
+## singleback_rate                                                   0.8406      0.4006      
+## empty_rate                                                        0.7261      0.4678      
+## iform_rate                                                        0.1796      0.8574      
+## shotgun_success                                                   0.7736      0.4392      
+## singleback_success                                                1.9728      0.0486    **
+## empty_success                                                    -0.2152      0.8296      
+## iform_success                                                    -1.7933      0.0730     *
+## def_stop_rate_run                                                -0.5792      0.5625      
+## def_stop_rate_pass                                               -4.9267      0.0000   ***
+## avg_pass_rushers                                                 -0.7502      0.4531      
+## avg_box_defenders                                                 1.2229      0.2214      
+## cover0_rate                                                       0.8762      0.3809      
+## cover1_rate                                                       1.6293      0.1033     .
+## cover2_rate                                                      -0.6373      0.5239      
+## cover3_rate                                                       1.7955      0.0726     *
+## cover4_rate                                                       0.2271      0.8203      
+## cover6_rate                                                       0.6663      0.5053      
+## two_man_rate                                                     -1.1169      0.2641      
+## prevent_rate                                                      0.4721      0.6368      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w      0.0195      0.9845      
+## starter_offense_player_1_passing_depth_medium_grades_pass...     -0.8501      0.3953      
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w       0.2827      0.7774      
+## starter_offense_player_1_rushing_grades_grades_run_12w            0.6483      0.5168      
+## starter_offense_player_4_rushing_grades_first_downs_12w          -0.4446      0.6566      
+## starter_offense_player_4_receiving_vs_scheme_zone_grades_...     -0.1715      0.8638      
+## starter_offense_player_4_pass_blocking_true_pass_set_grad...      0.1515      0.8796      
+## starter_offense_player_4_rushing_grades_yards_after_conta...      0.9119      0.3619      
+## starter_offense_player_8_receiving_depth_short_avg_depth_...      0.1337      0.8936      
+## starter_offense_player_8_blocking_grades_block_percent_12w        0.0278      0.9778      
+## starter_offense_player_8_receiving_grades_targets_12w             0.3630      0.7166      
+## starter_offense_player_8_receiving_grades_yards_per_recep...     -2.8510      0.0044   ***
+## starter_offense_player_9_receiving_depth_short_avg_depth_...      1.4381      0.1505      
+## starter_offense_player_9_blocking_grades_block_percent_12w       -1.9457      0.0517     *
+## starter_offense_player_9_receiving_grades_targets_12w            -1.6003      0.1096     .
+## starter_offense_player_9_receiving_grades_yards_per_recep...      0.1705      0.8646      
+## starter_offense_player_10_receiving_depth_short_avg_depth...     -1.0801      0.2802      
+## starter_offense_player_10_blocking_grades_block_percent_12w      -0.0501      0.9601      
+## starter_offense_player_10_receiving_grades_targets_12w            0.4863      0.6268      
+## starter_offense_player_10_receiving_grades_yards_per_rece...     -0.2252      0.8218      
+## starter_offense_player_14_blocking_grades_snap_counts_blo...     -0.8922      0.3723      
+## starter_offense_player_14_receiving_vs_scheme_zone_caught...      0.2846      0.7759      
+## starter_offense_player_14_receiving_depth_center_short_pa...     -0.5661      0.5714      
+## starter_offense_player_14_receiving_concept_slot_targets_12w     -0.0685      0.9454      
+## starter_offense_player_17_run_blocking_snap_counts_run_bl...     -0.5577      0.5771      
+## starter_offense_player_17_blocking_grades_grades_offense_12w      0.9969      0.3188      
+## starter_offense_player_17_blocking_grades_pbe_2w                 -1.3945      0.1632      
+## starter_offense_player_18_run_blocking_snap_counts_run_bl...      0.3293      0.7419      
+## starter_offense_player_18_blocking_grades_grades_offense_12w     -0.2103      0.8335      
+## starter_offense_player_18_blocking_grades_pbe_2w                  0.5875      0.5569      
+## starter_offense_player_19_run_blocking_snap_counts_run_bl...     -1.2748      0.2024      
+## starter_offense_player_19_blocking_grades_grades_offense_12w     -0.3326      0.7394      
+## starter_offense_player_19_blocking_grades_pbe_2w                  1.8878      0.0591     *
+## starter_offense_player_20_run_blocking_snap_counts_run_bl...      2.0493      0.0405    **
+## starter_offense_player_20_blocking_grades_grades_offense_12w      1.4455      0.1484     .
+## starter_offense_player_20_blocking_grades_pbe_2w                 -0.2166      0.8285      
+## starter_offense_player_21_run_blocking_snap_counts_run_bl...     -0.0445      0.9645      
+## starter_offense_player_21_blocking_grades_grades_offense_12w      0.6910      0.4896      
+## starter_offense_player_21_blocking_grades_pbe_2w                 -1.5490      0.1214     .
+## starter_defense_player_1_pass_rushing_productivity_prp_12w       -1.3418      0.1797      
+## starter_defense_player_1_pass_rushing_productivity_hurrie...     -0.0403      0.9679      
+## starter_defense_player_1_defensive_grades_grades_defense_...     -1.4241      0.1545      
+## starter_defense_player_1_run_defense_grades_stops_12w             0.3316      0.7402      
+## starter_defense_player_1_run_defense_grades_tackles_12w          -0.8978      0.3693      
+## starter_defense_player_2_pass_rushing_productivity_prp_12w       -0.5084      0.6112      
+## starter_defense_player_2_pass_rushing_productivity_hurrie...      0.0732      0.9416      
+## starter_defense_player_2_defensive_grades_grades_defense_...     -0.5607      0.5750      
+## starter_defense_player_2_run_defense_grades_stops_12w             0.5553      0.5787      
+## starter_defense_player_2_run_defense_grades_tackles_12w          -0.7131      0.4758      
+## starter_defense_player_3_pass_rushing_productivity_prp_12w        0.8540      0.3931      
+## starter_defense_player_3_pass_rushing_productivity_hurrie...     -0.5958      0.5513      
+## starter_defense_player_3_defensive_grades_grades_defense_...      0.1055      0.9160      
+## starter_defense_player_3_run_defense_grades_stops_12w            -0.2405      0.8099      
+## starter_defense_player_3_run_defense_grades_tackles_12w           0.6141      0.5392      
+## starter_defense_player_4_pass_rushing_productivity_prp_12w       -0.6139      0.5393      
+## starter_defense_player_4_pass_rushing_productivity_hurrie...      0.4908      0.6236      
+## starter_defense_player_4_defensive_grades_grades_defense_...      1.3447      0.1788      
+## starter_defense_player_4_run_defense_grades_stops_12w             1.1375      0.2554      
+## starter_defense_player_4_run_defense_grades_tackles_12w          -0.5626      0.5737      
+## starter_defense_player_9_pass_rushing_productivity_prp_12w        1.0749      0.2824      
+## starter_defense_player_9_pass_rushing_productivity_hurrie...      0.5777      0.5635      
+## starter_defense_player_9_defensive_grades_grades_defense_...     -0.9743      0.3300      
+## starter_defense_player_9_run_defense_grades_stops_12w            -0.4981      0.6184      
+## starter_defense_player_9_run_defense_grades_tackles_12w           0.2227      0.8238      
+## starter_defense_player_9_defensive_grades_snap_counts_cov...     -1.1742      0.2404      
+## starter_defense_player_9_coverage_schemes_zone_stops_12w          0.6338      0.5263      
+## starter_defense_player_10_pass_rushing_productivity_prp_12w      -0.0753      0.9400      
+## starter_defense_player_10_pass_rushing_productivity_hurri...      0.4652      0.6418      
+## starter_defense_player_10_defensive_grades_grades_defense...     -0.7961      0.4260      
+## starter_defense_player_10_run_defense_grades_stops_12w           -0.0932      0.9258      
+## starter_defense_player_10_run_defense_grades_tackles_12w          0.4851      0.6276      
+## starter_defense_player_10_defensive_grades_snap_counts_co...     -1.0336      0.3014      
+## starter_defense_player_10_coverage_schemes_zone_stops_12w         1.9735      0.0485    **
+## starter_defense_player_11_pass_rushing_productivity_prp_12w      -0.9224      0.3564      
+## starter_defense_player_11_pass_rushing_productivity_hurri...     -0.8611      0.3892      
+## starter_defense_player_11_defensive_grades_grades_defense...      2.2982      0.0216    **
+## starter_defense_player_11_run_defense_grades_stops_12w           -1.0405      0.2981      
+## starter_defense_player_11_run_defense_grades_tackles_12w          1.7725      0.0764     *
+## starter_defense_player_11_defensive_grades_snap_counts_co...     -2.6335      0.0085   ***
+## starter_defense_player_11_coverage_schemes_zone_stops_12w         0.4542      0.6497      
+## starter_defense_player_12_pass_rushing_productivity_prp_12w      -1.8224      0.0684     *
+## starter_defense_player_12_pass_rushing_productivity_hurri...     -0.2047      0.8378      
+## starter_defense_player_12_defensive_grades_grades_defense...      0.8501      0.3953      
+## starter_defense_player_12_run_defense_grades_stops_12w           -0.6733      0.5008      
+## starter_defense_player_12_run_defense_grades_tackles_12w          1.1549      0.2482      
+## starter_defense_player_12_defensive_grades_snap_counts_co...     -2.8682      0.0041   ***
+## starter_defense_player_12_coverage_schemes_zone_stops_12w         1.1793      0.2383      
+## starter_defense_player_15_defensive_grades_grades_defense...      0.4237      0.6718      
+## starter_defense_player_15_run_defense_grades_tackles_12w          0.1629      0.8706      
+## starter_defense_player_15_coverage_schemes_man_coverage_s...      0.4153      0.6779      
+## starter_defense_player_15_coverage_grades_stops_12w               0.4423      0.6583      
+## starter_defense_player_15_slot_coverage_targets_12w               0.2882      0.7732      
+## starter_defense_player_15_defensive_grades_missed_tackle_...      1.8917      0.0586     *
+## starter_defense_player_16_defensive_grades_grades_defense...      1.0381      0.2992      
+## starter_defense_player_16_run_defense_grades_tackles_12w          1.2094      0.2266      
+## starter_defense_player_16_coverage_schemes_man_coverage_s...      1.1377      0.2553      
+## starter_defense_player_16_coverage_grades_stops_12w               0.7382      0.4604      
+## starter_defense_player_16_slot_coverage_targets_12w              -0.3609      0.7182      
+## starter_defense_player_16_defensive_grades_missed_tackle_...     -0.4094      0.6823      
+## starter_defense_player_17_defensive_grades_grades_defense...      0.0176      0.9860      
+## starter_defense_player_17_run_defense_grades_tackles_12w         -1.7007      0.0890     *
+## starter_defense_player_17_coverage_schemes_man_coverage_s...      0.0861      0.9314      
+## starter_defense_player_17_coverage_grades_stops_12w              -0.6463      0.5181      
+## starter_defense_player_17_slot_coverage_targets_12w               0.1858      0.8526      
+## starter_defense_player_17_defensive_grades_missed_tackle_...      1.7509      0.0800     *
+## starter_defense_player_20_defensive_grades_grades_defense...      0.5402      0.5891      
+## starter_defense_player_20_run_defense_grades_tackles_12w         -0.2674      0.7892      
+## starter_defense_player_20_coverage_grades_stops_12w               0.5868      0.5574      
+## starter_defense_player_20_slot_coverage_targets_12w              -0.0852      0.9321      
+## starter_defense_player_20_defensive_grades_missed_tackle_...      0.6454      0.5187      
+## starter_defense_player_21_defensive_grades_grades_defense...      0.0360      0.9713      
+## starter_defense_player_21_run_defense_grades_tackles_12w         -0.9483      0.3430      
+## starter_defense_player_21_coverage_grades_stops_12w               1.5802      0.1141     .
+## starter_defense_player_21_slot_coverage_targets_12w              -0.0796      0.9366      
+## starter_defense_player_21_defensive_grades_missed_tackle_...     -1.6296      0.1032     .
+## starter_defense_player_22_defensive_grades_grades_defense...     -0.8853      0.3760      
+## starter_defense_player_22_run_defense_grades_tackles_12w          0.6189      0.5360      
+## starter_defense_player_22_coverage_grades_stops_12w              -3.5572      0.0004   ***
+## starter_defense_player_22_slot_coverage_targets_12w               2.2629      0.0237    **
+## starter_defense_player_22_defensive_grades_missed_tackle_...     -1.5783      0.1146     .
+## Bruce_Arians                                                      0.5221      0.6016      
+## Sean_McDermott                                                    2.3810      0.0173    **
+## Ron_Rivera                                                        1.3006      0.1934      
+## John_Harbaugh                                                     0.8150      0.4151      
+## Mike_McCarthy                                                     1.3581      0.1745      
+## Dan_Quinn                                                         1.8376      0.0662     *
+## Bill_OBrien                                                      -0.1018      0.9189      
+## Adam_Gase                                                         1.0026      0.3161      
+## Anthony_Lynn                                                      2.0428      0.0411    **
+## Mike_Zimmer                                                       2.5871      0.0097   ***
+## Mike_Tomlin                                                       1.1548      0.2482      
+## Bill_Belichick                                                    1.9764      0.0482    **
+## Sean_Payton                                                       1.9340      0.0532     *
+## Todd_Bowles                                                       1.0934      0.2742      
+## Doug_Pederson                                                     2.3946      0.0167    **
+## Andy_Reid                                                         1.7338      0.0830     *
+## Kyle_Shanahan                                                     1.4774      0.1396     .
+## Pete_Carroll                                                      1.7382      0.0822     *
+## Doug_Marrone                                                      1.0140      0.3106      
+## Sean_McVay                                                        0.7771      0.4372      
+## Matt_Patricia                                                     0.9626      0.3358      
+## Mike_Vrabel                                                       1.9059      0.0567     *
+## Frank_Reich                                                       1.7431      0.0814     *
+## Jon_Gruden                                                        1.5332      0.1253     .
+## Matt_Nagy                                                         2.1700      0.0300    **
+## Kliff_Kingsbury                                                   0.4383      0.6612      
+## Vic_Fangio                                                        0.7777      0.4368      
+## Matt_LaFleur                                                      1.8487      0.0645     *
+## Brian_Flores                                                      1.7063      0.0880     *
+## Zac_Taylor                                                        1.0815      0.2795      
+## Matt_Rhule                                                        0.6674      0.5046      
+## Kevin_Stefanski                                                   2.4783      0.0132    **
+## Joe_Judge                                                         0.8821      0.3778      
+## Romeo_Crennel                                                    -0.4503      0.6525      
+## Raheem_Morris                                                     1.9002      0.0574     *
+## Darrell_Bevell                                                    0.0079      0.9937      
+## Arthur_Smith                                                      1.0275      0.3042      
+## Brandon_Staley                                                    2.9799      0.0029   ***
+## Dan_Campbell                                                      3.5704      0.0004   ***
+## Robert_Saleh                                                      0.6543      0.5129      
+## Nick_Sirianni                                                     2.2792      0.0227    **
+## Josh_McDaniels                                                    2.7585      0.0058   ***
+## Brian_Daboll                                                      1.2689      0.2045      
+## Matt_Eberflus                                                     2.4377      0.0148    **
+## Mike_McDaniel                                                     1.0692      0.2850      
+## Kevin_OConnell                                                    2.1786      0.0294    **
+## Dennis_Allen                                                      1.5453      0.1223     .
+## DeMeco_Ryans                                                      1.8150      0.0696     *
+## Shane_Steichen                                                    1.3014      0.1932      
+## Jonathan_Gannon                                                   0.3616      0.7176      
+## Antonio_Pierce                                                    2.6898      0.0072   ***
+## Chris_Tabor                                                       1.6831      0.0924     *
+## yardline_1_10                                                     4.8279      0.0000   ***
+## yardline_11_20                                                    1.5896      0.1120     .
+## yardline_21_30                                                    2.5647      0.0103    **
+## yardline_31_40                                                    8.7057      0.0000   ***
+## yardline_41_50                                                    6.6084      0.0000   ***
+## yardline_51_60                                                    2.1271      0.0334    **
+## yardline_61_70                                                   -0.7590      0.4479      
+## yardline_71_80                                                   -1.8375      0.0662     *
+## yardline_81_90                                                   -0.3475      0.7282      
+## is_first_half                                                   -14.4094      0.0000   ***
+## time_in_half                                                     -8.5856      0.0000   ***
+## home_attendance                                                  -0.4221      0.6730      
+## posteam_type_home                                                -0.1020      0.9188      
+## interact_HxA                                                      1.0128      0.3112      
+## 
+## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15</code></pre>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkF0dGVuZGFuY2UgQmluYXJ5Ig0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCmBgYHtyIG9wdGlvbnMsIGluY2x1ZGU9RkFMU0V9DQpvcHRpb25zKG1heC5wcmludD0xMDAwMCkNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkoc2FuZHdpY2gpDQpsaWJyYXJ5KGxtdGVzdCkNCmBgYA0KDQpgYGB7cn0NCnJ1bl9hdHRlbmRhbmNlX2FuYWx5c2lzX3YxIDwtIGZ1bmN0aW9uKGZpbGVfcGF0aCwgeWVhcikgew0KICAgIGNhdCgiXG5cbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iKQ0KICAgIGNhdChzcHJpbnRmKCJcbkFuYWx5emluZyAlcyB2cyAyMDIwXG4iLCB5ZWFyKSkNCiAgICBjYXQoIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cblxuIikNCiAgICANCiAgICAjIFJlYWQgZGF0YQ0KICAgIGF0dGVuZGFuY2VfZGF0YSA8LSBmcmVhZChmaWxlX3BhdGgpDQogICAgDQogICAgDQogICAgIyBDaGVjayAxOiBFbnN1cmUgcmVxdWlyZWQgY29sdW1ucyBleGlzdA0KICAgIGlmICghImhvbWVfYXR0ZW5kYW5jZSIgJWluJSBjb2xuYW1lcyhhdHRlbmRhbmNlX2RhdGEpKSB7DQogICAgICAgIHN0b3AoIkVycm9yOiAnaG9tZV9hdHRlbmRhbmNlJyBjb2x1bW4gbm90IGZvdW5kIGluIHRoZSBkYXRhc2V0LiIpDQogICAgfQ0KICAgIGlmICghInBvc3RlYW1fdHlwZV9ob21lIiAlaW4lIGNvbG5hbWVzKGF0dGVuZGFuY2VfZGF0YSkpIHsNCiAgICAgICAgc3RvcCgiRXJyb3I6ICdwb3N0ZWFtX3R5cGVfaG9tZScgY29sdW1uIG5vdCBmb3VuZCBpbiB0aGUgZGF0YXNldC4iKQ0KICAgIH0NCiAgICANCiAgICAjIFJlbW92ZSBhdHRlbmRhbmNlX3BjdCBhbmQgYXR0ZW5kYW5jZV9yYXcgKGlycmVsZXZhbnQgZm9yIHRoaXMgdmVyc2lvbikNCiAgICBpZiAoImF0dGVuZGFuY2VfcGN0IiAlaW4lIG5hbWVzKGF0dGVuZGFuY2VfZGF0YSkpIGF0dGVuZGFuY2VfZGF0YSRhdHRlbmRhbmNlX3BjdCA8LSBOVUxMDQogICAgaWYgKCJhdHRlbmRhbmNlX3JhdyIgJWluJSBuYW1lcyhhdHRlbmRhbmNlX2RhdGEpKSBhdHRlbmRhbmNlX2RhdGEkYXR0ZW5kYW5jZV9yYXcgPC0gTlVMTA0KICAgIA0KICAgICMgQ3JlYXRlIGludGVyYWN0aW9uIHRlcm0NCiAgICBhdHRlbmRhbmNlX2RhdGEkaW50ZXJhY3RfSHhBIDwtIGF0dGVuZGFuY2VfZGF0YSRob21lX2F0dGVuZGFuY2UgKiBhdHRlbmRhbmNlX2RhdGEkcG9zdGVhbV90eXBlX2hvbWUNCiAgICANCiAgICAjIENoZWNrIDI6IFZlcmlmeSBpbnRlcmFjdGlvbiB0ZXJtIGNyZWF0aW9uDQogICAgaWYgKCEiaW50ZXJhY3RfSHhBIiAlaW4lIGNvbG5hbWVzKGF0dGVuZGFuY2VfZGF0YSkpIHsNCiAgICAgICAgc3RvcCgiRXJyb3I6ICdpbnRlcmFjdF9IeEEnIGNvbHVtbiB3YXMgbm90IGNyZWF0ZWQuIikNCiAgICB9DQogICAgDQogICAgIyBSZW9yZGVyIGNvbHVtbnMNCiAgICBvdGhlcl9jb2xzIDwtIHNldGRpZmYobmFtZXMoYXR0ZW5kYW5jZV9kYXRhKSwgDQogICAgICAgICAgICAgICAgICAgICAgICAgYygiaG9tZV9hdHRlbmRhbmNlIiwgInBvc3RlYW1fdHlwZV9ob21lIiwgImludGVyYWN0X0h4QSIpKQ0KICAgIHNldGNvbG9yZGVyKGF0dGVuZGFuY2VfZGF0YSwgYyhvdGhlcl9jb2xzLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJob21lX2F0dGVuZGFuY2UiLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJwb3N0ZWFtX3R5cGVfaG9tZSIsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImludGVyYWN0X0h4QSIpKQ0KICAgIA0KICAgICMgUmVtb3ZlIG15X2lkIGlmIGl0IGV4aXN0cw0KICAgIGlmICgibXlfaWQiICVpbiUgbmFtZXMoYXR0ZW5kYW5jZV9kYXRhKSkgYXR0ZW5kYW5jZV9kYXRhJG15X2lkIDwtIE5VTEwNCiAgDQogICAgDQogICAgIyBSdW4gT0xTDQogICAgb2xzX21vZGVsIDwtIGxtKGF0dGVtcHQgfiAuLCBkYXRhID0gYXR0ZW5kYW5jZV9kYXRhKQ0KICAgIA0KICAgICMgR2V0IHJvYnVzdCBzdGF0aXN0aWNzDQogICAgcm9idXN0X3Rlc3QgPC0gY29lZnRlc3Qob2xzX21vZGVsLCB2Y292ID0gdmNvdkhDKG9sc19tb2RlbCwgdHlwZSA9ICJIQzAiKSkNCiAgICB0X3N0YXRzIDwtIHJvYnVzdF90ZXN0WywgInQgdmFsdWUiXQ0KICAgIHBfdmFsdWVzIDwtIHJvYnVzdF90ZXN0WywgIlByKD58dHwpIl0NCiAgICANCiAgICAjIEZ1bmN0aW9uIHRvIGFkZCBzaWduaWZpY2FuY2Ugc3RhcnMNCiAgICBnZXRfc3RhcnMgPC0gZnVuY3Rpb24ocCkgew0KICAgICAgICBpZiAocCA8PSAwLjAxKSByZXR1cm4oIioqKiIpDQogICAgICAgIGlmIChwIDw9IDAuMDUpIHJldHVybigiKioiKQ0KICAgICAgICBpZiAocCA8PSAwLjEpIHJldHVybigiKiIpDQogICAgICAgIGlmIChwIDw9IDAuMTUpIHJldHVybigiLiIpDQogICAgICAgIHJldHVybigiIikNCiAgICB9DQogICAgDQogICAgIyBQcmludCByZXN1bHRzDQogICAgbmFtZV93aWR0aCA8LSA2MA0KICAgIGNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICJWYXJpYWJsZSIsICJ0LXZhbHVlIiwgInAtdmFsdWUiLCAic2lnIikpDQogICAgY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIi0tLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLSIpKQ0KICAgIA0KICAgIGZvciAoaSBpbiAxOmxlbmd0aCh0X3N0YXRzKSkgew0KICAgICAgICB2YXJfbmFtZSA8LSByb3duYW1lcyhyb2J1c3RfdGVzdClbaV0NCiAgICAgICAgaWYgKG5jaGFyKHZhcl9uYW1lKSA+IG5hbWVfd2lkdGgpIHsNCiAgICAgICAgICAgIHZhcl9uYW1lIDwtIHBhc3RlMChzdWJzdHIodmFyX25hbWUsIDEsIG5hbWVfd2lkdGgtMyksICIuLi4iKQ0KICAgICAgICB9DQogICAgICAgIGNhdChzcHJpbnRmKCIlLSpzICAlMTAuNGYgICUxMC40ZiAgJTRzXG4iLCANCiAgICAgICAgICAgICAgICAgICAgbmFtZV93aWR0aCwgdmFyX25hbWUsIA0KICAgICAgICAgICAgICAgICAgICB0X3N0YXRzW2ldLCBwX3ZhbHVlc1tpXSwNCiAgICAgICAgICAgICAgICAgICAgZ2V0X3N0YXJzKHBfdmFsdWVzW2ldKSkpDQogICAgfQ0KICAgIGNhdCgiXG5TaWduaWZpY2FuY2UgY29kZXM6IDAgJyoqKicgMC4wMSAnKionIDAuMDUgJyonIDAuMSAnLicgMC4xNVxuIikNCiAgICANCiAgICAjIFJldHVybiBrZXkgc3RhdGlzdGljcyBmb3IgcG90ZW50aWFsIGZ1cnRoZXIgYW5hbHlzaXMNCiAgICByZXR1cm4obGlzdCgNCiAgICAgICAgeWVhciA9IHllYXIsDQogICAgICAgIG1vZGVsID0gb2xzX21vZGVsLA0KICAgICAgICByb2J1c3RfdGVzdCA9IHJvYnVzdF90ZXN0DQogICAgKSkNCn0NCmBgYA0KDQpgYGB7cn0NCiMgWWVhcnMgdG8gYW5hbHl6ZQ0KeWVhcnMgPC0gYygyMDE3LCAyMDE4LCAyMDE5LCAyMDIxLCAyMDIyLCAyMDIzKQ0KIyBTdG9yZSByZXN1bHRzIGZvciBhbGwgeWVhcnMNCnJlc3VsdHNfbGlzdF92MSA8LSBsaXN0KCkNCiMgUnVuIGFuYWx5c2lzIGZvciBlYWNoIHllYXIgdXNpbmcgVmVyc2lvbiAxDQpmb3IgKHllYXIgaW4geWVhcnMpIHsNCiAgICBmaWxlX3BhdGggPC0gc3ByaW50ZigicHJlZGljdF9hdHRlbmRhbmNlXyVzX3ZzXzIwMjAuY3N2Lmd6IiwgeWVhcikNCiAgICBpZiAoZmlsZS5leGlzdHMoZmlsZV9wYXRoKSkgew0KICAgICAgICByZXN1bHRzX2xpc3RfdjFbW2FzLmNoYXJhY3Rlcih5ZWFyKV1dIDwtIHJ1bl9hdHRlbmRhbmNlX2FuYWx5c2lzX3YxKGZpbGVfcGF0aCwgeWVhcikNCiAgICB9IGVsc2Ugew0KICAgICAgICBjYXQoc3ByaW50ZigiXG5XYXJuaW5nOiBGaWxlIGZvciB5ZWFyICVzIG5vdCBmb3VuZFxuIiwgeWVhcikpDQogICAgfQ0KfQ0KYGBgDQoNCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("attendance_binary.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

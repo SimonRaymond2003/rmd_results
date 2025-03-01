@@ -1,0 +1,306 @@
+---
+title: "Support for the Kicker Exogenous Aurgument"
+output: html_document
+date: "2025-03-01"
+---
+
+```{r}
+library(data.table)
+library(lmtest)
+library(sandwich)
+library(car)
+library(caret)
+
+# Variables to track across models - using only 12w versions
+tracked_vars <- c(
+  "p_player_26_punting_grades_grades_punter_12w",
+  "k_player_25_field_goals_grades_grades_fgep_kicker_12w",
+  "score_diff"
+)
+
+# Create a data frame to track significance across models
+significance_tracker <- data.frame(
+  yardline_range = character(),
+  var_name = character(),
+  estimate = numeric(),
+  t_value = numeric(),
+  p_value = numeric(),
+  significance = character(),
+  stringsAsFactors = FALSE
+)
+
+# Function to get significance symbols
+get_stars <- function(p) {
+  if (p <= 0.01) return("***")
+  if (p <= 0.05) return("**") 
+  if (p <= 0.1) return("*")
+  if (p <= 0.15) return(".")
+  return("")
+}
+
+# Function to process one dataset and run OLS regression
+process_and_analyze <- function(file_path, range_name) {
+  cat("\n\n=======================================\n",
+      "ANALYZING YARDLINE RANGE:", range_name, 
+      "\n=======================================\n\n")
+  
+  # Read data
+  cat("Reading data from", file_path, "...\n")
+  ctd1 <- fread(file_path)
+  cat("Dataset dimensions:", nrow(ctd1), "rows,", ncol(ctd1), "columns\n")
+  
+  # Basic data cleaning
+  # Remove my_id if it exists
+  if("my_id" %in% names(ctd1)) {
+    ctd1[, my_id := NULL]
+  }
+  
+  # Remove any year2017_team_ARI columns if they exist
+  for(col in names(ctd1)) {
+    if(grepl("^year2017_team_", col)) {
+      ctd1[, (col) := NULL]
+    }
+  }
+  
+  # Make score_diff binary (1 if positive, 0 otherwise)
+  if("score_diff" %in% names(ctd1)) {
+    ctd1[, score_diff := as.integer(score_diff > 0)]
+  }
+  
+  # Remove 2w kicker and punter variables
+  cols_to_drop <- grep("_2w$", names(ctd1), value = TRUE)
+  if(length(cols_to_drop) > 0) {
+    ctd1[, (cols_to_drop) := NULL]
+    cat("Removed 2w variables:", paste(cols_to_drop, collapse=", "), "\n")
+  }
+  
+  # Keep only regular player columns (remove starter columns)
+  all_cols <- colnames(ctd1)
+  starter_pattern <- "^starter_"
+  starter_cols <- grep(starter_pattern, all_cols, value = TRUE)
+  
+  if(length(starter_cols) > 0) {
+    ctd1 <- ctd1[, setdiff(all_cols, starter_cols), with = FALSE]
+    cat("Removed", length(starter_cols), "starter columns\n")
+  }
+  
+  # Find and remove linear dependencies
+  cat("\nChecking for linear dependencies...\n")
+  tryCatch({
+    X <- model.matrix(~ . - conversion - 1, data = ctd1)  # -1 removes intercept
+    lin_combos <- findLinearCombos(X)
+    if (!is.null(lin_combos$remove)) {
+      cols_to_remove <- colnames(X)[lin_combos$remove]
+      cat("Removed columns:", paste(cols_to_remove, collapse=", "), "\n")
+      ctd1 <- ctd1[, setdiff(names(ctd1), cols_to_remove), with = FALSE]
+    } else {
+      cat("No linear dependencies found\n")
+    }
+  }, error = function(e) {
+    cat("Error checking for linear dependencies:", e$message, "\n")
+  })
+  
+  # Run OLS model
+  cat("\nRunning OLS regression model...\n")
+  tryCatch({
+    ols_model <- lm(conversion ~ ., data = ctd1)
+    
+    # Check for high multicollinearity
+    cat("\nChecking for multicollinearity...\n")
+    vifs <- vif(ols_model)
+    high_vifs <- vifs[vifs > 5]
+    
+    if(length(high_vifs) > 0) {
+      cat("\nVariables with VIF > 5:\n")
+      for(var_name in names(high_vifs)) {
+        cat(sprintf("%-50s  %7.2f\n", var_name, high_vifs[var_name]))
+      }
+    } else {
+      cat("\nNo variables with VIF > 5 found\n")
+    }
+    
+    # Get robust standard errors
+    robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
+    
+    # Print summary of the model
+    cat("\nModel Summary (with Robust Standard Errors):\n")
+    print(robust_test)
+    
+    # Model statistics
+    cat("\nModel Statistics:\n")
+    cat("R-squared:", round(summary(ols_model)$r.squared, 4), "\n")
+    cat("Adjusted R-squared:", round(summary(ols_model)$adj.r.squared, 4), "\n")
+    cat("F-statistic:", round(summary(ols_model)$fstatistic[1], 2), "on", 
+        summary(ols_model)$fstatistic[2], "and", summary(ols_model)$fstatistic[3], "DF\n")
+    
+    # Extract tracked variables and add to the tracker
+    for(var in tracked_vars) {
+      if(var %in% rownames(robust_test)) {
+        # Add to the tracker
+        significance_tracker <<- rbind(significance_tracker, data.frame(
+          yardline_range = range_name,
+          var_name = var,
+          estimate = robust_test[var, "Estimate"],
+          t_value = robust_test[var, "t value"],
+          p_value = robust_test[var, "Pr(>|t|)"],
+          significance = get_stars(robust_test[var, "Pr(>|t|)"]),
+          stringsAsFactors = FALSE
+        ))
+      } else {
+        cat("Note: Variable", var, "not found in the model\n")
+        # Add a row with NAs for missing variables
+        significance_tracker <<- rbind(significance_tracker, data.frame(
+          yardline_range = range_name,
+          var_name = var,
+          estimate = NA,
+          t_value = NA,
+          p_value = NA,
+          significance = "not in model",
+          stringsAsFactors = FALSE
+        ))
+      }
+    }
+    
+    # We've removed the Top 10 Influential Variables printout as requested
+    
+    return(ols_model)
+  }, error = function(e) {
+    cat("\nError running OLS:", e$message, "\n")
+    # Add rows to tracker for all tracked variables showing the error
+    for(var in tracked_vars) {
+      significance_tracker <<- rbind(significance_tracker, data.frame(
+        yardline_range = range_name,
+        var_name = var,
+        estimate = NA,
+        t_value = NA,
+        p_value = NA,
+        significance = "model error",
+        stringsAsFactors = FALSE
+      ))
+    }
+    return(NULL)
+  })
+}
+
+# List of yardline range files to process
+yardline_files <- c(
+  "ctd1_1to10.csv.gz",
+  "ctd1_11to20.csv.gz",
+  "ctd1_21to30.csv.gz",
+  "ctd1_31to40.csv.gz",
+  "ctd1_41to50.csv.gz",
+  "ctd1_51to60.csv.gz",
+  "ctd1_61to70.csv.gz",
+  "ctd1_71to80.csv.gz",
+  "ctd1_81to90.csv.gz",
+  "ctd1_91to100.csv.gz"
+)
+
+yardline_names <- c(
+  "Yardline 1-10 (Own)",
+  "Yardline 11-20",
+  "Yardline 21-30",
+  "Yardline 31-40",
+  "Yardline 41-50",
+  "Yardline 51-60 (Opp 40-49)",
+  "Yardline 61-70 (Opp 30-39)",
+  "Yardline 71-80 (Opp 20-29)",
+  "Yardline 81-90 (Opp 10-19)",
+  "Yardline 91-100 (Opp 0-9)"
+)
+
+# Create header
+cat("===========================================\n",
+    "THIRD DOWN ANALYSIS BY YARDLINE RANGES (OLS)\n",
+    "===========================================\n\n",
+    "Analysis Date: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n")
+
+# Process each file
+results_list <- list()
+
+for(i in 1:length(yardline_files)) {
+  cat("\nProcessing", yardline_names[i], "from", yardline_files[i], "...\n")
+  
+  if(file.exists(yardline_files[i])) {
+    results_list[[i]] <- process_and_analyze(yardline_files[i], yardline_names[i])
+  } else {
+    cat("ERROR: File", yardline_files[i], "does not exist. Skipping.\n")
+    # Add entries to the significance tracker for missing files
+    for(var in tracked_vars) {
+      significance_tracker <- rbind(significance_tracker, data.frame(
+        yardline_range = yardline_names[i],
+        var_name = var,
+        estimate = NA,
+        t_value = NA,
+        p_value = NA,
+        significance = "file missing",
+        stringsAsFactors = FALSE
+      ))
+    }
+  }
+}
+
+# Format the significance summary
+cat("\n\n=============================================\n",
+    "SIGNIFICANCE SUMMARY FOR TRACKED VARIABLES\n",
+    "=============================================\n\n")
+
+# For each tracked variable, create a table showing significance across all yardline ranges
+for(var in tracked_vars) {
+  cat("\nVariable:", var, "\n")
+  cat("--------------------------------------------------------------\n")
+  cat("Yardline Range            | Estimate   | t-value    | p-value    | Significance\n")
+  cat("--------------------------|------------|------------|------------|--------------\n")
+  
+  var_results <- significance_tracker[significance_tracker$var_name == var,]
+  
+  for(i in 1:length(yardline_names)) {
+    range_name <- yardline_names[i]
+    row <- var_results[var_results$yardline_range == range_name,]
+    
+    if(nrow(row) > 0) {
+      est <- ifelse(is.na(row$estimate), "N/A", sprintf("%.4f", row$estimate))
+      t_val <- ifelse(is.na(row$t_value), "N/A", sprintf("%.4f", row$t_value))
+      p_val <- ifelse(is.na(row$p_value), "N/A", sprintf("%.4f", row$p_value))
+      sig <- row$significance
+    } else {
+      est <- "N/A"
+      t_val <- "N/A"
+      p_val <- "N/A"
+      sig <- "not processed"
+    }
+    
+    cat(sprintf("%-26s | %-10s | %-10s | %-10s | %s\n",
+                range_name, est, t_val, p_val, sig))
+  }
+}
+
+# Regular model summary table
+cat("\n\n=============================================\n",
+    "SUMMARY OF MODEL FIT ACROSS ALL YARDLINE RANGES\n",
+    "=============================================\n\n")
+
+cat("Yardline Range            | R-squared  | Adj R-squared |\n")
+cat("--------------------------|------------|---------------|\n")
+
+for(i in 1:length(yardline_files)) {
+  if(!is.null(results_list[[i]])) {
+    r2 <- round(summary(results_list[[i]])$r.squared, 4)
+    adj_r2 <- round(summary(results_list[[i]])$adj.r.squared, 4)
+    
+    cat(sprintf("%-26s | %-10s | %-13s |\n",
+                yardline_names[i], r2, adj_r2))
+  } else {
+    cat(sprintf("%-26s | %-10s | %-13s |\n",
+                yardline_names[i], "Error", "Error"))
+  }
+}
+
+cat("\nAnalysis complete!\n")
+```
+
+
+
+
+
+
