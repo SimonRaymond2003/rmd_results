@@ -6,7 +6,7 @@ output: html_document
 
 This section is for notes. The interpretation will be as I go but I want this to be a general outline.
 
-PLAYERS ARE PUT INTO THEIR SLOTS BASED ON SNAP COUNT. THE STARTERS ARE DECIDED ON SNAP COUNT OF THE LAST GAME AND ONLY THE LAST GAME.
+PLAYERS ARE PUT INTO THEIR SLOTS BASED ON DEPTH CHART DATA
 
 
 * **QB (Slots 1-3):** Quarterbacks. Most plays will only have one QB on the field (slot 1)
