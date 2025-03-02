@@ -263,15 +263,5 @@ get_top_coefficients <- function(model_results, n = 10) {
 # Display top coefficients for each model
 cat("\n\nTop 10 Influential Variables by Absolute Coefficient Value\n")
 
-cat("\nOLS Regular Players:\n")
-print(get_top_coefficients(robust_regular_test))
 
-cat("\nOLS Starter Players:\n")
-print(get_top_coefficients(robust_starter_test))
-
-cat("\nProbit Regular Players:\n")
-print(get_top_coefficients(robust_probit_regular))
-
-cat("\nProbit Starter Players:\n")
-print(get_top_coefficients(robust_probit_starter))
 ```

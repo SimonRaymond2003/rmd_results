@@ -6,12 +6,6 @@ output: html_document
 
 This section is for notes. The interpretation will be as I go but I want this to be a general outline.
 
-The key points about how down4_pct is calculated:\
-
-- It only includes actual running and passing plays (excludes punts, field goals, etc.)\
-- Counts the cumulative number of run plays on 4th down\
-- The calculation is cumulative, meaning it includes all previous weeks of the season
-
 PLAYERS ARE PUT INTO THEIR SLOTS BASED ON SNAP COUNT. THE STARTERS ARE DECIDED ON SNAP COUNT OF THE LAST GAME AND ONLY THE LAST GAME.
 
 

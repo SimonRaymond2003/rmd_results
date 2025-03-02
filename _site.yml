@@ -19,14 +19,18 @@ navbar:
       href: robustness_checks.html
     - text: "Writing"
       href: Writing.html
-    - text: "Proof of exogeniety"
+    - text: "Proof of Exogeniety"
       href: kicker_exogenous.html
       
 output:
   html_document:
+    theme: flatly
     css: styles.css
     toc: true
-    toc_float: true
+    toc_float: 
+      collapsed: false
+      smooth_scroll: true
     code_folding: hide
     code_download: true
     df_print: paged
+    highlight: tango
