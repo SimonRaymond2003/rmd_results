@@ -14,11 +14,12 @@ ctd1$my_id <- NULL
 ctd1[, year2017_team_ARI := NULL]
 ```
 
-```{r}
-# make score_diff be binary 1 if positive, 0 if negative or = 0
-ctd1[, score_diff := as.integer(score_diff > 0)]
-```
 
+kill the score dif ones now just to test
+```{r}
+# ctd1$winning_score_diff <- NULL
+# ctd1$losing_score_diff <- NULL
+```
 
 
 ```{r}

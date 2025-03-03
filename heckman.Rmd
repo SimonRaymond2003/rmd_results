@@ -13,9 +13,7 @@ outcome_data <- fread("predict_outcome.csv.gz")
 select_data <- fread("predict_select.csv.gz")
 ```
 
-```{r}
-select_data[, score_diff := as.integer(score_diff > 0)]
-```
+
 
 
 ```{r}

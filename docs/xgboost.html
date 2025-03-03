@@ -661,12 +661,10 @@ div.tocify {
 <span id="cb18-41"><a href="#cb18-41" tabindex="-1"></a>    rf_data[, conversion <span class="sc">:=</span> <span class="fu">as.factor</span>(conversion)]</span>
 <span id="cb18-42"><a href="#cb18-42" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## 
-## Current AUC: 0.6141 with 246 variables
-## Current AUC: 0.6247 with 133 variables
-## Current AUC: 0.6366 with 84 variables
-## Current AUC: 0.6432 with 62 variables
-## Current AUC: 0.6463 with 46 variables
-## Current AUC: 0.6417 with 38 variables
+## Current AUC: 0.6171 with 246 variables
+## Current AUC: 0.6343 with 149 variables
+## Current AUC: 0.6432 with 103 variables
+## Current AUC: 0.6349 with 82 variables
 ## AUC dropped, reverting to previous state</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co">#kill my id</span></span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>outcome_data<span class="sc">$</span>my_id <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
@@ -764,26 +762,26 @@ div.tocify {
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean AUC: 0.6820648</code></pre>
+<pre><code>## Mean AUC: 0.6625032</code></pre>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD AUC:&quot;</span>, <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD AUC: 0.01365833</code></pre>
+<pre><code>## SD AUC: 0.01227024</code></pre>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean Youden&#39;s J:&quot;</span>, <span class="fu">mean</span>(test_j_stats), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean Youden&#39;s J: 0.2851201</code></pre>
+<pre><code>## Mean Youden&#39;s J: 0.2511254</code></pre>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD Youden&#39;s J:&quot;</span>, <span class="fu">sd</span>(test_j_stats), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD Youden&#39;s J: 0.02387767</code></pre>
+<pre><code>## SD Youden&#39;s J: 0.02013834</code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean Optimal Threshold:&quot;</span>, <span class="fu">mean</span>(all_thresholds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean Optimal Threshold: 0.5205105</code></pre>
+<pre><code>## Mean Optimal Threshold: 0.5219686</code></pre>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;95% CI for AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), </span>
 <span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>    <span class="st">&quot;to&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## 95% CI for AUC: 0.6552945 to 0.7088351</code></pre>
+<pre><code>## 95% CI for AUC: 0.6384535 to 0.6865529</code></pre>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Average Confusion Matrix:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Average Confusion Matrix:</code></pre>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">print</span>(avg_cm)</span></code></pre></div>
 <pre><code>##         
 ##          Pred 1 Pred 0
-##   True 1 409.46 218.55
-##   True 0 212.03 365.96</code></pre>
+##   True 1 398.53 231.38
+##   True 0 219.63 356.46</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># Plotting AUC distribution - removed type=&quot;o&quot; to not connect dots</span></span>
 <span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="fu">plot</span>(test_aucs, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">pch=</span><span class="dv">20</span>,</span>
 <span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;AUC Test Distribution&quot;</span>,</span>
@@ -937,10 +935,10 @@ div.tocify {
 <pre><code>## 
 ## Best parameters:</code></pre>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="fu">print</span>(best_params)</span></code></pre></div>
-<pre><code>##      eta max_depth min_child_weight subsample colsample_bytree lambda alpha
-## 11 0.011         5                1         1                1      1     0
-##    gamma nrounds
-## 11     0     250</code></pre>
+<pre><code>##     eta max_depth min_child_weight subsample colsample_bytree lambda alpha
+## 9 0.021         5                1         1                1      1     0
+##   gamma nrounds
+## 9     0     200</code></pre>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="co"># Run 100 tests with best parameters</span></span>
 <span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running 100 test iterations with best parameters...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
@@ -1012,26 +1010,26 @@ div.tocify {
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean AUC: 0.6719863</code></pre>
+<pre><code>## Mean AUC: 0.6669617</code></pre>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD AUC:&quot;</span>, <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD AUC: 0.009754323</code></pre>
+<pre><code>## SD AUC: 0.009620625</code></pre>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean Youden&#39;s J:&quot;</span>, <span class="fu">mean</span>(test_j_stats), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean Youden&#39;s J: 0.2691155</code></pre>
+<pre><code>## Mean Youden&#39;s J: 0.2562698</code></pre>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD Youden&#39;s J:&quot;</span>, <span class="fu">sd</span>(test_j_stats), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD Youden&#39;s J: 0.01939396</code></pre>
+<pre><code>## SD Youden&#39;s J: 0.01886438</code></pre>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean Optimal Threshold:&quot;</span>, <span class="fu">mean</span>(all_thresholds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean Optimal Threshold: 0.521184</code></pre>
+<pre><code>## Mean Optimal Threshold: 0.5247712</code></pre>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;95% CI for AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), </span>
 <span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a>    <span class="st">&quot;to&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## 95% CI for AUC: 0.6528678 to 0.6911048</code></pre>
+<pre><code>## 95% CI for AUC: 0.6481052 to 0.6858181</code></pre>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Average Confusion Matrix:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Average Confusion Matrix:</code></pre>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="fu">print</span>(avg_cm)</span></code></pre></div>
 <pre><code>##         
 ##          Pred 1 Pred 0
-##   True 1 508.26 260.88
-##   True 0 278.58 432.84</code></pre>
+##   True 1 500.80 274.24
+##   True 0 276.14 432.46</code></pre>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a><span class="co"># Plotting AUC distribution - removed type=&quot;o&quot; to not connect dots</span></span>
 <span id="cb69-2"><a href="#cb69-2" tabindex="-1"></a><span class="fu">plot</span>(test_aucs, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">pch=</span><span class="dv">20</span>,</span>
 <span id="cb69-3"><a href="#cb69-3" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;AUC Test Distribution&quot;</span>,</span>
@@ -1171,8 +1169,8 @@ div.tocify {
 <pre><code>## 
 ## Best parameters:</code></pre>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a><span class="fu">print</span>(best_params)</span></code></pre></div>
-<pre><code>##      eta nrounds
-## 14 0.011     250</code></pre>
+<pre><code>##     eta nrounds
+## 9 0.021     150</code></pre>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a><span class="co"># Run X tests with best parameters</span></span>
 <span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running X test iterations with best parameters...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
@@ -1244,26 +1242,26 @@ div.tocify {
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean AUC: 0.680117</code></pre>
+<pre><code>## Mean AUC: 0.6689536</code></pre>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD AUC:&quot;</span>, <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD AUC: 0.01082739</code></pre>
+<pre><code>## SD AUC: 0.01075043</code></pre>
 <div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean Youden&#39;s J:&quot;</span>, <span class="fu">mean</span>(test_j_stats), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean Youden&#39;s J: 0.2804939</code></pre>
+<pre><code>## Mean Youden&#39;s J: 0.2593005</code></pre>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD Youden&#39;s J:&quot;</span>, <span class="fu">sd</span>(test_j_stats), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD Youden&#39;s J: 0.01837918</code></pre>
+<pre><code>## SD Youden&#39;s J: 0.01935044</code></pre>
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean Optimal Threshold:&quot;</span>, <span class="fu">mean</span>(all_thresholds), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean Optimal Threshold: 0.5154228</code></pre>
+<pre><code>## Mean Optimal Threshold: 0.5215058</code></pre>
 <div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;95% CI for AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), </span>
 <span id="cb91-2"><a href="#cb91-2" tabindex="-1"></a>    <span class="st">&quot;to&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## 95% CI for AUC: 0.6588953 to 0.7013387</code></pre>
+<pre><code>## 95% CI for AUC: 0.6478828 to 0.6900244</code></pre>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Average Confusion Matrix:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Average Confusion Matrix:</code></pre>
 <div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" tabindex="-1"></a><span class="fu">print</span>(avg_cm)</span></code></pre></div>
 <pre><code>##         
 ##          Pred 1 Pred 0
-##   True 1 527.32 241.22
-##   True 0 288.72 422.70</code></pre>
+##   True 1 504.20 270.38
+##   True 0 277.38 430.40</code></pre>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" tabindex="-1"></a><span class="co"># Plotting AUC distribution - removed type=&quot;o&quot; to not connect dots</span></span>
 <span id="cb97-2"><a href="#cb97-2" tabindex="-1"></a><span class="fu">plot</span>(test_aucs, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">pch=</span><span class="dv">20</span>,</span>
 <span id="cb97-3"><a href="#cb97-3" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;AUC Test Distribution&quot;</span>,</span>

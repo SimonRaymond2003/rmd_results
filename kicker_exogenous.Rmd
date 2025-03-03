@@ -14,8 +14,7 @@ library(caret)
 # Variables to track across models - using only 12w versions
 tracked_vars <- c(
   "p_player_26_punting_grades_grades_punter_12w",
-  "k_player_25_field_goals_grades_grades_fgep_kicker_12w",
-  "score_diff"
+  "k_player_25_field_goals_grades_grades_fgep_kicker_12w"
 )
 
 # Create a data frame to track significance across models
@@ -62,10 +61,6 @@ process_and_analyze <- function(file_path, range_name) {
     }
   }
   
-  # Make score_diff binary (1 if positive, 0 otherwise)
-  if("score_diff" %in% names(ctd1)) {
-    ctd1[, score_diff := as.integer(score_diff > 0)]
-  }
   
   # Remove 2w kicker and punter variables
   cols_to_drop <- grep("_2w$", names(ctd1), value = TRUE)
