@@ -15,11 +15,16 @@ ctd1[, year2017_team_ARI := NULL]
 ```
 
 
-kill the score dif ones now just to test
 ```{r}
 # ctd1$winning_score_diff <- NULL
 # ctd1$losing_score_diff <- NULL
 ```
+
+```{r}
+ # makew losing_score_diff absolute value
+#ctd1$losing_score_diff <- abs(ctd1$losing_score_diff)
+```
+
 
 
 ```{r}
