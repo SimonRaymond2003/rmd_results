@@ -48,7 +48,6 @@ grid <- expand.grid(
   nrounds = seq(100, 250, by = 50)
 )
 
-
 # Sample grid points
 conf_lev <- .95
 num_max <- 5
@@ -122,7 +121,7 @@ best_params_list$objective <- "binary:logistic"
 best_params_list$scale_pos_weight <- scale_pos_weight
 best_params_list$nthread <- nc
 
-for(i in 1:20) {
+for(i in 1:100) {
   # Create test split
   idx <- unique(sample(nrow(xs), nrow(xs), T))
   train_x <- xs[idx, ]

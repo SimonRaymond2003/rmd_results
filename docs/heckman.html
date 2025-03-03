@@ -519,68 +519,67 @@ div.tocify {
 <span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>  <span class="at">nrounds =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">250</span>, <span class="at">by =</span> <span class="dv">50</span>)</span>
 <span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>)</span>
 <span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a></span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co"># Sample grid points</span></span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>conf_lev <span class="ot">&lt;-</span> .<span class="dv">95</span></span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>num_max <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>conf_lev)<span class="sc">/</span><span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>num_max<span class="sc">/</span><span class="fu">nrow</span>(grid)))</span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(grid), n, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>rgrid <span class="ot">&lt;-</span> grid[ind, ]</span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co"># Set up parallel processing</span></span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a></span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co"># Calculate scale_pos_weight for imbalanced dataset</span></span>
-<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>scale_pos_weight <span class="ot">&lt;-</span> <span class="fu">sum</span>(y <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">sum</span>(y <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a></span>
-<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co"># Validation phase</span></span>
-<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#cat(&quot;\nPhase 1: Validation Phase\n&quot;)</span></span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>n_validations <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>validation_results <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">nrow</span>(rgrid), <span class="at">ncol =</span> n_validations)</span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a></span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(rgrid)) {</span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>  <span class="co">#cat(&quot;\nTesting parameter set&quot;, j, &quot;of&quot;, nrow(rgrid), &quot;\n&quot;)</span></span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>  </span>
-<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_validations) {</span>
-<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>    <span class="co">#cat(&quot;\nValidation iteration&quot;, i, &quot;of&quot;, n_validations, &quot;\n&quot;)             </span></span>
-<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>    <span class="co"># Create validation split</span></span>
-<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">sample</span>(<span class="fu">nrow</span>(xs), <span class="fu">nrow</span>(xs), <span class="cn">TRUE</span>))</span>
-<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>    train_x <span class="ot">&lt;-</span> xs[idx, ]</span>
-<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>    train_y <span class="ot">&lt;-</span> y[idx]</span>
-<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>    val_x <span class="ot">&lt;-</span> xs[<span class="sc">-</span>idx, ]</span>
-<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>    val_y <span class="ot">&lt;-</span> y[<span class="sc">-</span>idx]</span>
-<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>    </span>
-<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>    prm <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>      <span class="at">booster =</span> <span class="st">&quot;gbtree&quot;</span>,</span>
-<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>      <span class="at">objective =</span> <span class="st">&quot;binary:logistic&quot;</span>,</span>
-<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a>      <span class="at">max_depth =</span> rgrid[j, <span class="st">&quot;max_depth&quot;</span>],</span>
-<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a>      <span class="at">eta =</span> rgrid[j, <span class="st">&quot;eta&quot;</span>],</span>
-<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a>      <span class="at">subsample =</span> rgrid[j, <span class="st">&quot;subsample&quot;</span>],</span>
-<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a>      <span class="at">colsample_bytree =</span> rgrid[j, <span class="st">&quot;colsample_bytree&quot;</span>],</span>
-<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a>      <span class="at">gamma =</span> rgrid[j, <span class="st">&quot;gamma&quot;</span>],</span>
-<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a>      <span class="at">min_child_weight =</span> rgrid[j, <span class="st">&quot;min_child_weight&quot;</span>],</span>
-<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a>      <span class="at">alpha =</span> rgrid[j, <span class="st">&quot;alpha&quot;</span>],</span>
-<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a>      <span class="at">lambda =</span> rgrid[j, <span class="st">&quot;lambda&quot;</span>],</span>
-<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a>      <span class="at">scale_pos_weight =</span> scale_pos_weight,</span>
-<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a>      <span class="at">nthread =</span> nc</span>
-<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a>    )</span>
-<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a>    </span>
-<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a>    dm_train <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> train_x, <span class="at">label =</span> train_y)</span>
-<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a>    mdl <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(</span>
-<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a>      <span class="at">params =</span> prm,</span>
-<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a>      <span class="at">data =</span> dm_train,</span>
-<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a>      <span class="at">nrounds =</span> rgrid[j, <span class="st">&quot;nrounds&quot;</span>],</span>
-<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a>      <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a>    )</span>
-<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a>    </span>
-<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">predict</span>(mdl, <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> val_x))</span>
-<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a>    pred <span class="ot">&lt;-</span> <span class="fu">prediction</span>(p, val_y)</span>
-<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a>    validation_results[j, i] <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="st">&quot;auc&quot;</span>)<span class="sc">@</span>y.values[[<span class="dv">1</span>]]</span>
-<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a>  }</span>
-<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a>}</span>
-<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a></span>
-<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a><span class="co"># Run 100 tests with best parameters</span></span>
-<span id="cb4-87"><a href="#cb4-87" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running X test iterations with best parameters...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co"># Sample grid points</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>conf_lev <span class="ot">&lt;-</span> .<span class="dv">95</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>num_max <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>conf_lev)<span class="sc">/</span><span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>num_max<span class="sc">/</span><span class="fu">nrow</span>(grid)))</span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(grid), n, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>rgrid <span class="ot">&lt;-</span> grid[ind, ]</span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co"># Set up parallel processing</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co"># Calculate scale_pos_weight for imbalanced dataset</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>scale_pos_weight <span class="ot">&lt;-</span> <span class="fu">sum</span>(y <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">sum</span>(y <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co"># Validation phase</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#cat(&quot;\nPhase 1: Validation Phase\n&quot;)</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a>n_validations <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>validation_results <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">nrow</span>(rgrid), <span class="at">ncol =</span> n_validations)</span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(rgrid)) {</span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>  <span class="co">#cat(&quot;\nTesting parameter set&quot;, j, &quot;of&quot;, nrow(rgrid), &quot;\n&quot;)</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>  </span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_validations) {</span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>    <span class="co">#cat(&quot;\nValidation iteration&quot;, i, &quot;of&quot;, n_validations, &quot;\n&quot;)             </span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>    <span class="co"># Create validation split</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">sample</span>(<span class="fu">nrow</span>(xs), <span class="fu">nrow</span>(xs), <span class="cn">TRUE</span>))</span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>    train_x <span class="ot">&lt;-</span> xs[idx, ]</span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>    train_y <span class="ot">&lt;-</span> y[idx]</span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>    val_x <span class="ot">&lt;-</span> xs[<span class="sc">-</span>idx, ]</span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>    val_y <span class="ot">&lt;-</span> y[<span class="sc">-</span>idx]</span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>    </span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>    prm <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>      <span class="at">booster =</span> <span class="st">&quot;gbtree&quot;</span>,</span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>      <span class="at">objective =</span> <span class="st">&quot;binary:logistic&quot;</span>,</span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>      <span class="at">max_depth =</span> rgrid[j, <span class="st">&quot;max_depth&quot;</span>],</span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a>      <span class="at">eta =</span> rgrid[j, <span class="st">&quot;eta&quot;</span>],</span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a>      <span class="at">subsample =</span> rgrid[j, <span class="st">&quot;subsample&quot;</span>],</span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a>      <span class="at">colsample_bytree =</span> rgrid[j, <span class="st">&quot;colsample_bytree&quot;</span>],</span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a>      <span class="at">gamma =</span> rgrid[j, <span class="st">&quot;gamma&quot;</span>],</span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a>      <span class="at">min_child_weight =</span> rgrid[j, <span class="st">&quot;min_child_weight&quot;</span>],</span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a>      <span class="at">alpha =</span> rgrid[j, <span class="st">&quot;alpha&quot;</span>],</span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a>      <span class="at">lambda =</span> rgrid[j, <span class="st">&quot;lambda&quot;</span>],</span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a>      <span class="at">scale_pos_weight =</span> scale_pos_weight,</span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a>      <span class="at">nthread =</span> nc</span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a>    )</span>
+<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a>    </span>
+<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a>    dm_train <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> train_x, <span class="at">label =</span> train_y)</span>
+<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a>    mdl <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(</span>
+<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a>      <span class="at">params =</span> prm,</span>
+<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a>      <span class="at">data =</span> dm_train,</span>
+<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a>      <span class="at">nrounds =</span> rgrid[j, <span class="st">&quot;nrounds&quot;</span>],</span>
+<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a>      <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a>    )</span>
+<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a>    </span>
+<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">predict</span>(mdl, <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> val_x))</span>
+<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a>    pred <span class="ot">&lt;-</span> <span class="fu">prediction</span>(p, val_y)</span>
+<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a>    validation_results[j, i] <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="st">&quot;auc&quot;</span>)<span class="sc">@</span>y.values[[<span class="dv">1</span>]]</span>
+<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a>  }</span>
+<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a>}</span>
+<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a></span>
+<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a><span class="co"># Run 100 tests with best parameters</span></span>
+<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running X test iterations with best parameters...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Running X test iterations with best parameters...</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>test_aucs <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
@@ -595,7 +594,7 @@ div.tocify {
 <span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>best_params_list<span class="sc">$</span>scale_pos_weight <span class="ot">&lt;-</span> scale_pos_weight</span>
 <span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>best_params_list<span class="sc">$</span>nthread <span class="ot">&lt;-</span> nc</span>
 <span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) {</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
 <span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="co"># Create test split</span></span>
 <span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">sample</span>(<span class="fu">nrow</span>(xs), <span class="fu">nrow</span>(xs), T))</span>
 <span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  train_x <span class="ot">&lt;-</span> xs[idx, ]</span>
@@ -622,12 +621,12 @@ div.tocify {
 <pre><code>## 
 ## Test Results over 100 iterations:</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Mean AUC:&quot;</span>, <span class="fu">mean</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Mean AUC: 0.8870486</code></pre>
+<pre><code>## Mean AUC: 0.8833657</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;SD AUC:&quot;</span>, <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## SD AUC: 0.00454176</code></pre>
+<pre><code>## SD AUC: 0.003860322</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;95% CI:&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), </span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>    <span class="st">&quot;to&quot;</span>, <span class="fu">mean</span>(test_aucs) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sd</span>(test_aucs), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## 95% CI: 0.8781467 to 0.8959504</code></pre>
+<pre><code>## 95% CI: 0.8757995 to 0.8909319</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Plotting AUC distribution</span></span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">plot</span>(test_aucs, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">pch=</span><span class="dv">20</span>,</span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;AUC Test Distribution&quot;</span>,</span>
@@ -806,369 +805,430 @@ div.tocify {
 ## 
 ## Variable                                                         t-value     p-value   sig
 ## ---------                                                        -------     -------  ----
-## (Intercept)                                                       3.6637      0.0003   ***
-## ydstogo                                                         -12.7550      0.0000   ***
-## posteam_timeouts_remaining                                        1.0122      0.3115      
-## defteam_timeouts_remaining                                        0.9798      0.3272      
-## rush_attempt                                                      7.2807      0.0000   ***
-## week                                                              0.4160      0.6774      
-## temp                                                             -1.1069      0.2684      
-## wind                                                              1.0379      0.2994      
-## vegas_wp                                                          0.8948      0.3710      
-## spread_line                                                      -0.2674      0.7891      
-## total_line                                                        1.6574      0.0975     *
-## prep_days                                                         1.0978      0.2724      
-## overall_win_pct                                                   0.0560      0.9553      
-## team_win_pct                                                      1.7416      0.0817     *
-## prev_win_pct                                                     -2.5353      0.0113    **
-## prev_shotgun_rate                                                 0.2828      0.7773      
-## prev_singleback_rate                                              0.4382      0.6612      
-## prev_empty_rate                                                   0.8100      0.4180      
-## prev_iform_rate                                                   0.2984      0.7654      
-## prev_shotgun_success                                              0.3462      0.7292      
-## prev_singleback_success                                           0.3188      0.7499      
-## prev_empty_success                                               -0.1310      0.8958      
-## prev_iform_success                                                2.6988      0.0070   ***
-## prev_stop_rate_run                                               -0.2619      0.7934      
-## prev_stop_rate_pass                                              -3.6322      0.0003   ***
-## shotgun_rate                                                      1.2456      0.2130      
-## singleback_rate                                                   0.6608      0.5088      
-## empty_rate                                                        0.0746      0.9405      
-## iform_rate                                                       -1.7423      0.0815     *
-## shotgun_success                                                  -2.1030      0.0355    **
-## singleback_success                                               -0.6908      0.4897      
-## empty_success                                                    -0.7177      0.4730      
-## iform_success                                                    -1.5711      0.1162     .
-## def_stop_rate_run                                                 1.8440      0.0653     *
-## def_stop_rate_pass                                               -1.2857      0.1986      
-## avg_pass_rushers                                                 -0.9644      0.3349      
-## avg_box_defenders                                                -0.3839      0.7011      
-## cover0_rate                                                      -0.2908      0.7712      
-## cover1_rate                                                      -0.4813      0.6303      
-## cover2_rate                                                      -0.5194      0.6035      
-## cover3_rate                                                       1.1727      0.2410      
-## cover4_rate                                                       0.8493      0.3958      
-## cover6_rate                                                      -0.7135      0.4756      
-## two_man_rate                                                      1.6072      0.1081     .
-## prevent_rate                                                      2.5191      0.0118    **
-## roof_outdoors                                                    -0.5243      0.6001      
-## posteam_type_home                                                -1.3927      0.1638      
-## offense_formation_EMPTY                                           0.3204      0.7487      
-## offense_formation_SHOTGUN                                        -0.1961      0.8445      
-## offense_formation_SINGLEBACK                                     -0.5856      0.5582      
-## offense_formation_I_FORM                                         -0.5737      0.5662      
-## offense_player_1_passing_depth_short_grades_pass_12w              2.0790      0.0377    **
-## offense_player_1_passing_depth_medium_grades_pass_12w            -0.1453      0.8845      
-## offense_player_1_passing_depth_deep_grades_pass_12w              -1.2195      0.2227      
-## offense_player_1_rushing_grades_grades_run_12w                   -0.0374      0.9702      
-## offense_player_4_rushing_grades_first_downs_12w                   1.4472      0.1479     .
-## offense_player_4_pass_blocking_true_pass_set_grades_pass_...      0.5291      0.5968      
-## offense_player_8_receiving_depth_medium_yprr_12w                 -1.3783      0.1682      
-## offense_player_8_blocking_grades_block_percent_12w               -1.0213      0.3072      
-## offense_player_8_receiving_grades_first_downs_12w                 0.6131      0.5398      
-## offense_player_9_receiving_depth_medium_yprr_12w                 -1.8685      0.0618     *
-## offense_player_9_blocking_grades_block_percent_12w               -0.0894      0.9288      
-## offense_player_9_receiving_grades_first_downs_12w                 0.3398      0.7340      
-## offense_player_10_receiving_depth_medium_yprr_12w                -0.4871      0.6262      
-## offense_player_10_blocking_grades_block_percent_12w               0.1273      0.8987      
-## offense_player_10_receiving_grades_first_downs_12w                2.3821      0.0173    **
-## offense_player_14_receiving_grades_first_downs_12w                0.6314      0.5278      
-## offense_player_14_blocking_grades_pass_block_percent_12w          0.9740      0.3301      
-## offense_player_17_blocking_grades_grades_offense_12w             -0.3007      0.7636      
-## offense_player_18_blocking_grades_grades_offense_12w             -1.0119      0.3116      
-## offense_player_19_blocking_grades_grades_offense_12w              0.7689      0.4420      
-## offense_player_20_blocking_grades_grades_offense_12w             -0.3541      0.7233      
-## offense_player_21_blocking_grades_grades_offense_12w              0.0087      0.9930      
-## defense_player_1_pass_rushing_productivity_hurries_12w           -1.6798      0.0931     *
-## defense_player_1_run_defense_grades_stops_12w                    -0.7211      0.4709      
-## defense_player_2_pass_rushing_productivity_hurries_12w           -0.8922      0.3723      
-## defense_player_2_run_defense_grades_stops_12w                     1.1231      0.2615      
-## defense_player_3_pass_rushing_productivity_hurries_12w           -1.1249      0.2607      
-## defense_player_3_run_defense_grades_stops_12w                     1.1812      0.2376      
-## defense_player_4_pass_rushing_productivity_hurries_12w            0.2660      0.7903      
-## defense_player_4_run_defense_grades_stops_12w                    -1.6622      0.0966     *
-## defense_player_9_pass_rushing_productivity_hurries_12w           -0.9695      0.3324      
-## defense_player_9_run_defense_grades_stops_12w                    -0.4607      0.6451      
-## defense_player_9_coverage_schemes_zone_stops_12w                 -0.2713      0.7862      
-## defense_player_10_pass_rushing_productivity_hurries_12w          -0.0693      0.9448      
-## defense_player_10_run_defense_grades_stops_12w                   -2.4017      0.0164    **
-## defense_player_10_coverage_schemes_zone_stops_12w                 0.9037      0.3662      
-## defense_player_11_pass_rushing_productivity_hurries_12w           0.7239      0.4692      
-## defense_player_11_run_defense_grades_stops_12w                   -1.3625      0.1731      
-## defense_player_11_coverage_schemes_zone_stops_12w                 0.7034      0.4818      
-## defense_player_12_pass_rushing_productivity_hurries_12w           1.5378      0.1242     .
-## defense_player_12_run_defense_grades_stops_12w                   -0.5516      0.5813      
-## defense_player_12_coverage_schemes_zone_stops_12w                -0.5320      0.5947      
-## defense_player_15_defensive_grades_receptions_12w                 0.4958      0.6201      
-## defense_player_15_coverage_grades_stops_12w                       1.2230      0.2214      
-## defense_player_16_defensive_grades_receptions_12w                 0.1056      0.9159      
-## defense_player_16_coverage_grades_stops_12w                      -0.0572      0.9544      
-## defense_player_17_defensive_grades_receptions_12w                -0.1504      0.8805      
-## defense_player_17_coverage_grades_stops_12w                       0.4826      0.6294      
-## defense_player_20_defensive_grades_receptions_12w                -1.3688      0.1712      
-## defense_player_20_coverage_grades_stops_12w                       1.0682      0.2855      
-## defense_player_21_defensive_grades_receptions_12w                 0.2291      0.8188      
-## defense_player_21_coverage_grades_stops_12w                      -0.4950      0.6207      
-## defense_player_22_defensive_grades_receptions_12w                -1.7441      0.0812     *
-## defense_player_22_coverage_grades_stops_12w                       1.9428      0.0521     *
-## yardline_1_10                                                    -2.2469      0.0247    **
-## yardline_11_20                                                    0.2831      0.7771      
-## yardline_21_30                                                    0.1671      0.8673      
-## yardline_41_50                                                    1.9582      0.0503     *
-## yardline_51_60                                                    0.6792      0.4971      
-## yardline_61_70                                                    1.1821      0.2372      
-## yardline_71_80                                                    1.6940      0.0904     *
-## yardline_81_90                                                    2.2953      0.0218    **
-## yardline_91_100                                                   1.3835      0.1666      
-## year2017_team_ARI                                                 0.1273      0.8987      
-## year2017_team_BUF                                                -0.6337      0.5263      
-## year2017_team_CHI                                                -0.3336      0.7387      
-## year2017_team_CLE                                                 0.4806      0.6308      
-## year2017_team_DAL                                                -1.0144      0.3104      
-## year2017_team_DET                                                -0.7972      0.4254      
-## year2017_team_GB                                                  1.9106      0.0561     *
-## year2017_team_HOU                                                 1.5038      0.1327     .
-## year2017_team_MIA                                                -1.2426      0.2141      
-## year2017_team_MIN                                                -0.5415      0.5882      
-## year2017_team_NE                                                 -0.0287      0.9771      
-## year2017_team_SF                                                  1.7749      0.0760     *
-## year2017_team_BAL                                                 0.0006      0.9996      
-## year2017_team_DEN                                                 0.0776      0.9381      
-## year2017_team_LA                                                  0.2590      0.7957      
-## year2017_team_NYG                                                -0.4640      0.6427      
-## year2017_team_OAK                                                -0.5552      0.5788      
-## year2017_team_SEA                                                 0.3710      0.7107      
-## year2017_team_CAR                                                 0.2562      0.7978      
-## year2017_team_CIN                                                 0.5255      0.5993      
-## year2017_team_IND                                                 0.6716      0.5019      
-## year2017_team_NO                                                  0.3750      0.7077      
-## year2017_team_PHI                                                 0.2848      0.7758      
-## year2017_team_PIT                                                -1.1532      0.2489      
-## year2017_team_TEN                                                 0.0421      0.9664      
-## year2017_team_WAS                                                 0.2120      0.8321      
-## year2017_team_KC                                                  1.4889      0.1366     .
-## year2017_team_LAC                                                -0.0665      0.9470      
-## year2017_team_NYJ                                                 0.7304      0.4652      
-## year2017_team_TB                                                  0.0776      0.9381      
-## year2017_team_ATL                                                -0.3251      0.7451      
-## year2017_team_JAX                                                 0.3594      0.7194      
-## year2018_team_ARI                                                 0.4387      0.6609      
-## year2018_team_BAL                                                 0.4581      0.6469      
-## year2018_team_CAR                                                 0.2899      0.7719      
-## year2018_team_CLE                                                -0.2887      0.7728      
-## year2018_team_DET                                                 0.3648      0.7153      
-## year2018_team_HOU                                                 1.2032      0.2290      
-## year2018_team_IND                                                -0.7147      0.4749      
-## year2018_team_KC                                                  0.9254      0.3548      
-## year2018_team_NYG                                                 0.3924      0.6948      
-## year2018_team_OAK                                                -0.5798      0.5621      
-## year2018_team_PHI                                                 0.5380      0.5906      
-## year2018_team_SEA                                                -0.4244      0.6713      
-## year2018_team_BUF                                                -0.6239      0.5327      
-## year2018_team_CHI                                                -0.3671      0.7136      
-## year2018_team_CIN                                                -0.2909      0.7712      
-## year2018_team_DAL                                                -0.3782      0.7053      
-## year2018_team_DEN                                                -0.0332      0.9735      
-## year2018_team_GB                                                 -0.1900      0.8493      
-## year2018_team_LAC                                                 0.3302      0.7413      
-## year2018_team_NE                                                 -0.5944      0.5523      
-## year2018_team_NO                                                  0.7683      0.4424      
-## year2018_team_PIT                                                 0.5076      0.6117      
-## year2018_team_SF                                                  0.6656      0.5057      
-## year2018_team_MIA                                                 0.5445      0.5862      
-## year2018_team_MIN                                                 0.1487      0.8818      
-## year2018_team_NYJ                                                 0.7413      0.4586      
-## year2018_team_TB                                                  0.2734      0.7846      
-## year2018_team_ATL                                                 0.6794      0.4969      
-## year2018_team_JAX                                                 0.1507      0.8802      
-## year2018_team_LA                                                 -0.8604      0.3896      
-## year2018_team_TEN                                                 0.5888      0.5560      
-## year2018_team_WAS                                                -0.1525      0.8788      
-## year2019_team_ARI                                                -0.7560      0.4497      
-## year2019_team_BUF                                                -1.0157      0.3098      
-## year2019_team_CHI                                                 0.4216      0.6734      
-## year2019_team_CLE                                                 0.6832      0.4945      
-## year2019_team_DAL                                                -0.4464      0.6553      
-## year2019_team_IND                                                -0.6826      0.4949      
-## year2019_team_JAX                                                 0.5007      0.6166      
-## year2019_team_KC                                                 -0.1286      0.8977      
-## year2019_team_LAC                                                -0.8681      0.3854      
-## year2019_team_MIN                                                -0.4988      0.6180      
-## year2019_team_NE                                                 -0.4983      0.6183      
-## year2019_team_NO                                                 -1.0275      0.3043      
-## year2019_team_PHI                                                 0.4326      0.6653      
-## year2019_team_SEA                                                 0.2056      0.8371      
-## year2019_team_SF                                                 -0.6082      0.5431      
-## year2019_team_TB                                                 -1.2220      0.2218      
-## year2019_team_BAL                                                -0.1190      0.9053      
-## year2019_team_CAR                                                -0.5110      0.6094      
-## year2019_team_DEN                                                 0.8717      0.3834      
-## year2019_team_DET                                                -0.6254      0.5318      
-## year2019_team_HOU                                                -0.2847      0.7759      
-## year2019_team_LA                                                 -0.7671      0.4430      
-## year2019_team_MIA                                                -2.0788      0.0377    **
-## year2019_team_NYG                                                -1.1982      0.2309      
-## year2019_team_NYJ                                                -1.9477      0.0515     *
-## year2019_team_OAK                                                -0.2718      0.7858      
-## year2019_team_PIT                                                -3.0036      0.0027   ***
-## year2019_team_TEN                                                -1.4833      0.1381     .
-## year2019_team_CIN                                                 0.4200      0.6745      
-## year2019_team_WAS                                                -0.4921      0.6227      
-## year2019_team_ATL                                                -0.0941      0.9250      
-## year2019_team_GB                                                 -0.3500      0.7264      
-## year2020_team_ATL                                                 0.0031      0.9976      
-## year2020_team_BAL                                                 0.4295      0.6676      
-## year2020_team_BUF                                                -0.0195      0.9844      
-## year2020_team_CAR                                                 0.5390      0.5899      
-## year2020_team_CIN                                                 0.3110      0.7558      
-## year2020_team_DEN                                                -0.5081      0.6114      
-## year2020_team_DET                                                -1.0304      0.3029      
-## year2020_team_JAX                                                -0.8070      0.4197      
-## year2020_team_KC                                                  0.3289      0.7423      
-## year2020_team_LA                                                 -1.0368      0.2999      
-## year2020_team_MIN                                                 0.8427      0.3995      
-## year2020_team_NE                                                 -0.2689      0.7880      
-## year2020_team_NO                                                  0.3183      0.7502      
-## year2020_team_NYG                                                 0.0242      0.9807      
-## year2020_team_SF                                                  0.2558      0.7981      
-## year2020_team_WAS                                                 0.1145      0.9088      
-## year2020_team_CHI                                                 0.2369      0.8128      
-## year2020_team_DAL                                                -0.2944      0.7685      
-## year2020_team_GB                                                 -0.0518      0.9587      
-## year2020_team_HOU                                                -0.4094      0.6823      
-## year2020_team_MIA                                                -0.9760      0.3291      
-## year2020_team_NYJ                                                -0.1576      0.8748      
-## year2020_team_TB                                                  0.3025      0.7623      
-## year2020_team_TEN                                                -0.7247      0.4687      
-## year2020_team_ARI                                                 0.2150      0.8298      
-## year2020_team_CLE                                                -1.3700      0.1708      
-## year2020_team_IND                                                -0.9237      0.3557      
-## year2020_team_LAC                                                 0.2973      0.7663      
-## year2020_team_PHI                                                 0.6829      0.4947      
-## year2020_team_SEA                                                -0.3248      0.7454      
-## year2020_team_LV                                                  0.7206      0.4712      
-## year2020_team_PIT                                                -0.8393      0.4013      
-## year2021_team_ATL                                                -1.8921      0.0586     *
-## year2021_team_BUF                                                 0.0046      0.9963      
-## year2021_team_CIN                                                -2.2506      0.0245    **
-## year2021_team_DAL                                                -0.6471      0.5176      
-## year2021_team_DEN                                                 0.4079      0.6834      
-## year2021_team_DET                                                -0.8071      0.4196      
-## year2021_team_KC                                                  0.1692      0.8656      
-## year2021_team_LA                                                  0.0641      0.9489      
-## year2021_team_LV                                                  0.4440      0.6571      
-## year2021_team_MIN                                                -0.4188      0.6754      
-## year2021_team_NE                                                  0.2422      0.8086      
-## year2021_team_NO                                                 -0.0728      0.9420      
-## year2021_team_NYG                                                 0.0310      0.9753      
-## year2021_team_SF                                                 -0.1725      0.8631      
-## year2021_team_TEN                                                -0.5491      0.5830      
-## year2021_team_ARI                                                 0.6491      0.5163      
-## year2021_team_BAL                                                 0.3938      0.6938      
-## year2021_team_CAR                                                -0.6240      0.5327      
-## year2021_team_CHI                                                -1.8577      0.0633     *
-## year2021_team_GB                                                  0.6891      0.4908      
-## year2021_team_IND                                                -0.4994      0.6175      
-## year2021_team_LAC                                                 0.2225      0.8239      
-## year2021_team_MIA                                                -0.1802      0.8570      
-## year2021_team_NYJ                                                -0.3285      0.7425      
-## year2021_team_PHI                                                -1.5801      0.1142     .
-## year2021_team_SEA                                                -1.2580      0.2085      
-## year2021_team_TB                                                  0.1492      0.8814      
-## year2021_team_WAS                                                -0.9008      0.3677      
-## year2021_team_CLE                                                -0.9498      0.3423      
-## year2021_team_HOU                                                -0.4586      0.6466      
-## year2021_team_JAX                                                -0.3564      0.7216      
-## year2021_team_PIT                                                 0.2190      0.8266      
-## year2022_team_ARI                                                -1.0579      0.2902      
-## year2022_team_ATL                                                -1.9258      0.0542     *
-## year2022_team_CAR                                                 0.9683      0.3330      
-## year2022_team_CHI                                                -0.5078      0.6116      
-## year2022_team_CIN                                                -1.0317      0.3023      
-## year2022_team_HOU                                                -0.1219      0.9030      
-## year2022_team_IND                                                -0.8728      0.3828      
-## year2022_team_LAC                                                -0.9192      0.3581      
-## year2022_team_MIA                                                -1.6202      0.1053     .
-## year2022_team_SEA                                                -0.1255      0.9001      
-## year2022_team_TB                                                  0.1026      0.9183      
-## year2022_team_TEN                                                 1.2485      0.2119      
-## year2022_team_WAS                                                -0.1685      0.8662      
-## year2022_team_BAL                                                -1.4884      0.1367     .
-## year2022_team_BUF                                                 0.1082      0.9139      
-## year2022_team_DAL                                                -0.0348      0.9722      
-## year2022_team_DET                                                -0.9906      0.3220      
-## year2022_team_GB                                                 -0.9703      0.3320      
-## year2022_team_JAX                                                -1.2773      0.2016      
-## year2022_team_KC                                                 -0.7110      0.4771      
-## year2022_team_LA                                                  1.2050      0.2283      
-## year2022_team_LV                                                  1.0794      0.2805      
-## year2022_team_NO                                                 -0.3219      0.7476      
-## year2022_team_PHI                                                 0.3946      0.6932      
-## year2022_team_PIT                                                 1.1657      0.2438      
-## year2022_team_DEN                                                 0.4205      0.6741      
-## year2022_team_MIN                                                -1.0259      0.3050      
-## year2022_team_NE                                                  0.2926      0.7698      
-## year2022_team_NYJ                                                -0.9425      0.3460      
-## year2022_team_NYG                                                -0.5375      0.5909      
-## year2022_team_SF                                                 -1.0360      0.3003      
-## year2023_team_BAL                                                -0.7031      0.4820      
-## year2023_team_CHI                                                -1.0825      0.2791      
-## year2023_team_CLE                                                -0.9340      0.3504      
-## year2023_team_GB                                                 -0.1825      0.8552      
-## year2023_team_IND                                                 0.5534      0.5800      
-## year2023_team_KC                                                 -0.0969      0.9228      
-## year2023_team_LAC                                                 0.2806      0.7791      
-## year2023_team_LV                                                 -0.0188      0.9850      
-## year2023_team_MIA                                                 0.0559      0.9554      
-## year2023_team_MIN                                                 1.0805      0.2800      
-## year2023_team_NO                                                 -0.4626      0.6437      
-## year2023_team_NYG                                                 0.1697      0.8653      
-## year2023_team_SEA                                                -1.9761      0.0482    **
-## year2023_team_SF                                                  0.0194      0.9845      
-## year2023_team_WAS                                                 1.4442      0.1488     .
-## year2023_team_ATL                                                -0.8646      0.3873      
-## year2023_team_BUF                                                -0.6655      0.5058      
-## year2023_team_CAR                                                 0.3519      0.7249      
-## year2023_team_DAL                                                 0.5274      0.5979      
-## year2023_team_DEN                                                 0.0092      0.9927      
-## year2023_team_HOU                                                 0.0448      0.9643      
-## year2023_team_LA                                                 -0.0424      0.9662      
-## year2023_team_NE                                                  0.1826      0.8551      
-## year2023_team_PHI                                                -0.2086      0.8347      
-## year2023_team_PIT                                                -0.0678      0.9459      
-## year2023_team_TEN                                                 0.0035      0.9972      
-## year2023_team_ARI                                                -1.2461      0.2128      
-## year2023_team_CIN                                                -1.0841      0.2784      
-## year2023_team_DET                                                 0.2804      0.7792      
-## year2023_team_TB                                                  0.3608      0.7183      
-## year2023_team_JAX                                                -0.4413      0.6590      
-## year2023_team_NYJ                                                 1.3663      0.1719      
-## is_first_half                                                    -0.9335      0.3506      
-## time_in_half                                                      1.4241      0.1545      
-## home_attendance                                                  -0.3967      0.6916      
-## GIMR                                                              1.3642      0.1726      
+## (Intercept)                                                       3.5936      0.0003   ***
+## ydstogo                                                         -12.5263      0.0000   ***
+## posteam_timeouts_remaining                                        1.0594      0.2895      
+## defteam_timeouts_remaining                                        1.1748      0.2402      
+## rush_attempt                                                      7.1718      0.0000   ***
+## week                                                              0.6717      0.5018      
+## temp                                                             -0.9569      0.3387      
+## wind                                                              0.9596      0.3373      
+## vegas_wp                                                          1.6570      0.0976     *
+## spread_line                                                      -0.1814      0.8561      
+## total_line                                                        2.0572      0.0397    **
+## prep_days                                                         1.0093      0.3129      
+## overall_win_pct                                                   0.5026      0.6152      
+## team_win_pct                                                      1.0685      0.2854      
+## prev_win_pct                                                     -2.6578      0.0079   ***
+## prev_shotgun_rate                                                 0.3542      0.7232      
+## prev_singleback_rate                                              0.4599      0.6456      
+## prev_empty_rate                                                   0.5404      0.5890      
+## prev_iform_rate                                                   0.0719      0.9427      
+## prev_shotgun_success                                              0.3656      0.7147      
+## prev_singleback_success                                           0.7112      0.4770      
+## prev_empty_success                                                0.5717      0.5675      
+## prev_iform_success                                                2.0712      0.0384    **
+## prev_stop_rate_run                                                0.1132      0.9099      
+## prev_stop_rate_pass                                              -3.3935      0.0007   ***
+## shotgun_rate                                                      1.0974      0.2726      
+## singleback_rate                                                   0.3143      0.7533      
+## empty_rate                                                       -0.1717      0.8637      
+## iform_rate                                                       -1.8170      0.0693     *
+## shotgun_success                                                  -2.1333      0.0330    **
+## singleback_success                                               -0.8366      0.4029      
+## empty_success                                                    -0.7618      0.4462      
+## iform_success                                                    -1.2865      0.1983      
+## def_stop_rate_run                                                 1.6129      0.1068     .
+## def_stop_rate_pass                                               -1.2223      0.2217      
+## avg_pass_rushers                                                 -0.8549      0.3927      
+## avg_box_defenders                                                -0.4963      0.6197      
+## cover0_rate                                                      -0.1711      0.8642      
+## cover1_rate                                                      -0.3288      0.7423      
+## cover2_rate                                                      -0.2739      0.7842      
+## cover3_rate                                                       1.6249      0.1043     .
+## cover4_rate                                                       0.9475      0.3434      
+## cover6_rate                                                      -0.5574      0.5773      
+## two_man_rate                                                      1.4899      0.1363     .
+## prevent_rate                                                      2.7149      0.0067   ***
+## roof_outdoors                                                    -0.4551      0.6491      
+## posteam_type_home                                                -1.3051      0.1919      
+## offense_formation_EMPTY                                          -0.0430      0.9657      
+## offense_formation_SHOTGUN                                        -0.6756      0.4994      
+## offense_formation_SINGLEBACK                                     -0.5148      0.6067      
+## offense_formation_I_FORM                                         -0.1991      0.8422      
+## offense_player_1_passing_depth_short_grades_pass_12w              2.6077      0.0092   ***
+## offense_player_1_passing_depth_medium_grades_pass_12w            -0.4631      0.6434      
+## offense_player_1_passing_depth_deep_grades_pass_12w              -1.6147      0.1065     .
+## offense_player_4_rushing_grades_first_downs_12w                  -0.4577      0.6472      
+## offense_player_4_rushing_grades_yards_12w                         1.0965      0.2729      
+## offense_player_4_receiving_grades_grades_pass_block_12w           1.4629      0.1436     .
+## offense_player_4_receiving_grades_grades_offense_12w             -0.7771      0.4372      
+## offense_player_8_receiving_depth_short_grades_pass_route_12w     -0.6104      0.5416      
+## offense_player_8_receiving_depth_medium_grades_pass_route...     -0.4243      0.6714      
+## offense_player_8_receiving_depth_deep_grades_pass_route_12w       0.3731      0.7091      
+## offense_player_9_receiving_depth_short_grades_pass_route_12w     -0.3506      0.7259      
+## offense_player_9_receiving_depth_medium_grades_pass_route...     -0.3152      0.7526      
+## offense_player_9_receiving_depth_deep_grades_pass_route_12w       0.8179      0.4135      
+## offense_player_10_receiving_depth_short_grades_pass_route...     -0.3635      0.7162      
+## offense_player_10_receiving_depth_medium_grades_pass_rout...      0.7013      0.4832      
+## offense_player_10_receiving_depth_deep_grades_pass_route_12w      0.9024      0.3669      
+## offense_player_14_receiving_depth_short_grades_pass_route...      0.4610      0.6449      
+## offense_player_14_receiving_depth_medium_grades_pass_rout...      1.8804      0.0601     *
+## offense_player_14_receiving_depth_deep_grades_pass_route_12w     -1.4654      0.1429     .
+## offense_player_17_blocking_grades_grades_pass_block_12w          -1.0299      0.3031      
+## offense_player_17_blocking_grades_grades_run_block_12w            0.6345      0.5258      
+## offense_player_18_blocking_grades_grades_pass_block_12w          -0.3592      0.7195      
+## offense_player_18_blocking_grades_grades_run_block_12w           -1.3741      0.1695      
+## offense_player_19_blocking_grades_grades_pass_block_12w           0.6591      0.5099      
+## offense_player_19_blocking_grades_grades_run_block_12w            0.5581      0.5768      
+## offense_player_20_blocking_grades_grades_pass_block_12w           0.9690      0.3326      
+## offense_player_20_blocking_grades_grades_run_block_12w           -1.6985      0.0895     *
+## offense_player_21_blocking_grades_grades_pass_block_12w          -1.4139      0.1575      
+## offense_player_21_blocking_grades_grades_run_block_12w            1.1394      0.2546      
+## defense_player_1_defensive_grades_grades_run_defense_12w         -0.3543      0.7231      
+## defense_player_1_defensive_grades_grades_pass_rush_defens...     -1.3612      0.1735      
+## defense_player_2_defensive_grades_grades_run_defense_12w          0.4624      0.6438      
+## defense_player_2_defensive_grades_grades_pass_rush_defens...     -0.3801      0.7039      
+## defense_player_3_defensive_grades_grades_run_defense_12w          0.0106      0.9915      
+## defense_player_3_defensive_grades_grades_pass_rush_defens...      0.3086      0.7576      
+## defense_player_4_defensive_grades_grades_run_defense_12w         -0.8376      0.4023      
+## defense_player_4_defensive_grades_grades_pass_rush_defens...      0.2181      0.8274      
+## defense_player_9_defensive_grades_grades_run_defense_12w          0.3919      0.6952      
+## defense_player_9_defensive_grades_grades_pass_rush_defens...     -1.5784      0.1146     .
+## defense_player_9_defensive_grades_grades_coverage_defense...      1.6815      0.0928     *
+## defense_player_10_defensive_grades_grades_run_defense_12w         0.1712      0.8640      
+## defense_player_10_defensive_grades_grades_pass_rush_defen...     -1.7902      0.0735     *
+## defense_player_10_defensive_grades_grades_coverage_defens...      1.4381      0.1505      
+## defense_player_11_defensive_grades_grades_run_defense_12w        -1.1007      0.2711      
+## defense_player_11_defensive_grades_grades_pass_rush_defen...      1.6683      0.0953     *
+## defense_player_11_defensive_grades_grades_coverage_defens...     -0.8017      0.4228      
+## defense_player_12_defensive_grades_grades_run_defense_12w         0.6098      0.5421      
+## defense_player_12_defensive_grades_grades_pass_rush_defen...     -1.3388      0.1807      
+## defense_player_12_defensive_grades_grades_coverage_defens...      0.5067      0.6124      
+## defense_player_15_defensive_grades_grades_run_defense_12w         0.7332      0.4635      
+## defense_player_15_defensive_grades_grades_coverage_defens...     -1.7023      0.0888     *
+## defense_player_16_defensive_grades_grades_run_defense_12w        -0.4044      0.6859      
+## defense_player_16_defensive_grades_grades_coverage_defens...     -0.1803      0.8570      
+## defense_player_17_defensive_grades_grades_run_defense_12w         0.1585      0.8740      
+## defense_player_17_defensive_grades_grades_coverage_defens...      0.2769      0.7818      
+## defense_player_20_defensive_grades_grades_run_defense_12w        -1.2711      0.2038      
+## defense_player_20_defensive_grades_grades_coverage_defens...      0.6279      0.5301      
+## defense_player_21_defensive_grades_grades_run_defense_12w        -1.3328      0.1827      
+## defense_player_21_defensive_grades_grades_coverage_defens...      1.5619      0.1184     .
+## defense_player_22_defensive_grades_grades_run_defense_12w        -0.4757      0.6343      
+## defense_player_22_defensive_grades_grades_coverage_defens...      0.6469      0.5177      
+## yardline_1_10                                                    -2.2416      0.0250    **
+## yardline_11_20                                                    0.4160      0.6774      
+## yardline_21_30                                                    0.2088      0.8346      
+## yardline_41_50                                                    1.9553      0.0506     *
+## yardline_51_60                                                    0.5838      0.5594      
+## yardline_61_70                                                    1.3492      0.1774      
+## yardline_71_80                                                    1.8660      0.0621     *
+## yardline_81_90                                                    2.4245      0.0154    **
+## yardline_91_100                                                   0.7988      0.4244      
+## year2017_team_ARI                                                 0.4251      0.6708      
+## year2017_team_BUF                                                -0.6023      0.5470      
+## year2017_team_CHI                                                -0.0153      0.9878      
+## year2017_team_CLE                                                 0.8547      0.3928      
+## year2017_team_DAL                                                -0.9678      0.3332      
+## year2017_team_DET                                                -0.4226      0.6726      
+## year2017_team_GB                                                  1.9461      0.0517     *
+## year2017_team_HOU                                                 1.6378      0.1015     .
+## year2017_team_MIA                                                -1.2453      0.2131      
+## year2017_team_MIN                                                -0.5698      0.5688      
+## year2017_team_NE                                                  0.0556      0.9557      
+## year2017_team_SF                                                  1.8652      0.0622     *
+## year2017_team_BAL                                                 0.0358      0.9714      
+## year2017_team_DEN                                                 0.0239      0.9810      
+## year2017_team_LA                                                  0.1988      0.8425      
+## year2017_team_NYG                                                -0.2821      0.7779      
+## year2017_team_OAK                                                -0.5041      0.6142      
+## year2017_team_SEA                                                 0.6172      0.5371      
+## year2017_team_CAR                                                 0.6238      0.5328      
+## year2017_team_CIN                                                 0.7783      0.4364      
+## year2017_team_IND                                                 0.8256      0.4091      
+## year2017_team_NO                                                  0.6052      0.5451      
+## year2017_team_PHI                                                 0.1705      0.8646      
+## year2017_team_PIT                                                -0.8255      0.4091      
+## year2017_team_TEN                                                 0.2177      0.8277      
+## year2017_team_WAS                                                 0.1922      0.8476      
+## year2017_team_KC                                                  1.3932      0.1636      
+## year2017_team_LAC                                                 0.1135      0.9097      
+## year2017_team_NYJ                                                 0.7237      0.4693      
+## year2017_team_TB                                                  0.1541      0.8775      
+## year2017_team_ATL                                                -0.1242      0.9012      
+## year2017_team_JAX                                                 0.1948      0.8456      
+## year2018_team_ARI                                                 0.6512      0.5149      
+## year2018_team_BAL                                                 0.2053      0.8373      
+## year2018_team_CAR                                                 0.1479      0.8824      
+## year2018_team_CLE                                                -0.3005      0.7638      
+## year2018_team_DET                                                 0.7608      0.4468      
+## year2018_team_HOU                                                 1.3968      0.1626      
+## year2018_team_IND                                                -0.7522      0.4520      
+## year2018_team_KC                                                  0.8621      0.3887      
+## year2018_team_NYG                                                 0.3803      0.7037      
+## year2018_team_OAK                                                -0.6910      0.4896      
+## year2018_team_PHI                                                 0.5472      0.5843      
+## year2018_team_SEA                                                -0.5959      0.5513      
+## year2018_team_BUF                                                -0.6543      0.5130      
+## year2018_team_CHI                                                -0.1747      0.8613      
+## year2018_team_CIN                                                -0.2879      0.7734      
+## year2018_team_DAL                                                -0.4612      0.6447      
+## year2018_team_DEN                                                 0.1633      0.8703      
+## year2018_team_GB                                                  0.0308      0.9754      
+## year2018_team_LAC                                                 0.2138      0.8307      
+## year2018_team_NE                                                 -0.4926      0.6223      
+## year2018_team_NO                                                  0.5631      0.5734      
+## year2018_team_PIT                                                 0.5532      0.5801      
+## year2018_team_SF                                                  0.1983      0.8428      
+## year2018_team_MIA                                                 0.6144      0.5390      
+## year2018_team_MIN                                                -0.0155      0.9876      
+## year2018_team_NYJ                                                 0.7396      0.4596      
+## year2018_team_TB                                                  0.2304      0.8178      
+## year2018_team_ATL                                                 0.4912      0.6233      
+## year2018_team_JAX                                                 0.3127      0.7546      
+## year2018_team_LA                                                 -1.1822      0.2372      
+## year2018_team_TEN                                                 0.6110      0.5413      
+## year2018_team_WAS                                                 0.0053      0.9957      
+## year2019_team_ARI                                                -0.7064      0.4800      
+## year2019_team_BUF                                                -1.2067      0.2276      
+## year2019_team_CHI                                                 0.4108      0.6812      
+## year2019_team_CLE                                                 0.6739      0.5004      
+## year2019_team_DAL                                                -0.4894      0.6246      
+## year2019_team_IND                                                -0.4527      0.6508      
+## year2019_team_JAX                                                 0.5197      0.6033      
+## year2019_team_KC                                                 -0.1266      0.8992      
+## year2019_team_LAC                                                -0.5934      0.5529      
+## year2019_team_MIN                                                -0.6728      0.5011      
+## year2019_team_NE                                                 -0.2332      0.8156      
+## year2019_team_NO                                                 -1.2863      0.1984      
+## year2019_team_PHI                                                 0.2198      0.8260      
+## year2019_team_SEA                                                 0.2542      0.7994      
+## year2019_team_SF                                                 -0.1391      0.8894      
+## year2019_team_TB                                                 -1.0535      0.2922      
+## year2019_team_BAL                                                 0.0181      0.9856      
+## year2019_team_CAR                                                -0.7746      0.4386      
+## year2019_team_DEN                                                 0.6310      0.5281      
+## year2019_team_DET                                                -0.7131      0.4758      
+## year2019_team_HOU                                                -0.0410      0.9673      
+## year2019_team_LA                                                 -0.6736      0.5006      
+## year2019_team_MIA                                                -1.9419      0.0522     *
+## year2019_team_NYG                                                -0.9605      0.3369      
+## year2019_team_NYJ                                                -1.8857      0.0594     *
+## year2019_team_OAK                                                -0.3361      0.7368      
+## year2019_team_PIT                                                -2.4150      0.0158    **
+## year2019_team_TEN                                                -1.4631      0.1435     .
+## year2019_team_CIN                                                 0.3585      0.7200      
+## year2019_team_WAS                                                -0.5102      0.6100      
+## year2019_team_ATL                                                -0.2004      0.8412      
+## year2019_team_GB                                                 -0.3427      0.7318      
+## year2020_team_ATL                                                 0.1998      0.8417      
+## year2020_team_BAL                                                 0.3645      0.7155      
+## year2020_team_BUF                                                -0.0674      0.9463      
+## year2020_team_CAR                                                 0.6592      0.5098      
+## year2020_team_CIN                                                 0.3921      0.6950      
+## year2020_team_DEN                                                -0.4952      0.6205      
+## year2020_team_DET                                                -0.9268      0.3541      
+## year2020_team_JAX                                                -0.9028      0.3667      
+## year2020_team_KC                                                  0.2089      0.8345      
+## year2020_team_LA                                                 -1.1422      0.2535      
+## year2020_team_MIN                                                 1.0043      0.3153      
+## year2020_team_NE                                                 -0.4486      0.6537      
+## year2020_team_NO                                                  0.3077      0.7583      
+## year2020_team_NYG                                                 0.0511      0.9593      
+## year2020_team_SF                                                  0.4748      0.6350      
+## year2020_team_WAS                                                 0.1068      0.9149      
+## year2020_team_CHI                                                 0.1766      0.8598      
+## year2020_team_DAL                                                -0.3730      0.7092      
+## year2020_team_GB                                                 -0.3904      0.6963      
+## year2020_team_HOU                                                -0.7692      0.4418      
+## year2020_team_MIA                                                -1.1124      0.2660      
+## year2020_team_NYJ                                                -0.0980      0.9219      
+## year2020_team_TB                                                  0.1119      0.9109      
+## year2020_team_TEN                                                -0.6958      0.4866      
+## year2020_team_ARI                                                 0.2902      0.7717      
+## year2020_team_CLE                                                -1.7320      0.0834     *
+## year2020_team_IND                                                -0.9138      0.3609      
+## year2020_team_LAC                                                 0.0489      0.9610      
+## year2020_team_PHI                                                 0.5110      0.6094      
+## year2020_team_SEA                                                -0.1637      0.8699      
+## year2020_team_LV                                                  0.6712      0.5021      
+## year2020_team_PIT                                                -0.5832      0.5598      
+## year2021_team_ATL                                                -1.7452      0.0810     *
+## year2021_team_BUF                                                 0.2778      0.7812      
+## year2021_team_CIN                                                -2.0203      0.0434    **
+## year2021_team_DAL                                                -0.5783      0.5631      
+## year2021_team_DEN                                                 0.2827      0.7774      
+## year2021_team_DET                                                -0.4931      0.6220      
+## year2021_team_KC                                                  0.3657      0.7146      
+## year2021_team_LA                                                  0.2239      0.8228      
+## year2021_team_LV                                                  0.3071      0.7588      
+## year2021_team_MIN                                                -0.2384      0.8116      
+## year2021_team_NE                                                  0.3890      0.6973      
+## year2021_team_NO                                                 -0.2175      0.8278      
+## year2021_team_NYG                                                -0.0869      0.9308      
+## year2021_team_SF                                                  0.0738      0.9412      
+## year2021_team_TEN                                                -0.6966      0.4861      
+## year2021_team_ARI                                                 1.0058      0.3146      
+## year2021_team_BAL                                                 0.6454      0.5187      
+## year2021_team_CAR                                                -0.4735      0.6359      
+## year2021_team_CHI                                                -1.4851      0.1376     .
+## year2021_team_GB                                                  0.8310      0.4060      
+## year2021_team_IND                                                -0.1910      0.8485      
+## year2021_team_LAC                                                 0.2872      0.7740      
+## year2021_team_MIA                                                 0.0663      0.9471      
+## year2021_team_NYJ                                                -0.2329      0.8158      
+## year2021_team_PHI                                                -1.3613      0.1735      
+## year2021_team_SEA                                                -1.3038      0.1924      
+## year2021_team_TB                                                  0.3879      0.6981      
+## year2021_team_WAS                                                -0.5922      0.5537      
+## year2021_team_CLE                                                -0.6678      0.5043      
+## year2021_team_HOU                                                -0.6672      0.5047      
+## year2021_team_JAX                                                -0.2569      0.7973      
+## year2021_team_PIT                                                 0.2508      0.8020      
+## year2022_team_ARI                                                -1.0420      0.2975      
+## year2022_team_ATL                                                -2.2777      0.0228    **
+## year2022_team_CAR                                                 0.8616      0.3890      
+## year2022_team_CHI                                                -0.3870      0.6988      
+## year2022_team_CIN                                                -0.9159      0.3598      
+## year2022_team_HOU                                                -0.1606      0.8724      
+## year2022_team_IND                                                -0.8766      0.3808      
+## year2022_team_LAC                                                -0.5614      0.5746      
+## year2022_team_MIA                                                -1.5709      0.1163     .
+## year2022_team_SEA                                                -0.4179      0.6760      
+## year2022_team_TB                                                  0.0218      0.9826      
+## year2022_team_TEN                                                 1.1952      0.2321      
+## year2022_team_WAS                                                -0.1213      0.9035      
+## year2022_team_BAL                                                -1.5015      0.1333     .
+## year2022_team_BUF                                                 0.1134      0.9097      
+## year2022_team_DAL                                                -0.1158      0.9079      
+## year2022_team_DET                                                -0.7797      0.4356      
+## year2022_team_GB                                                 -1.0503      0.2936      
+## year2022_team_JAX                                                -0.8494      0.3957      
+## year2022_team_KC                                                 -0.7952      0.4266      
+## year2022_team_LA                                                  1.2873      0.1981      
+## year2022_team_LV                                                  0.9290      0.3530      
+## year2022_team_NO                                                 -0.4338      0.6645      
+## year2022_team_PHI                                                 0.4773      0.6332      
+## year2022_team_PIT                                                 1.3311      0.1832      
+## year2022_team_DEN                                                 0.3423      0.7321      
+## year2022_team_MIN                                                -0.7315      0.4645      
+## year2022_team_NE                                                  0.0742      0.9408      
+## year2022_team_NYJ                                                -0.8135      0.4160      
+## year2022_team_NYG                                                -0.6698      0.5030      
+## year2022_team_SF                                                 -1.1787      0.2386      
+## year2023_team_BAL                                                -0.4910      0.6235      
+## year2023_team_CHI                                                -1.1092      0.2674      
+## year2023_team_CLE                                                -0.7458      0.4559      
+## year2023_team_GB                                                  0.2156      0.8293      
+## year2023_team_IND                                                 0.6411      0.5215      
+## year2023_team_KC                                                  0.3129      0.7543      
+## year2023_team_LAC                                                 0.2237      0.8230      
+## year2023_team_LV                                                  0.3818      0.7026      
+## year2023_team_MIA                                                 0.3147      0.7530      
+## year2023_team_MIN                                                 0.9693      0.3325      
+## year2023_team_NO                                                 -0.6300      0.5287      
+## year2023_team_NYG                                                 0.0236      0.9812      
+## year2023_team_SEA                                                -2.0360      0.0418    **
+## year2023_team_SF                                                  0.0340      0.9729      
+## year2023_team_WAS                                                 1.4261      0.1539      
+## year2023_team_ATL                                                -0.5775      0.5637      
+## year2023_team_BUF                                                -0.6279      0.5301      
+## year2023_team_CAR                                                 0.3589      0.7197      
+## year2023_team_DAL                                                 0.9130      0.3613      
+## year2023_team_DEN                                                 0.2560      0.7980      
+## year2023_team_HOU                                                -0.2143      0.8303      
+## year2023_team_LA                                                  0.1235      0.9017      
+## year2023_team_NE                                                  0.1976      0.8434      
+## year2023_team_PHI                                                -0.2509      0.8019      
+## year2023_team_PIT                                                 0.1004      0.9200      
+## year2023_team_TEN                                                 0.0779      0.9379      
+## year2023_team_ARI                                                -1.2430      0.2140      
+## year2023_team_CIN                                                -0.9578      0.3382      
+## year2023_team_DET                                                 0.2463      0.8055      
+## year2023_team_TB                                                  0.6742      0.5002      
+## year2023_team_JAX                                                -0.5581      0.5768      
+## year2023_team_NYJ                                                 1.3748      0.1693      
+## is_first_half                                                    -0.6360      0.5248      
+## time_in_half                                                      1.5773      0.1148     .
+## home_attendance                                                  -0.5048      0.6138      
+## GIMR                                                              1.9526      0.0509     *
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
-## Adjusted R-squared: 0.1081876 
+## Adjusted R-squared: 0.1107308 
 ## 
 ## Variables with VIF &gt; 5:
-##                                 prev_shotgun_rate 
-##                                          9.511388 
-##                              prev_singleback_rate 
-##                                          5.518744 
-##                                       cover1_rate 
-##                                          6.431726 
-##                                       cover3_rate 
-##                                          7.116048 
-##                         offense_formation_SHOTGUN 
-##                                          6.736058 
-## defense_player_22_defensive_grades_receptions_12w 
-##                                          5.321338 
-##       defense_player_22_coverage_grades_stops_12w 
-##                                          5.199728 
-##                                   home_attendance 
-##                                         14.005435</code></pre>
+##                                               prev_shotgun_rate 
+##                                                        9.603546 
+##                                            prev_singleback_rate 
+##                                                        5.516497 
+##                                                     cover1_rate 
+##                                                        6.182436 
+##                                                     cover3_rate 
+##                                                        6.508120 
+##                                       offense_formation_SHOTGUN 
+##                                                        6.970809 
+##                 offense_player_4_rushing_grades_first_downs_12w 
+##                                                       11.461021 
+##                       offense_player_4_rushing_grades_yards_12w 
+##                                                       11.478690 
+##    offense_player_9_receiving_depth_short_grades_pass_route_12w 
+##                                                        7.731179 
+##   offense_player_9_receiving_depth_medium_grades_pass_route_12w 
+##                                                        7.205164 
+##   offense_player_10_receiving_depth_short_grades_pass_route_12w 
+##                                                        5.990313 
+##  offense_player_10_receiving_depth_medium_grades_pass_route_12w 
+##                                                        5.982390 
+##        defense_player_2_defensive_grades_grades_run_defense_12w 
+##                                                        7.993591 
+##  defense_player_2_defensive_grades_grades_pass_rush_defense_12w 
+##                                                        7.986942 
+##        defense_player_3_defensive_grades_grades_run_defense_12w 
+##                                                       25.570665 
+##  defense_player_3_defensive_grades_grades_pass_rush_defense_12w 
+##                                                       25.374956 
+##        defense_player_4_defensive_grades_grades_run_defense_12w 
+##                                                       38.924133 
+##  defense_player_4_defensive_grades_grades_pass_rush_defense_12w 
+##                                                       39.827611 
+##       defense_player_10_defensive_grades_grades_run_defense_12w 
+##                                                        7.135414 
+## defense_player_10_defensive_grades_grades_pass_rush_defense_12w 
+##                                                        5.622658 
+##  defense_player_10_defensive_grades_grades_coverage_defense_12w 
+##                                                        7.175858 
+##       defense_player_11_defensive_grades_grades_run_defense_12w 
+##                                                       23.538775 
+## defense_player_11_defensive_grades_grades_pass_rush_defense_12w 
+##                                                       18.023663 
+##  defense_player_11_defensive_grades_grades_coverage_defense_12w 
+##                                                       22.546469 
+##       defense_player_12_defensive_grades_grades_run_defense_12w 
+##                                                       29.079252 
+## defense_player_12_defensive_grades_grades_pass_rush_defense_12w 
+##                                                       24.516486 
+##  defense_player_12_defensive_grades_grades_coverage_defense_12w 
+##                                                       29.637974 
+##       defense_player_16_defensive_grades_grades_run_defense_12w 
+##                                                        5.299491 
+##  defense_player_16_defensive_grades_grades_coverage_defense_12w 
+##                                                        5.495586 
+##       defense_player_17_defensive_grades_grades_run_defense_12w 
+##                                                       16.385364 
+##  defense_player_17_defensive_grades_grades_coverage_defense_12w 
+##                                                       16.542200 
+##       defense_player_21_defensive_grades_grades_run_defense_12w 
+##                                                       10.881945 
+##  defense_player_21_defensive_grades_grades_coverage_defense_12w 
+##                                                       10.965532 
+##       defense_player_22_defensive_grades_grades_run_defense_12w 
+##                                                       30.480031 
+##  defense_player_22_defensive_grades_grades_coverage_defense_12w 
+##                                                       30.653642 
+##                                                 home_attendance 
+##                                                       13.955771</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>r2_starter <span class="ot">&lt;-</span> <span class="fu">analyze_model</span>(ols_model_starter, <span class="st">&quot;Starter Model with GIMR&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## 
@@ -1178,359 +1238,376 @@ div.tocify {
 ## 
 ## Variable                                                         t-value     p-value   sig
 ## ---------                                                        -------     -------  ----
-## (Intercept)                                                       3.2999      0.0010   ***
-## ydstogo                                                         -12.8481      0.0000   ***
-## posteam_timeouts_remaining                                        0.9955      0.3196      
-## defteam_timeouts_remaining                                        1.1720      0.2413      
-## rush_attempt                                                      7.2093      0.0000   ***
-## week                                                              0.3253      0.7450      
-## temp                                                             -0.9414      0.3466      
-## wind                                                              0.6060      0.5445      
-## vegas_wp                                                          0.8311      0.4060      
-## spread_line                                                      -0.8043      0.4213      
-## total_line                                                        2.4533      0.0142    **
-## prep_days                                                         0.8495      0.3957      
-## overall_win_pct                                                   0.7563      0.4495      
-## team_win_pct                                                      1.6297      0.1032     .
-## prev_win_pct                                                     -2.2474      0.0247    **
-## prev_shotgun_rate                                                 0.6894      0.4906      
-## prev_singleback_rate                                              0.8252      0.4093      
-## prev_empty_rate                                                   0.8674      0.3858      
-## prev_iform_rate                                                   0.3659      0.7144      
-## prev_shotgun_success                                              0.4072      0.6839      
-## prev_singleback_success                                           0.6040      0.5459      
-## prev_empty_success                                                0.3382      0.7352      
-## prev_iform_success                                                3.0582      0.0022   ***
-## prev_stop_rate_run                                               -0.1453      0.8845      
-## prev_stop_rate_pass                                              -3.4681      0.0005   ***
-## shotgun_rate                                                      1.1712      0.2416      
-## singleback_rate                                                   0.6747      0.4999      
-## empty_rate                                                       -0.3042      0.7610      
-## iform_rate                                                       -1.5644      0.1178     .
-## shotgun_success                                                  -2.4610      0.0139    **
-## singleback_success                                               -1.2953      0.1953      
-## empty_success                                                    -0.6918      0.4891      
-## iform_success                                                    -1.5096      0.1312     .
-## def_stop_rate_run                                                 1.5092      0.1313     .
-## def_stop_rate_pass                                               -1.1086      0.2677      
-## avg_pass_rushers                                                 -0.8609      0.3893      
-## avg_box_defenders                                                -0.3760      0.7069      
-## cover0_rate                                                      -0.3917      0.6953      
-## cover1_rate                                                      -0.0287      0.9771      
-## cover2_rate                                                      -0.1411      0.8878      
-## cover3_rate                                                       1.1226      0.2617      
-## cover4_rate                                                       1.0906      0.2755      
-## cover6_rate                                                      -0.2920      0.7703      
-## two_man_rate                                                      1.5285      0.1265     .
-## prevent_rate                                                      2.3464      0.0190    **
-## roof_outdoors                                                    -0.2116      0.8324      
-## posteam_type_home                                                -1.3202      0.1868      
-## offense_formation_EMPTY                                           0.2755      0.7830      
-## offense_formation_SHOTGUN                                        -0.3017      0.7629      
-## offense_formation_SINGLEBACK                                     -0.7907      0.4292      
-## offense_formation_I_FORM                                         -0.7336      0.4632      
-## starter_offense_player_1_passing_depth_short_grades_pass_12w      2.1095      0.0350    **
-## starter_offense_player_1_passing_depth_medium_grades_pass...     -0.2034      0.8388      
-## starter_offense_player_1_passing_depth_deep_grades_pass_12w      -0.8759      0.3811      
-## starter_offense_player_1_rushing_grades_grades_run_12w           -0.6618      0.5082      
-## starter_offense_player_4_rushing_grades_first_downs_12w          -0.0324      0.9741      
-## starter_offense_player_4_pass_blocking_true_pass_set_grad...     -0.8294      0.4069      
-## starter_offense_player_8_receiving_depth_medium_yprr_12w         -0.2218      0.8245      
-## starter_offense_player_8_blocking_grades_block_percent_12w        0.3974      0.6911      
-## starter_offense_player_8_receiving_grades_first_downs_12w         1.3689      0.1711      
-## starter_offense_player_9_receiving_depth_medium_yprr_12w         -1.6389      0.1013     .
-## starter_offense_player_9_blocking_grades_block_percent_12w       -1.3938      0.1635      
-## starter_offense_player_9_receiving_grades_first_downs_12w        -0.1420      0.8871      
-## starter_offense_player_10_receiving_depth_medium_yprr_12w        -0.8401      0.4009      
-## starter_offense_player_10_blocking_grades_block_percent_12w       0.3466      0.7289      
-## starter_offense_player_10_receiving_grades_first_downs_12w       -1.0726      0.2835      
-## starter_offense_player_14_receiving_grades_first_downs_12w       -1.1959      0.2318      
-## starter_offense_player_14_blocking_grades_pass_block_perc...     -1.2225      0.2216      
-## starter_offense_player_17_blocking_grades_grades_offense_12w      1.5811      0.1139     .
-## starter_offense_player_18_blocking_grades_grades_offense_12w     -0.9193      0.3580      
-## starter_offense_player_19_blocking_grades_grades_offense_12w      0.1193      0.9051      
-## starter_offense_player_20_blocking_grades_grades_offense_12w      1.6600      0.0970     *
-## starter_offense_player_21_blocking_grades_grades_offense_12w     -0.0810      0.9355      
-## starter_defense_player_1_pass_rushing_productivity_hurrie...     -0.6474      0.5174      
-## starter_defense_player_1_run_defense_grades_stops_12w             0.6616      0.5083      
-## starter_defense_player_2_pass_rushing_productivity_hurrie...     -1.1219      0.2620      
-## starter_defense_player_2_run_defense_grades_stops_12w             1.1256      0.2604      
-## starter_defense_player_3_pass_rushing_productivity_hurrie...     -0.0903      0.9281      
-## starter_defense_player_3_run_defense_grades_stops_12w            -0.4760      0.6341      
-## starter_defense_player_4_pass_rushing_productivity_hurrie...     -1.5140      0.1301     .
-## starter_defense_player_4_run_defense_grades_stops_12w             0.3791      0.7046      
-## starter_defense_player_9_pass_rushing_productivity_hurrie...      0.5592      0.5760      
-## starter_defense_player_9_run_defense_grades_stops_12w             4.1687      0.0000   ***
-## starter_defense_player_9_coverage_schemes_zone_stops_12w         -1.2903      0.1970      
-## starter_defense_player_10_pass_rushing_productivity_hurri...      0.4331      0.6650      
-## starter_defense_player_10_run_defense_grades_stops_12w            1.7766      0.0757     *
-## starter_defense_player_10_coverage_schemes_zone_stops_12w        -0.8231      0.4105      
-## starter_defense_player_11_pass_rushing_productivity_hurri...      0.2595      0.7953      
-## starter_defense_player_11_run_defense_grades_stops_12w            1.4035      0.1605      
-## starter_defense_player_11_coverage_schemes_zone_stops_12w        -0.1117      0.9111      
-## starter_defense_player_12_pass_rushing_productivity_hurri...     -1.0522      0.2928      
-## starter_defense_player_12_run_defense_grades_stops_12w            0.2711      0.7863      
-## starter_defense_player_12_coverage_schemes_zone_stops_12w        -1.1734      0.2407      
-## starter_defense_player_15_defensive_grades_receptions_12w        -0.4268      0.6696      
-## starter_defense_player_15_coverage_grades_stops_12w              -1.0972      0.2726      
-## starter_defense_player_16_defensive_grades_receptions_12w        -1.2496      0.2115      
-## starter_defense_player_16_coverage_grades_stops_12w               0.3814      0.7029      
-## starter_defense_player_17_defensive_grades_receptions_12w        -0.1402      0.8885      
-## starter_defense_player_17_coverage_grades_stops_12w              -0.8640      0.3877      
-## starter_defense_player_20_defensive_grades_receptions_12w         0.3551      0.7226      
-## starter_defense_player_20_coverage_grades_stops_12w              -0.4918      0.6229      
-## starter_defense_player_21_defensive_grades_receptions_12w        -0.4460      0.6557      
-## starter_defense_player_21_coverage_grades_stops_12w               0.8038      0.4216      
-## starter_defense_player_22_defensive_grades_receptions_12w        -0.2470      0.8049      
-## starter_defense_player_22_coverage_grades_stops_12w              -0.2432      0.8079      
-## yardline_1_10                                                    -2.3245      0.0202    **
-## yardline_11_20                                                    0.0710      0.9434      
-## yardline_21_30                                                    0.0324      0.9742      
-## yardline_41_50                                                    1.9242      0.0544     *
-## yardline_51_60                                                    0.5494      0.5828      
-## yardline_61_70                                                    1.4792      0.1392     .
-## yardline_71_80                                                    1.6298      0.1032     .
-## yardline_81_90                                                    2.5883      0.0097   ***
-## yardline_91_100                                                   1.0630      0.2879      
-## year2017_team_ARI                                                 0.4331      0.6650      
-## year2017_team_BUF                                                -0.5575      0.5772      
-## year2017_team_CHI                                                -0.0162      0.9871      
-## year2017_team_CLE                                                 0.7002      0.4838      
-## year2017_team_DAL                                                -0.7624      0.4459      
-## year2017_team_DET                                                -0.5358      0.5921      
-## year2017_team_GB                                                  1.6987      0.0895     *
-## year2017_team_HOU                                                 1.9519      0.0510     *
-## year2017_team_MIA                                                -0.5783      0.5631      
-## year2017_team_MIN                                                -0.6487      0.5166      
-## year2017_team_NE                                                  0.0526      0.9580      
-## year2017_team_SF                                                  2.2221      0.0263    **
-## year2017_team_BAL                                                -0.1291      0.8973      
-## year2017_team_DEN                                                -0.1019      0.9188      
-## year2017_team_LA                                                  0.4017      0.6879      
-## year2017_team_NYG                                                 0.0206      0.9836      
-## year2017_team_OAK                                                 0.1163      0.9074      
-## year2017_team_SEA                                                 0.6652      0.5060      
-## year2017_team_CAR                                                 0.4859      0.6270      
-## year2017_team_CIN                                                 0.8338      0.4045      
-## year2017_team_IND                                                 0.6727      0.5012      
-## year2017_team_NO                                                  0.4463      0.6554      
-## year2017_team_PHI                                                 0.5984      0.5496      
-## year2017_team_PIT                                                -1.1018      0.2706      
-## year2017_team_TEN                                                 0.3633      0.7164      
-## year2017_team_WAS                                                 0.0112      0.9911      
-## year2017_team_KC                                                  1.3986      0.1620      
-## year2017_team_LAC                                                 0.1830      0.8548      
-## year2017_team_NYJ                                                 0.8458      0.3977      
-## year2017_team_TB                                                  0.3442      0.7307      
-## year2017_team_ATL                                                -0.1224      0.9026      
-## year2017_team_JAX                                                 0.7556      0.4499      
-## year2018_team_ARI                                                 1.0146      0.3104      
-## year2018_team_BAL                                                 0.6800      0.4965      
-## year2018_team_CAR                                                 0.4329      0.6651      
-## year2018_team_CLE                                                -0.3541      0.7233      
-## year2018_team_DET                                                 0.3249      0.7453      
-## year2018_team_HOU                                                 1.0633      0.2877      
-## year2018_team_IND                                                -0.4980      0.6185      
-## year2018_team_KC                                                  0.3551      0.7226      
-## year2018_team_NYG                                                 0.5385      0.5902      
-## year2018_team_OAK                                                -0.1443      0.8853      
-## year2018_team_PHI                                                 0.6937      0.4879      
-## year2018_team_SEA                                                -0.3294      0.7419      
-## year2018_team_BUF                                                -0.2769      0.7819      
-## year2018_team_CHI                                                -0.1474      0.8828      
-## year2018_team_CIN                                                -0.2752      0.7832      
-## year2018_team_DAL                                                 0.0051      0.9959      
-## year2018_team_DEN                                                 0.2327      0.8160      
-## year2018_team_GB                                                 -0.0651      0.9481      
-## year2018_team_LAC                                                 0.6548      0.5126      
-## year2018_team_NE                                                 -1.0036      0.3157      
-## year2018_team_NO                                                  0.8750      0.3816      
-## year2018_team_PIT                                                 0.3461      0.7293      
-## year2018_team_SF                                                  0.3438      0.7310      
-## year2018_team_MIA                                                 0.5802      0.5618      
-## year2018_team_MIN                                                 0.2183      0.8272      
-## year2018_team_NYJ                                                 0.8383      0.4019      
-## year2018_team_TB                                                  0.4025      0.6874      
-## year2018_team_ATL                                                 0.6194      0.5357      
-## year2018_team_JAX                                                 0.6639      0.5068      
-## year2018_team_LA                                                 -1.1023      0.2704      
-## year2018_team_TEN                                                 0.8385      0.4018      
-## year2018_team_WAS                                                 0.2384      0.8116      
-## year2019_team_ARI                                                -0.3602      0.7187      
-## year2019_team_BUF                                                -1.1006      0.2711      
-## year2019_team_CHI                                                 0.4803      0.6310      
-## year2019_team_CLE                                                 0.8566      0.3917      
-## year2019_team_DAL                                                -0.1482      0.8822      
-## year2019_team_IND                                                -0.5032      0.6149      
-## year2019_team_JAX                                                 0.9726      0.3308      
-## year2019_team_KC                                                 -0.2492      0.8032      
-## year2019_team_LAC                                                -0.5762      0.5645      
-## year2019_team_MIN                                                -0.6163      0.5377      
-## year2019_team_NE                                                 -0.1498      0.8810      
-## year2019_team_NO                                                 -1.1793      0.2384      
-## year2019_team_PHI                                                 0.4960      0.6199      
-## year2019_team_SEA                                                 0.3307      0.7409      
-## year2019_team_SF                                                  0.0709      0.9435      
-## year2019_team_TB                                                 -0.9334      0.3507      
-## year2019_team_BAL                                                 0.1147      0.9087      
-## year2019_team_CAR                                                -0.2356      0.8138      
-## year2019_team_DEN                                                 0.6202      0.5352      
-## year2019_team_DET                                                -0.6087      0.5428      
-## year2019_team_HOU                                                -0.0521      0.9585      
-## year2019_team_LA                                                 -0.6343      0.5259      
-## year2019_team_MIA                                                -2.4163      0.0157    **
-## year2019_team_NYG                                                -0.8016      0.4228      
-## year2019_team_NYJ                                                -1.2251      0.2206      
-## year2019_team_OAK                                                 0.1821      0.8555      
-## year2019_team_PIT                                                -2.2928      0.0219    **
-## year2019_team_TEN                                                -1.0512      0.2932      
-## year2019_team_CIN                                                 0.5504      0.5821      
-## year2019_team_WAS                                                -0.3717      0.7101      
-## year2019_team_ATL                                                 0.3721      0.7098      
-## year2019_team_GB                                                 -0.4011      0.6884      
-## year2020_team_ATL                                                 0.4436      0.6574      
-## year2020_team_BAL                                                 0.8202      0.4121      
-## year2020_team_BUF                                                 0.3396      0.7342      
-## year2020_team_CAR                                                 0.9676      0.3333      
-## year2020_team_CIN                                                 0.4600      0.6456      
-## year2020_team_DEN                                                -0.4489      0.6535      
-## year2020_team_DET                                                -0.6894      0.4906      
-## year2020_team_JAX                                                -0.7233      0.4696      
-## year2020_team_KC                                                  0.0885      0.9295      
-## year2020_team_LA                                                 -0.7767      0.4374      
-## year2020_team_MIN                                                 1.3630      0.1730      
-## year2020_team_NE                                                  0.2593      0.7955      
-## year2020_team_NO                                                  0.4405      0.6596      
-## year2020_team_NYG                                                 0.4712      0.6375      
-## year2020_team_SF                                                  0.7284      0.4664      
-## year2020_team_WAS                                                 0.2762      0.7824      
-## year2020_team_CHI                                                 0.3695      0.7118      
-## year2020_team_DAL                                                 0.1407      0.8881      
-## year2020_team_GB                                                  0.0951      0.9243      
-## year2020_team_HOU                                                -0.9569      0.3387      
-## year2020_team_MIA                                                -0.8331      0.4049      
-## year2020_team_NYJ                                                 0.4741      0.6354      
-## year2020_team_TB                                                  0.5817      0.5608      
-## year2020_team_TEN                                                -0.5085      0.6111      
-## year2020_team_ARI                                                 0.6950      0.4871      
-## year2020_team_CLE                                                -1.0940      0.2740      
-## year2020_team_IND                                                -0.6417      0.5211      
-## year2020_team_LAC                                                 0.4345      0.6639      
-## year2020_team_PHI                                                 1.2782      0.2013      
-## year2020_team_SEA                                                -0.1939      0.8462      
-## year2020_team_LV                                                  1.0626      0.2880      
-## year2020_team_PIT                                                -0.7133      0.4757      
-## year2021_team_ATL                                                -1.6057      0.1084     .
-## year2021_team_BUF                                                -0.1030      0.9180      
-## year2021_team_CIN                                                -1.4031      0.1607      
-## year2021_team_DAL                                                -0.5751      0.5653      
-## year2021_team_DEN                                                 0.8183      0.4132      
-## year2021_team_DET                                                -0.8024      0.4224      
-## year2021_team_KC                                                  0.1748      0.8612      
-## year2021_team_LA                                                  0.2550      0.7987      
-## year2021_team_LV                                                  0.7601      0.4472      
-## year2021_team_MIN                                                -0.3943      0.6934      
-## year2021_team_NE                                                  0.0541      0.9568      
-## year2021_team_NO                                                  0.0565      0.9549      
-## year2021_team_NYG                                                 0.3906      0.6961      
-## year2021_team_SF                                                  0.0023      0.9981      
-## year2021_team_TEN                                                 0.1431      0.8863      
-## year2021_team_ARI                                                 1.0016      0.3166      
-## year2021_team_BAL                                                 1.0054      0.3148      
-## year2021_team_CAR                                                -0.7017      0.4829      
-## year2021_team_CHI                                                -1.6161      0.1062     .
-## year2021_team_GB                                                  0.8266      0.4085      
-## year2021_team_IND                                                -0.4505      0.6524      
-## year2021_team_LAC                                                 0.2186      0.8270      
-## year2021_team_MIA                                                 0.3258      0.7446      
-## year2021_team_NYJ                                                -0.2608      0.7943      
-## year2021_team_PHI                                                -1.2844      0.1991      
-## year2021_team_SEA                                                -1.1575      0.2471      
-## year2021_team_TB                                                  0.0733      0.9415      
-## year2021_team_WAS                                                -0.3680      0.7129      
-## year2021_team_CLE                                                -0.4779      0.6327      
-## year2021_team_HOU                                                -0.6113      0.5411      
-## year2021_team_JAX                                                -0.0661      0.9473      
-## year2021_team_PIT                                                 0.2931      0.7694      
-## year2022_team_ARI                                                -0.8134      0.4160      
-## year2022_team_ATL                                                -1.7295      0.0838     *
-## year2022_team_CAR                                                 0.7117      0.4767      
-## year2022_team_CHI                                                -0.2353      0.8140      
-## year2022_team_CIN                                                -0.8436      0.3989      
-## year2022_team_HOU                                                -0.0494      0.9606      
-## year2022_team_IND                                                -0.6984      0.4850      
-## year2022_team_LAC                                                -0.9396      0.3475      
-## year2022_team_MIA                                                -1.4041      0.1604      
-## year2022_team_SEA                                                -0.2174      0.8279      
-## year2022_team_TB                                                  0.0823      0.9344      
-## year2022_team_TEN                                                 1.9331      0.0533     *
-## year2022_team_WAS                                                 0.5222      0.6016      
-## year2022_team_BAL                                                -1.1423      0.2534      
-## year2022_team_BUF                                                 0.5872      0.5571      
-## year2022_team_DAL                                                 0.3111      0.7558      
-## year2022_team_DET                                                -0.1097      0.9126      
-## year2022_team_GB                                                 -0.5444      0.5862      
-## year2022_team_JAX                                                -0.8448      0.3983      
-## year2022_team_KC                                                 -0.8539      0.3932      
-## year2022_team_LA                                                  1.2961      0.1950      
-## year2022_team_LV                                                  1.1208      0.2625      
-## year2022_team_NO                                                  0.0612      0.9512      
-## year2022_team_PHI                                                 0.6679      0.5043      
-## year2022_team_PIT                                                 1.0264      0.3048      
-## year2022_team_DEN                                                 0.6533      0.5136      
-## year2022_team_MIN                                                -0.8086      0.4188      
-## year2022_team_NE                                                  0.6175      0.5369      
-## year2022_team_NYJ                                                -0.9152      0.3601      
-## year2022_team_NYG                                                -0.3460      0.7293      
-## year2022_team_SF                                                 -1.0791      0.2806      
-## year2023_team_BAL                                                -0.1490      0.8816      
-## year2023_team_CHI                                                -0.8852      0.3761      
-## year2023_team_CLE                                                -0.9296      0.3527      
-## year2023_team_GB                                                  0.2151      0.8297      
-## year2023_team_IND                                                 0.6457      0.5185      
-## year2023_team_KC                                                  0.1448      0.8849      
-## year2023_team_LAC                                                 0.3673      0.7134      
-## year2023_team_LV                                                  0.4851      0.6277      
-## year2023_team_MIA                                                 0.0936      0.9254      
-## year2023_team_MIN                                                 1.6910      0.0909     *
-## year2023_team_NO                                                 -0.2075      0.8356      
-## year2023_team_NYG                                                 0.3898      0.6967      
-## year2023_team_SEA                                                -2.2262      0.0261    **
-## year2023_team_SF                                                  0.5909      0.5546      
-## year2023_team_WAS                                                 1.6905      0.0910     *
-## year2023_team_ATL                                                -0.5790      0.5626      
-## year2023_team_BUF                                                -0.5680      0.5700      
-## year2023_team_CAR                                                 1.0405      0.2982      
-## year2023_team_DAL                                                 0.9658      0.3342      
-## year2023_team_DEN                                                 0.0228      0.9818      
-## year2023_team_HOU                                                 0.2684      0.7884      
-## year2023_team_LA                                                  0.2604      0.7945      
-## year2023_team_NE                                                  0.6050      0.5452      
-## year2023_team_PHI                                                -0.2467      0.8051      
-## year2023_team_PIT                                                -0.1640      0.8697      
-## year2023_team_TEN                                                 0.1689      0.8659      
-## year2023_team_ARI                                                -0.3760      0.7069      
-## year2023_team_CIN                                                -0.4701      0.6383      
-## year2023_team_DET                                                 0.4766      0.6336      
-## year2023_team_TB                                                  1.2157      0.2242      
-## year2023_team_JAX                                                -0.3406      0.7335      
-## year2023_team_NYJ                                                 1.3900      0.1646      
-## is_first_half                                                    -0.7833      0.4335      
-## time_in_half                                                      1.6289      0.1034     .
-## home_attendance                                                  -0.1982      0.8429      
-## GIMR                                                              1.5079      0.1317     .
+## (Intercept)                                                       3.5741      0.0004   ***
+## ydstogo                                                         -13.1385      0.0000   ***
+## posteam_timeouts_remaining                                        1.2366      0.2163      
+## defteam_timeouts_remaining                                        1.0303      0.3029      
+## rush_attempt                                                      6.9284      0.0000   ***
+## week                                                              0.7331      0.4636      
+## temp                                                             -0.7635      0.4452      
+## wind                                                              0.2982      0.7655      
+## vegas_wp                                                          1.0230      0.3064      
+## spread_line                                                      -0.3738      0.7086      
+## total_line                                                        2.1671      0.0303    **
+## prep_days                                                         0.9746      0.3298      
+## overall_win_pct                                                   0.3784      0.7051      
+## team_win_pct                                                      1.5209      0.1284     .
+## prev_win_pct                                                     -2.5574      0.0106    **
+## prev_shotgun_rate                                                 0.4052      0.6854      
+## prev_singleback_rate                                              0.7840      0.4331      
+## prev_empty_rate                                                   0.8793      0.3793      
+## prev_iform_rate                                                   0.1647      0.8692      
+## prev_shotgun_success                                              0.6171      0.5372      
+## prev_singleback_success                                           0.4639      0.6428      
+## prev_empty_success                                               -0.0596      0.9525      
+## prev_iform_success                                                2.9259      0.0035   ***
+## prev_stop_rate_run                                               -0.0530      0.9577      
+## prev_stop_rate_pass                                              -3.4929      0.0005   ***
+## shotgun_rate                                                      1.2508      0.2111      
+## singleback_rate                                                   0.6298      0.5289      
+## empty_rate                                                       -0.1886      0.8504      
+## iform_rate                                                       -1.2025      0.2293      
+## shotgun_success                                                  -2.3478      0.0189    **
+## singleback_success                                               -1.2031      0.2290      
+## empty_success                                                    -1.1381      0.2552      
+## iform_success                                                    -1.0902      0.2757      
+## def_stop_rate_run                                                 1.6237      0.1045     .
+## def_stop_rate_pass                                               -1.4253      0.1542      
+## avg_pass_rushers                                                 -1.0621      0.2882      
+## avg_box_defenders                                                -0.4164      0.6771      
+## cover0_rate                                                      -0.5167      0.6054      
+## cover1_rate                                                      -0.2854      0.7754      
+## cover2_rate                                                      -0.0797      0.9365      
+## cover3_rate                                                       1.3194      0.1871      
+## cover4_rate                                                       0.8639      0.3877      
+## cover6_rate                                                      -0.6199      0.5354      
+## two_man_rate                                                      1.5420      0.1232     .
+## prevent_rate                                                      2.5245      0.0116    **
+## roof_outdoors                                                     0.1204      0.9042      
+## posteam_type_home                                                -1.4542      0.1460     .
+## offense_formation_EMPTY                                           0.1830      0.8548      
+## offense_formation_SHOTGUN                                        -0.3069      0.7589      
+## offense_formation_SINGLEBACK                                     -0.8415      0.4001      
+## offense_formation_I_FORM                                         -0.8627      0.3883      
+## starter_offense_player_1_passing_depth_short_grades_pass_12w      1.8981      0.0578     *
+## starter_offense_player_1_passing_depth_medium_grades_pass...     -1.5415      0.1233     .
+## starter_offense_player_1_passing_depth_deep_grades_pass_12w      -0.5848      0.5587      
+## starter_offense_player_4_rushing_grades_first_downs_12w          -0.3395      0.7343      
+## starter_offense_player_4_rushing_grades_yards_12w                 0.2147      0.8300      
+## starter_offense_player_4_receiving_grades_grades_pass_blo...     -2.3458      0.0190    **
+## starter_offense_player_4_receiving_grades_grades_offense_12w      0.9402      0.3472      
+## starter_offense_player_8_receiving_depth_short_grades_pas...      0.0886      0.9294      
+## starter_offense_player_8_receiving_depth_medium_grades_pa...      1.6466      0.0997     *
+## starter_offense_player_8_receiving_depth_deep_grades_pass...      0.1309      0.8959      
+## starter_offense_player_9_receiving_depth_short_grades_pas...     -1.0754      0.2823      
+## starter_offense_player_9_receiving_depth_medium_grades_pa...      1.2259      0.2203      
+## starter_offense_player_9_receiving_depth_deep_grades_pass...      0.2997      0.7644      
+## starter_offense_player_10_receiving_depth_short_grades_pa...     -1.1316      0.2579      
+## starter_offense_player_10_receiving_depth_medium_grades_p...      0.5403      0.5890      
+## starter_offense_player_10_receiving_depth_deep_grades_pas...      0.2336      0.8153      
+## starter_offense_player_14_receiving_depth_short_grades_pa...      0.7040      0.4815      
+## starter_offense_player_14_receiving_depth_medium_grades_p...     -1.7766      0.0757     *
+## starter_offense_player_14_receiving_depth_deep_grades_pas...     -0.1893      0.8499      
+## starter_offense_player_17_blocking_grades_grades_pass_blo...      1.2786      0.2011      
+## starter_offense_player_17_blocking_grades_grades_run_bloc...      0.2942      0.7686      
+## starter_offense_player_18_blocking_grades_grades_pass_blo...     -0.8877      0.3748      
+## starter_offense_player_18_blocking_grades_grades_run_bloc...     -0.4140      0.6789      
+## starter_offense_player_19_blocking_grades_grades_pass_blo...      0.5998      0.5487      
+## starter_offense_player_19_blocking_grades_grades_run_bloc...     -1.0257      0.3051      
+## starter_offense_player_20_blocking_grades_grades_pass_blo...      1.8301      0.0673     *
+## starter_offense_player_20_blocking_grades_grades_run_bloc...     -0.4634      0.6431      
+## starter_offense_player_21_blocking_grades_grades_pass_blo...      2.3209      0.0203    **
+## starter_offense_player_21_blocking_grades_grades_run_bloc...     -2.4956      0.0126    **
+## starter_defense_player_1_defensive_grades_grades_run_defe...     -0.0851      0.9322      
+## starter_defense_player_1_defensive_grades_grades_pass_rus...      0.1743      0.8616      
+## starter_defense_player_2_defensive_grades_grades_run_defe...      2.0536      0.0401    **
+## starter_defense_player_2_defensive_grades_grades_pass_rus...     -1.2557      0.2093      
+## starter_defense_player_3_defensive_grades_grades_run_defe...     -0.3703      0.7112      
+## starter_defense_player_3_defensive_grades_grades_pass_rus...     -0.2355      0.8138      
+## starter_defense_player_4_defensive_grades_grades_run_defe...      0.9814      0.3264      
+## starter_defense_player_4_defensive_grades_grades_pass_rus...     -0.4363      0.6626      
+## starter_defense_player_9_defensive_grades_grades_run_defe...      1.9277      0.0540     *
+## starter_defense_player_9_defensive_grades_grades_pass_rus...      0.9850      0.3247      
+## starter_defense_player_9_defensive_grades_grades_coverage...     -1.9099      0.0562     *
+## starter_defense_player_10_defensive_grades_grades_run_def...      1.8872      0.0592     *
+## starter_defense_player_10_defensive_grades_grades_pass_ru...      1.1153      0.2648      
+## starter_defense_player_10_defensive_grades_grades_coverag...     -1.6437      0.1003     .
+## starter_defense_player_11_defensive_grades_grades_run_def...     -0.1983      0.8428      
+## starter_defense_player_11_defensive_grades_grades_pass_ru...      0.5633      0.5732      
+## starter_defense_player_11_defensive_grades_grades_coverag...      0.0673      0.9464      
+## starter_defense_player_12_defensive_grades_grades_run_def...     -1.6328      0.1026     .
+## starter_defense_player_12_defensive_grades_grades_pass_ru...      0.0557      0.9556      
+## starter_defense_player_12_defensive_grades_grades_coverag...      0.6044      0.5456      
+## starter_defense_player_15_defensive_grades_grades_run_def...     -0.9174      0.3590      
+## starter_defense_player_15_defensive_grades_grades_coverag...      0.0027      0.9979      
+## starter_defense_player_16_defensive_grades_grades_run_def...      2.0787      0.0377    **
+## starter_defense_player_16_defensive_grades_grades_coverag...     -1.4700      0.1416     .
+## starter_defense_player_17_defensive_grades_grades_run_def...     -0.8852      0.3761      
+## starter_defense_player_17_defensive_grades_grades_coverag...     -0.6722      0.5015      
+## starter_defense_player_20_defensive_grades_grades_run_def...      0.3235      0.7463      
+## starter_defense_player_20_defensive_grades_grades_coverag...     -0.4816      0.6301      
+## starter_defense_player_21_defensive_grades_grades_run_def...     -0.2569      0.7973      
+## starter_defense_player_21_defensive_grades_grades_coverag...     -1.0115      0.3118      
+## starter_defense_player_22_defensive_grades_grades_run_def...      0.3643      0.7157      
+## starter_defense_player_22_defensive_grades_grades_coverag...     -0.0217      0.9827      
+## yardline_1_10                                                    -2.4943      0.0127    **
+## yardline_11_20                                                    0.0076      0.9940      
+## yardline_21_30                                                   -0.0368      0.9707      
+## yardline_41_50                                                    1.8419      0.0656     *
+## yardline_51_60                                                    0.4668      0.6407      
+## yardline_61_70                                                    1.4623      0.1438     .
+## yardline_71_80                                                    1.8122      0.0700     *
+## yardline_81_90                                                    2.3444      0.0191    **
+## yardline_91_100                                                   1.0316      0.3023      
+## year2017_team_ARI                                                 0.0541      0.9569      
+## year2017_team_BUF                                                -0.9022      0.3670      
+## year2017_team_CHI                                                -0.3095      0.7569      
+## year2017_team_CLE                                                 0.0741      0.9409      
+## year2017_team_DAL                                                -0.9684      0.3329      
+## year2017_team_DET                                                -0.7803      0.4353      
+## year2017_team_GB                                                  1.4192      0.1559      
+## year2017_team_HOU                                                 1.4793      0.1391     .
+## year2017_team_MIA                                                -1.3822      0.1670      
+## year2017_team_MIN                                                -1.1755      0.2399      
+## year2017_team_NE                                                 -0.3622      0.7173      
+## year2017_team_SF                                                  1.7759      0.0758     *
+## year2017_team_BAL                                                -0.4003      0.6889      
+## year2017_team_DEN                                                -0.3239      0.7461      
+## year2017_team_LA                                                  0.2411      0.8095      
+## year2017_team_NYG                                                -0.7678      0.4427      
+## year2017_team_OAK                                                -0.2438      0.8074      
+## year2017_team_SEA                                                 0.4028      0.6871      
+## year2017_team_CAR                                                 0.1394      0.8892      
+## year2017_team_CIN                                                 0.1287      0.8976      
+## year2017_team_IND                                                 0.5889      0.5559      
+## year2017_team_NO                                                  0.1246      0.9008      
+## year2017_team_PHI                                                -0.0959      0.9236      
+## year2017_team_PIT                                                -1.2809      0.2003      
+## year2017_team_TEN                                                -0.2823      0.7777      
+## year2017_team_WAS                                                -0.1011      0.9195      
+## year2017_team_KC                                                  1.0787      0.2808      
+## year2017_team_LAC                                                -0.3504      0.7260      
+## year2017_team_NYJ                                                 0.2357      0.8137      
+## year2017_team_TB                                                  0.1493      0.8813      
+## year2017_team_ATL                                                -0.4252      0.6707      
+## year2017_team_JAX                                                 0.4216      0.6734      
+## year2018_team_ARI                                                 0.4675      0.6402      
+## year2018_team_BAL                                                 0.1627      0.8708      
+## year2018_team_CAR                                                 0.0125      0.9900      
+## year2018_team_CLE                                                -0.7416      0.4584      
+## year2018_team_DET                                                -0.2692      0.7878      
+## year2018_team_HOU                                                 0.4843      0.6282      
+## year2018_team_IND                                                -1.4653      0.1429     .
+## year2018_team_KC                                                 -0.2115      0.8325      
+## year2018_team_NYG                                                -0.0426      0.9661      
+## year2018_team_OAK                                                -0.5503      0.5821      
+## year2018_team_PHI                                                 0.1232      0.9020      
+## year2018_team_SEA                                                -0.8584      0.3907      
+## year2018_team_BUF                                                -0.8383      0.4019      
+## year2018_team_CHI                                                -0.5300      0.5962      
+## year2018_team_CIN                                                -1.0350      0.3008      
+## year2018_team_DAL                                                -0.7666      0.4434      
+## year2018_team_DEN                                                -0.3271      0.7436      
+## year2018_team_GB                                                 -0.4767      0.6336      
+## year2018_team_LAC                                                 0.2997      0.7645      
+## year2018_team_NE                                                 -0.9947      0.3199      
+## year2018_team_NO                                                  0.0135      0.9892      
+## year2018_team_PIT                                                -0.0467      0.9628      
+## year2018_team_SF                                                 -0.0001      0.9999      
+## year2018_team_MIA                                                 0.2175      0.8278      
+## year2018_team_MIN                                                -0.1443      0.8852      
+## year2018_team_NYJ                                                 0.3769      0.7062      
+## year2018_team_TB                                                 -0.3245      0.7456      
+## year2018_team_ATL                                                -0.1078      0.9142      
+## year2018_team_JAX                                                -0.3685      0.7125      
+## year2018_team_LA                                                 -1.5212      0.1283     .
+## year2018_team_TEN                                                 0.3714      0.7104      
+## year2018_team_WAS                                                -0.3572      0.7210      
+## year2019_team_ARI                                                -1.0760      0.2820      
+## year2019_team_BUF                                                -1.1733      0.2408      
+## year2019_team_CHI                                                -0.0500      0.9601      
+## year2019_team_CLE                                                 0.0181      0.9856      
+## year2019_team_DAL                                                -0.6406      0.5218      
+## year2019_team_IND                                                -0.7766      0.4374      
+## year2019_team_JAX                                                 0.2136      0.8309      
+## year2019_team_KC                                                 -0.1376      0.8905      
+## year2019_team_LAC                                                -1.1767      0.2394      
+## year2019_team_MIN                                                -1.1866      0.2355      
+## year2019_team_NE                                                 -0.4397      0.6602      
+## year2019_team_NO                                                 -1.4929      0.1356     .
+## year2019_team_PHI                                                 0.1243      0.9011      
+## year2019_team_SEA                                                -0.0637      0.9492      
+## year2019_team_SF                                                 -0.7899      0.4296      
+## year2019_team_TB                                                 -1.3145      0.1888      
+## year2019_team_BAL                                                -0.2025      0.8395      
+## year2019_team_CAR                                                -0.8576      0.3912      
+## year2019_team_DEN                                                 0.4306      0.6668      
+## year2019_team_DET                                                -1.1481      0.2510      
+## year2019_team_HOU                                                -0.4751      0.6347      
+## year2019_team_LA                                                 -1.4827      0.1382     .
+## year2019_team_MIA                                                -2.3298      0.0199    **
+## year2019_team_NYG                                                -1.3423      0.1796      
+## year2019_team_NYJ                                                -2.0173      0.0437    **
+## year2019_team_OAK                                                -0.3100      0.7566      
+## year2019_team_PIT                                                -3.6694      0.0002   ***
+## year2019_team_TEN                                                -1.6620      0.0966     *
+## year2019_team_CIN                                                 0.0441      0.9649      
+## year2019_team_WAS                                                -0.7142      0.4751      
+## year2019_team_ATL                                                -0.1986      0.8426      
+## year2019_team_GB                                                 -0.8359      0.4033      
+## year2020_team_ATL                                                 0.2887      0.7728      
+## year2020_team_BAL                                                 0.2737      0.7844      
+## year2020_team_BUF                                                 0.0969      0.9228      
+## year2020_team_CAR                                                 0.8199      0.4123      
+## year2020_team_CIN                                                 0.2757      0.7828      
+## year2020_team_DEN                                                -0.5173      0.6050      
+## year2020_team_DET                                                -1.0205      0.3075      
+## year2020_team_JAX                                                -0.8942      0.3713      
+## year2020_team_KC                                                  0.0166      0.9868      
+## year2020_team_LA                                                 -1.1823      0.2371      
+## year2020_team_MIN                                                 1.1021      0.2705      
+## year2020_team_NE                                                 -0.2086      0.8348      
+## year2020_team_NO                                                  0.2037      0.8386      
+## year2020_team_NYG                                                -0.1610      0.8721      
+## year2020_team_SF                                                  0.1568      0.8754      
+## year2020_team_WAS                                                 0.0552      0.9559      
+## year2020_team_CHI                                                 0.6583      0.5104      
+## year2020_team_DAL                                                -0.2584      0.7961      
+## year2020_team_GB                                                 -0.0098      0.9921      
+## year2020_team_HOU                                                -1.2378      0.2159      
+## year2020_team_MIA                                                -1.0802      0.2801      
+## year2020_team_NYJ                                                -0.1370      0.8911      
+## year2020_team_TB                                                  0.1648      0.8691      
+## year2020_team_TEN                                                -0.6860      0.4928      
+## year2020_team_ARI                                                 0.3874      0.6984      
+## year2020_team_CLE                                                -1.6855      0.0920     *
+## year2020_team_IND                                                -0.9966      0.3190      
+## year2020_team_LAC                                                -0.2135      0.8309      
+## year2020_team_PHI                                                 0.6018      0.5474      
+## year2020_team_SEA                                                -0.3442      0.7307      
+## year2020_team_LV                                                  0.4917      0.6230      
+## year2020_team_PIT                                                -0.8601      0.3898      
+## year2021_team_ATL                                                -2.0299      0.0424    **
+## year2021_team_BUF                                                -0.2364      0.8131      
+## year2021_team_CIN                                                -1.4579      0.1450     .
+## year2021_team_DAL                                                -1.0363      0.3001      
+## year2021_team_DEN                                                 0.3189      0.7498      
+## year2021_team_DET                                                -1.2343      0.2172      
+## year2021_team_KC                                                  0.3190      0.7498      
+## year2021_team_LA                                                 -0.2766      0.7821      
+## year2021_team_LV                                                  0.3151      0.7527      
+## year2021_team_MIN                                                -0.5680      0.5701      
+## year2021_team_NE                                                  0.2190      0.8267      
+## year2021_team_NO                                                 -0.3277      0.7431      
+## year2021_team_NYG                                                 0.1352      0.8925      
+## year2021_team_SF                                                 -0.3791      0.7046      
+## year2021_team_TEN                                                -0.5996      0.5488      
+## year2021_team_ARI                                                 0.8862      0.3756      
+## year2021_team_BAL                                                 0.4983      0.6183      
+## year2021_team_CAR                                                -0.2102      0.8335      
+## year2021_team_CHI                                                -1.7897      0.0736     *
+## year2021_team_GB                                                  0.2602      0.7947      
+## year2021_team_IND                                                -0.6911      0.4896      
+## year2021_team_LAC                                                -0.0946      0.9246      
+## year2021_team_MIA                                                -0.0477      0.9619      
+## year2021_team_NYJ                                                -0.6034      0.5463      
+## year2021_team_PHI                                                -1.6246      0.1043     .
+## year2021_team_SEA                                                -1.4861      0.1373     .
+## year2021_team_TB                                                 -0.0819      0.9347      
+## year2021_team_WAS                                                -0.7840      0.4331      
+## year2021_team_CLE                                                -0.5685      0.5697      
+## year2021_team_HOU                                                -0.7556      0.4499      
+## year2021_team_JAX                                                -0.6736      0.5006      
+## year2021_team_PIT                                                -0.1002      0.9202      
+## year2022_team_ARI                                                -1.4813      0.1386     .
+## year2022_team_ATL                                                -1.6511      0.0988     *
+## year2022_team_CAR                                                 0.1003      0.9201      
+## year2022_team_CHI                                                -0.3825      0.7021      
+## year2022_team_CIN                                                -1.0551      0.2915      
+## year2022_team_HOU                                                -0.4864      0.6267      
+## year2022_team_IND                                                -0.7123      0.4763      
+## year2022_team_LAC                                                -0.9458      0.3443      
+## year2022_team_MIA                                                -1.4722      0.1411     .
+## year2022_team_SEA                                                -0.4239      0.6716      
+## year2022_team_TB                                                 -0.0986      0.9215      
+## year2022_team_TEN                                                 1.4676      0.1423     .
+## year2022_team_WAS                                                 0.1342      0.8932      
+## year2022_team_BAL                                                -1.6198      0.1054     .
+## year2022_team_BUF                                                 0.4273      0.6692      
+## year2022_team_DAL                                                -0.1083      0.9137      
+## year2022_team_DET                                                -0.3470      0.7286      
+## year2022_team_GB                                                 -0.8614      0.3891      
+## year2022_team_JAX                                                -1.8927      0.0585     *
+## year2022_team_KC                                                 -0.9344      0.3502      
+## year2022_team_LA                                                  1.0178      0.3088      
+## year2022_team_LV                                                  0.7004      0.4837      
+## year2022_team_NO                                                 -0.4349      0.6636      
+## year2022_team_PHI                                                 0.2636      0.7921      
+## year2022_team_PIT                                                 0.7555      0.4500      
+## year2022_team_DEN                                                 0.1461      0.8839      
+## year2022_team_MIN                                                -0.7948      0.4268      
+## year2022_team_NE                                                  0.1683      0.8663      
+## year2022_team_NYJ                                                -1.3044      0.1922      
+## year2022_team_NYG                                                -0.5406      0.5888      
+## year2022_team_SF                                                 -1.2817      0.2000      
+## year2023_team_BAL                                                -0.4978      0.6187      
+## year2023_team_CHI                                                -1.3452      0.1786      
+## year2023_team_CLE                                                -1.1863      0.2356      
+## year2023_team_GB                                                 -0.4944      0.6210      
+## year2023_team_IND                                                 0.2597      0.7951      
+## year2023_team_KC                                                 -0.2645      0.7914      
+## year2023_team_LAC                                                 0.3036      0.7615      
+## year2023_team_LV                                                 -0.2765      0.7822      
+## year2023_team_MIA                                                -0.0555      0.9557      
+## year2023_team_MIN                                                 1.0721      0.2838      
+## year2023_team_NO                                                 -1.1064      0.2686      
+## year2023_team_NYG                                                 0.5201      0.6031      
+## year2023_team_SEA                                                -2.6368      0.0084   ***
+## year2023_team_SF                                                  0.0472      0.9623      
+## year2023_team_WAS                                                 1.1562      0.2477      
+## year2023_team_ATL                                                -1.0882      0.2766      
+## year2023_team_BUF                                                -0.8735      0.3825      
+## year2023_team_CAR                                                 0.3555      0.7223      
+## year2023_team_DAL                                                 0.4838      0.6285      
+## year2023_team_DEN                                                -0.4604      0.6453      
+## year2023_team_HOU                                                -0.1755      0.8607      
+## year2023_team_LA                                                  0.0279      0.9777      
+## year2023_team_NE                                                  0.2117      0.8323      
+## year2023_team_PHI                                                -0.7529      0.4516      
+## year2023_team_PIT                                                -0.2668      0.7897      
+## year2023_team_TEN                                                -0.4573      0.6475      
+## year2023_team_ARI                                                -1.5195      0.1287     .
+## year2023_team_CIN                                                -1.0693      0.2850      
+## year2023_team_DET                                                -0.0896      0.9286      
+## year2023_team_TB                                                  0.3228      0.7469      
+## year2023_team_JAX                                                -0.8513      0.3947      
+## year2023_team_NYJ                                                 1.1719      0.2413      
+## is_first_half                                                    -0.8042      0.4213      
+## time_in_half                                                      1.6715      0.0947     *
+## home_attendance                                                  -0.1797      0.8574      
+## GIMR                                                              1.9198      0.0550     *
 ## 
 ## Significance codes: 0 &#39;***&#39; 0.01 &#39;**&#39; 0.05 &#39;*&#39; 0.1 &#39;.&#39; 0.15
 ## 
-## Adjusted R-squared: 0.1097566 
+## Adjusted R-squared: 0.1103407 
 ## 
 ## Variables with VIF &gt; 5:
-##         prev_shotgun_rate      prev_singleback_rate           prev_iform_rate 
-##                 10.203998                  5.948495                  5.055627 
-##               cover1_rate               cover3_rate offense_formation_SHOTGUN 
-##                  6.238061                  6.565899                  5.638981 
-##           home_attendance 
-##                 13.846742</code></pre>
+##                                       prev_shotgun_rate 
+##                                                9.942789 
+##                                    prev_singleback_rate 
+##                                                5.749487 
+##                                             cover1_rate 
+##                                                6.199817 
+##                                             cover3_rate 
+##                                                6.588790 
+##                               offense_formation_SHOTGUN 
+##                                                5.630244 
+## starter_offense_player_4_rushing_grades_first_downs_12w 
+##                                               12.510132 
+##       starter_offense_player_4_rushing_grades_yards_12w 
+##                                               12.522463 
+##                                         home_attendance 
+##                                               14.045174</code></pre>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="co"># Compare R-squared values</span></span>
 <span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>, <span class="fu">paste</span>(<span class="fu">rep</span>(<span class="st">&quot;=&quot;</span>, <span class="dv">80</span>), <span class="at">collapse=</span><span class="st">&quot;&quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
@@ -1541,11 +1618,11 @@ div.tocify {
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="fu">rep</span>(<span class="st">&quot;=&quot;</span>, <span class="dv">80</span>), <span class="at">collapse=</span><span class="st">&quot;&quot;</span>), <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## ================================================================================</code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Player Model with GIMR:&quot;</span>, r2_player, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Player Model with GIMR: 0.1081876</code></pre>
+<pre><code>## Player Model with GIMR: 0.1107308</code></pre>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Starter Model with GIMR:&quot;</span>, r2_starter, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Starter Model with GIMR: 0.1097566</code></pre>
+<pre><code>## Starter Model with GIMR: 0.1103407</code></pre>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkhlY2ttYW4gU2VsZWN0aW9uIE1vZGVsIEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0Kb3V0Y29tZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X291dGNvbWUuY3N2Lmd6IikNCnNlbGVjdF9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X3NlbGVjdC5jc3YuZ3oiKQ0KYGBgDQoNCmBgYHtyfQ0Kc2VsZWN0X2RhdGFbLCBzY29yZV9kaWZmIDo9IGFzLmludGVnZXIoc2NvcmVfZGlmZiA+IDApXQ0KYGBgDQoNCg0KYGBge3J9DQpzZWxlY3RfZGF0YVssIGF0dGVtcHQgOj0gYXMubnVtZXJpYyhhcy5jaGFyYWN0ZXIoYXR0ZW1wdCkpXQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KbGlicmFyeSh4Z2Jvb3N0KQ0KbGlicmFyeShST0NSKQ0KbGlicmFyeShwYXJhbGxlbCkNCg0KIyBQcmVwYXJlIHRoZSBYR0Jvb3N0IG1hdHJpY2VzDQp4cyA8LSBtb2RlbC5tYXRyaXgofiAuIC0gMSAtIGF0dGVtcHQgLSBteV9pZCwgZGF0YSA9IHNlbGVjdF9kYXRhKQ0KeSA8LSBhcy5udW1lcmljKGFzLmNoYXJhY3RlcihzZWxlY3RfZGF0YSRhdHRlbXB0KSkNCg0KDQojIENyZWF0ZSBwYXJhbWV0ZXIgZ3JpZA0KDQojIENyZWF0ZSBwYXJhbWV0ZXIgZ3JpZA0KZ3JpZCA8LSBleHBhbmQuZ3JpZCgNCiAgZXRhID0gc2VxKDAuMDAxLCAwLjAzLCBieSA9IDAuMDEpLA0KICBtYXhfZGVwdGggPSBzZXEoNSwgNSwgYnkgPSAyKSwNCiAgbWluX2NoaWxkX3dlaWdodCA9IHNlcSgxLCAxLCBieSA9IDEpLCAgICAgICAgDQogIHN1YnNhbXBsZSA9IHNlcSgxLCAxLCBieSA9IDAuMiksDQogIGNvbHNhbXBsZV9ieXRyZWUgPSBzZXEoMSwgMSwgYnkgPSAwLjIpLA0KICBsYW1iZGEgPSBzZXEoMSwgMSwgYnkgPSAxKSwgICAgICAgICAgICAgICAgDQogIGFscGhhID0gc2VxKDAsIDAsIGJ5ID0gMSksICAgICAgICAgICAgICAgICAgDQogIGdhbW1hID0gc2VxKDAsIDAsIGJ5ID0gMC4xKSwgICAgICAgICAgICAgICANCiAgbnJvdW5kcyA9IHNlcSgxMDAsIDI1MCwgYnkgPSA1MCkNCikNCg0KDQojIFNhbXBsZSBncmlkIHBvaW50cw0KY29uZl9sZXYgPC0gLjk1DQpudW1fbWF4IDwtIDUNCm4gPC0gY2VpbGluZyhsb2coMS1jb25mX2xldikvbG9nKDEtbnVtX21heC9ucm93KGdyaWQpKSkNCmluZCA8LSBzYW1wbGUobnJvdyhncmlkKSwgbiwgcmVwbGFjZSA9IEZBTFNFKQ0KcmdyaWQgPC0gZ3JpZFtpbmQsIF0NCg0KIyBTZXQgdXAgcGFyYWxsZWwgcHJvY2Vzc2luZw0KbmMgPC0gZGV0ZWN0Q29yZXMoKSAtIDENCg0KIyBDYWxjdWxhdGUgc2NhbGVfcG9zX3dlaWdodCBmb3IgaW1iYWxhbmNlZCBkYXRhc2V0DQpzY2FsZV9wb3Nfd2VpZ2h0IDwtIHN1bSh5ID09IDApIC8gc3VtKHkgPT0gMSkNCg0KIyBWYWxpZGF0aW9uIHBoYXNlDQojY2F0KCJcblBoYXNlIDE6IFZhbGlkYXRpb24gUGhhc2VcbiIpDQpuX3ZhbGlkYXRpb25zIDwtIDMNCnZhbGlkYXRpb25fcmVzdWx0cyA8LSBtYXRyaXgobnJvdyA9IG5yb3cocmdyaWQpLCBuY29sID0gbl92YWxpZGF0aW9ucykNCg0KZm9yIChqIGluIDE6bnJvdyhyZ3JpZCkpIHsNCiAgI2NhdCgiXG5UZXN0aW5nIHBhcmFtZXRlciBzZXQiLCBqLCAib2YiLCBucm93KHJncmlkKSwgIlxuIikNCiAgDQogIGZvciAoaSBpbiAxOm5fdmFsaWRhdGlvbnMpIHsNCiAgICAjY2F0KCJcblZhbGlkYXRpb24gaXRlcmF0aW9uIiwgaSwgIm9mIiwgbl92YWxpZGF0aW9ucywgIlxuIikgICAgICAgICAgICAgDQogICAgIyBDcmVhdGUgdmFsaWRhdGlvbiBzcGxpdA0KICAgIGlkeCA8LSB1bmlxdWUoc2FtcGxlKG5yb3coeHMpLCBucm93KHhzKSwgVFJVRSkpDQogICAgdHJhaW5feCA8LSB4c1tpZHgsIF0NCiAgICB0cmFpbl95IDwtIHlbaWR4XQ0KICAgIHZhbF94IDwtIHhzWy1pZHgsIF0NCiAgICB2YWxfeSA8LSB5Wy1pZHhdDQogICAgDQogICAgcHJtIDwtIGxpc3QoDQogICAgICBib29zdGVyID0gImdidHJlZSIsDQogICAgICBvYmplY3RpdmUgPSAiYmluYXJ5OmxvZ2lzdGljIiwNCiAgICAgIG1heF9kZXB0aCA9IHJncmlkW2osICJtYXhfZGVwdGgiXSwNCiAgICAgIGV0YSA9IHJncmlkW2osICJldGEiXSwNCiAgICAgIHN1YnNhbXBsZSA9IHJncmlkW2osICJzdWJzYW1wbGUiXSwNCiAgICAgIGNvbHNhbXBsZV9ieXRyZWUgPSByZ3JpZFtqLCAiY29sc2FtcGxlX2J5dHJlZSJdLA0KICAgICAgZ2FtbWEgPSByZ3JpZFtqLCAiZ2FtbWEiXSwNCiAgICAgIG1pbl9jaGlsZF93ZWlnaHQgPSByZ3JpZFtqLCAibWluX2NoaWxkX3dlaWdodCJdLA0KICAgICAgYWxwaGEgPSByZ3JpZFtqLCAiYWxwaGEiXSwNCiAgICAgIGxhbWJkYSA9IHJncmlkW2osICJsYW1iZGEiXSwNCiAgICAgIHNjYWxlX3Bvc193ZWlnaHQgPSBzY2FsZV9wb3Nfd2VpZ2h0LA0KICAgICAgbnRocmVhZCA9IG5jDQogICAgKQ0KICAgIA0KICAgIGRtX3RyYWluIDwtIHhnYi5ETWF0cml4KGRhdGEgPSB0cmFpbl94LCBsYWJlbCA9IHRyYWluX3kpDQogICAgbWRsIDwtIHhnYi50cmFpbigNCiAgICAgIHBhcmFtcyA9IHBybSwNCiAgICAgIGRhdGEgPSBkbV90cmFpbiwNCiAgICAgIG5yb3VuZHMgPSByZ3JpZFtqLCAibnJvdW5kcyJdLA0KICAgICAgdmVyYm9zZSA9IEZBTFNFDQogICAgKQ0KICAgIA0KICAgIHAgPC0gcHJlZGljdChtZGwsIHhnYi5ETWF0cml4KGRhdGEgPSB2YWxfeCkpDQogICAgcHJlZCA8LSBwcmVkaWN0aW9uKHAsIHZhbF95KQ0KICAgIHZhbGlkYXRpb25fcmVzdWx0c1tqLCBpXSA8LSBwZXJmb3JtYW5jZShwcmVkLCAiYXVjIilAeS52YWx1ZXNbWzFdXQ0KICB9DQp9DQoNCiMgUnVuIDEwMCB0ZXN0cyB3aXRoIGJlc3QgcGFyYW1ldGVycw0KY2F0KCJcblJ1bm5pbmcgWCB0ZXN0IGl0ZXJhdGlvbnMgd2l0aCBiZXN0IHBhcmFtZXRlcnMuLi5cbiIpDQp0ZXN0X2F1Y3MgPC0gYygpDQoNCmJlc3RfcGFyYW1zX2lkeCA8LSB3aGljaC5tYXgocm93TWVhbnModmFsaWRhdGlvbl9yZXN1bHRzKSkNCmJlc3RfcGFyYW1zIDwtIHJncmlkW2Jlc3RfcGFyYW1zX2lkeCxdDQoNCiMgVHJhaW4gZmluYWwgbW9kZWwgd2l0aCBiZXN0IHBhcmFtZXRlcnMNCmJlc3RfcGFyYW1zX2xpc3QgPC0gYXMubGlzdChiZXN0X3BhcmFtc1std2hpY2gobmFtZXMoYmVzdF9wYXJhbXMpID09ICJucm91bmRzIildKQ0KYmVzdF9wYXJhbXNfbGlzdCRib29zdGVyIDwtICJnYnRyZWUiDQpiZXN0X3BhcmFtc19saXN0JG9iamVjdGl2ZSA8LSAiYmluYXJ5OmxvZ2lzdGljIg0KYmVzdF9wYXJhbXNfbGlzdCRzY2FsZV9wb3Nfd2VpZ2h0IDwtIHNjYWxlX3Bvc193ZWlnaHQNCmJlc3RfcGFyYW1zX2xpc3QkbnRocmVhZCA8LSBuYw0KDQpmb3IoaSBpbiAxOjIwKSB7DQogICMgQ3JlYXRlIHRlc3Qgc3BsaXQNCiAgaWR4IDwtIHVuaXF1ZShzYW1wbGUobnJvdyh4cyksIG5yb3coeHMpLCBUKSkNCiAgdHJhaW5feCA8LSB4c1tpZHgsIF0NCiAgdHJhaW5feSA8LSB5W2lkeF0NCiAgdGVzdF94IDwtIHhzWy1pZHgsIF0NCiAgdGVzdF95IDwtIHlbLWlkeF0NCiAgDQogICMgVHJhaW4gbW9kZWwgb24gZnVsbCB1bmJhbGFuY2VkIGRhdGFzZXQNCiAgZG1fdHJhaW4gPC0geGdiLkRNYXRyaXgoZGF0YSA9IHRyYWluX3gsIGxhYmVsID0gdHJhaW5feSkNCiAgbWRsIDwtIHhnYi50cmFpbigNCiAgICBwYXJhbXMgPSBiZXN0X3BhcmFtc19saXN0LA0KICAgIGRhdGEgPSBkbV90cmFpbiwNCiAgICBucm91bmRzID0gYmVzdF9wYXJhbXNbWyJucm91bmRzIl1dLA0KICAgIHZlcmJvc2UgPSBGQUxTRQ0KICApDQogIA0KICAjIFRlc3Qgb24gdW5iYWxhbmNlZCB0ZXN0IHNldA0KICBwIDwtIHByZWRpY3QobWRsLCB4Z2IuRE1hdHJpeChkYXRhID0gdGVzdF94KSkNCiAgcHJlZCA8LSBwcmVkaWN0aW9uKHAsIHRlc3RfeSkNCiAgdGVzdF9hdWNzW2ldIDwtIHBlcmZvcm1hbmNlKHByZWQsICJhdWMiKUB5LnZhbHVlc1tbMV1dDQp9DQojIFByaW50IHJlc3VsdHMNCmNhdCgiXG5UZXN0IFJlc3VsdHMgb3ZlciAxMDAgaXRlcmF0aW9uczpcbiIpDQpjYXQoIk1lYW4gQVVDOiIsIG1lYW4odGVzdF9hdWNzKSwgIlxuIikNCmNhdCgiU0QgQVVDOiIsIHNkKHRlc3RfYXVjcyksICJcbiIpDQpjYXQoIjk1JSBDSToiLCBtZWFuKHRlc3RfYXVjcykgLSAxLjk2ICogc2QodGVzdF9hdWNzKSwgDQogICAgInRvIiwgbWVhbih0ZXN0X2F1Y3MpICsgMS45NiAqIHNkKHRlc3RfYXVjcyksICJcbiIpDQoNCiMgUGxvdHRpbmcgQVVDIGRpc3RyaWJ1dGlvbg0KcGxvdCh0ZXN0X2F1Y3MsIGNvbD0icmVkIiwgcGNoPTIwLA0KICAgICBtYWluPSJBVUMgVGVzdCBEaXN0cmlidXRpb24iLA0KICAgICB4bGFiPSJJdGVyYXRpb24iLCB5bGFiPSJBVUMiKQ0KYWJsaW5lKGg9bWVhbih0ZXN0X2F1Y3MpLCBjb2w9ImJsdWUiLCBsd2Q9MiwgbHR5PTIpICAjIEFkZCB0aGlzIGxpbmUgdG8gc2hvdyBtZWFuDQphYmxpbmUoaD1tZWFuKHRlc3RfYXVjcykgLSAxLjk2ICogc2QodGVzdF9hdWNzKSwgY29sPSJncmVlbiIsIGx3ZD0yLCBsdHk9MykNCmFibGluZShoPW1lYW4odGVzdF9hdWNzKSArIDEuOTYgKiBzZCh0ZXN0X2F1Y3MpLCBjb2w9ImdyZWVuIiwgbHdkPTIsIGx0eT0zKQ0KbGVnZW5kKCJib3R0b21yaWdodCIsIA0KICAgICAgIGxlZ2VuZD1jKCJBVUMgVmFsdWVzIiwgIk1lYW4iLCAiOTUlIENJIEJvdW5kcyIpLA0KICAgICAgIGNvbD1jKCJyZWQiLCAiYmx1ZSIsICJncmVlbiIpLA0KICAgICAgIGx0eT1jKE5BLCAyLCAzKSwNCiAgICAgICBwY2g9YygyMCwgTkEsIE5BKSkNCg0KIyBOb3cgdHJhaW4gZmluYWwgbW9kZWwgb24gZnVsbCBkYXRhIGZvciB6IHNjb3Jlcw0KZG1fZnVsbCA8LSB4Z2IuRE1hdHJpeChkYXRhID0geHMsIGxhYmVsID0geSkNCmZpbmFsX21vZGVsIDwtIHhnYi50cmFpbigNCiAgcGFyYW1zID0gYmVzdF9wYXJhbXNfbGlzdCwNCiAgZGF0YSA9IGRtX2Z1bGwsDQogIG5yb3VuZHMgPSBiZXN0X3BhcmFtc1tbIm5yb3VuZHMiXV0sDQogIHZlcmJvc2UgPSBGQUxTRQ0KKQ0KDQojIEdldCBwcm9iYWJpbGl0eSBwcmVkaWN0aW9ucyAoeikgZm9yIEFMTCBkYXRhDQp6IDwtIHByZWRpY3QoZmluYWxfbW9kZWwsIHhnYi5ETWF0cml4KGRhdGEgPSB4cykpDQpgYGANCg0KDQpgYGB7cn0NCiMgQ2FsY3VsYXRlIHJlc2lkdWFscyBmb3IgWEdCb29zdCBwcmVkaWN0aW9ucw0KeSA8LSBhcy5udW1lcmljKGFzLmNoYXJhY3RlcihzZWxlY3RfZGF0YSRhdHRlbXB0KSkNCnJlc2lkdWFscyA8LSB5IC0geg0KDQojIEhpc3RvZ3JhbSBvZiByZXNpZHVhbHMNCmhpc3QocmVzaWR1YWxzLCBtYWluPSJEaXN0cmlidXRpb24gb2YgWEdCb29zdCBNb2RlbCBSZXNpZHVhbHMiLCB4bGFiPSJSZXNpZHVhbCIsIGJyZWFrcz0xMDApDQpgYGANCg0KYGBge3J9DQojIHBsb3Qgb3V0IHRoZSB6IHZhbHVlc1wNCnBsb3QoZGVuc2l0eSh6KSwgDQogICAgIG1haW4gPSAiRGVuc2l0eSBvZiBaIFByZWRpY3Rpb25zIiwNCiAgICAgeGxhYiA9ICJQcmVkaWN0ZWQgUHJvYmFiaWxpdHkgb2YgQXR0ZW1wdCIsDQogICAgIHlsYWIgPSAiRGVuc2l0eSIpDQpgYGANCg0KYGBge3J9DQojIENhbGN1bGF0ZSBHSU1SIChsYW1iZGEpIFRoaXMgaXMgR2VuZXJhbGl6ZWQgaW52ZXJzZSBtaWxscyByYXRpbw0KR0lNUiA8LSBkbm9ybShxbm9ybSh6KSkgLyAoMSAtIHBub3JtKHFub3JtKHopKSkNCg0KIyBBZGQgR0lNUiB0byB0aGUgZGF0YQ0Kc2VsZWN0X2RhdGFbLCBHSU1SIDo9IEdJTVJdDQoNCiMgUHJpbnQgdmFyaWFibGUgaW1wb3J0YQ0KYGBgDQoNCmBgYHtyfQ0KIyBDcmVhdGUgYSBkYXRhLnRhYmxlIHdpdGgganVzdCBteV9pZCBhbmQgR0lNUiBmcm9tIHNlbGVjdF9kYXRhDQpHSU1SX2R0IDwtIGRhdGEudGFibGUobXlfaWQgPSBzZWxlY3RfZGF0YSRteV9pZCwgR0lNUiA9IEdJTVIpDQoNCiMgQWRkIEdJTVIgdG8gb3V0Y29tZV9kYXRhIGJ5IG1hdGNoaW5nIG9uIG15X2lkDQpvdXRjb21lX2RhdGFbR0lNUl9kdCwgR0lNUiA6PSBpLkdJTVIsIG9uID0gIm15X2lkIl0NCmBgYA0KDQpgYGB7cn0NCiMgIyBFeGlzdGluZyBjb2RlDQojIG91dGNvbWVfZGF0YSA8LSBvdXRjb21lX2RhdGFbLCBteV9pZCA6PSBOVUxMXQ0KIyBvdXRjb21lX2RhdGFbLCB5YXJkbGluZV8zMV80MCA6PSBOVUxMXQ0KIyBvdXRjb21lX2RhdGFbLCB5ZWFyMjAyMl90ZWFtX0NMRSA6PSBOVUxMXSAjIHRpZWQgZm9yIG1vc3QgYXR0ZW1wdHMgd2l0aCAzMQ0KDQojIFJlbW92ZSBhbGwgY29sdW1ucyB3aXRoICJfcHJlc2VudCIgaW4gdGhlIG5hbWUNCnByZXNlbnRfY29scyA8LSBncmVwKCJfcHJlc2VudCIsIG5hbWVzKG91dGNvbWVfZGF0YSksIHZhbHVlID0gVFJVRSkNCmZvciAoY29sIGluIHByZXNlbnRfY29scykgew0KICBvdXRjb21lX2RhdGFbLCAoY29sKSA6PSBOVUxMXQ0KfQ0KYGBgDQoNCg0KYGBge3J9DQoNCiMgQ3JlYXRlIGNvcGllcyBvZiBvdXRjb21lX2RhdGEgZm9yIGRpZmZlcmVudCBtb2RlbHMNCm91dGNvbWVfZGF0YV9wbGF5ZXIgPC0gY29weShvdXRjb21lX2RhdGEpDQpvdXRjb21lX2RhdGFfc3RhcnRlciA8LSBjb3B5KG91dGNvbWVfZGF0YSkNCg0KIyBSZW1vdmUgc3BlY2lmaWMgY29sdW1ucyBhcyBpbiBvcmlnaW5hbCBjb2RlDQpmb3IgKGR0IGluIGxpc3Qob3V0Y29tZV9kYXRhX3BsYXllciwgb3V0Y29tZV9kYXRhX3N0YXJ0ZXIpKSB7DQogIGR0WywgbXlfaWQgOj0gTlVMTF0NCiAgZHRbLCB5YXJkbGluZV8zMV80MCA6PSBOVUxMXQ0KICBkdFssIHllYXIyMDIyX3RlYW1fQ0xFIDo9IE5VTExdICMgdGllZCBmb3IgbW9zdCBhdHRlbXB0cyB3aXRoIDMxDQogIA0KICAjIFJlbW92ZSBhdHRlbmRhbmNlIHZhcmlhYmxlcw0KICBkdFssIGF0dGVuZGFuY2VfcGN0IDo9IE5VTExdDQogIGR0WywgYXR0ZW5kYW5jZV9yYXcgOj0gTlVMTF0NCiAgZHRbLCB2ZWdhc193cF9wb3N0ZWFtIDo9IE5VTExdDQp9DQoNCiMgRm9yIHBsYXllciBtb2RlbHMsIHJlbW92ZSBzdGFydGVyIGNvbHVtbnMNCnBsYXllcl9jb2xzIDwtIGdyZXAoIl5zdGFydGVyXyIsIG5hbWVzKG91dGNvbWVfZGF0YV9wbGF5ZXIpLCB2YWx1ZSA9IFRSVUUpDQpmb3IgKGNvbCBpbiBwbGF5ZXJfY29scykgew0KICBvdXRjb21lX2RhdGFfcGxheWVyWywgKGNvbCkgOj0gTlVMTF0NCn0NCg0KIyBGb3Igc3RhcnRlciBtb2RlbHMsIHJlbW92ZSBwbGF5ZXIgY29sdW1ucw0Kc3RhcnRlcl9jb2xzIDwtIGdyZXAoIl4ob2ZmZW5zZXxkZWZlbnNlKV9wbGF5ZXJfIiwgbmFtZXMob3V0Y29tZV9kYXRhX3N0YXJ0ZXIpLCB2YWx1ZSA9IFRSVUUpDQpmb3IgKGNvbCBpbiBzdGFydGVyX2NvbHMpIHsNCiAgb3V0Y29tZV9kYXRhX3N0YXJ0ZXJbLCAoY29sKSA6PSBOVUxMXQ0KfQ0KDQojIEVuc3VyZSBjb252ZXJzaW9uIGlzIG51bWVyaWMNCmZvciAoZHQgaW4gbGlzdChvdXRjb21lX2RhdGFfcGxheWVyLCBvdXRjb21lX2RhdGFfc3RhcnRlcikpIHsNCiAgZHRbLCBjb252ZXJzaW9uIDo9IGFzLm51bWVyaWMoYXMuY2hhcmFjdGVyKGNvbnZlcnNpb24pKV0NCn0NCg0KIyBNT0RFTCAxOiBQbGF5ZXIgbW9kZWwgd2l0aCBHSU1SDQpvbHNfbW9kZWxfcGxheWVyIDwtIGxtKGNvbnZlcnNpb24gfiAuLCBkYXRhID0gb3V0Y29tZV9kYXRhX3BsYXllcikNCg0KIyBNT0RFTCAyOiBTdGFydGVyIG1vZGVsIHdpdGggR0lNUg0Kb2xzX21vZGVsX3N0YXJ0ZXIgPC0gbG0oY29udmVyc2lvbiB+IC4sIGRhdGEgPSBvdXRjb21lX2RhdGFfc3RhcnRlcikNCg0KIyBGdW5jdGlvbiB0byBhbmFseXplIGFuZCBwcmludCBtb2RlbCByZXN1bHRzDQphbmFseXplX21vZGVsIDwtIGZ1bmN0aW9uKG1vZGVsLCBtb2RlbF9uYW1lKSB7DQogIGxpYnJhcnkoc2FuZHdpY2gpDQogIGxpYnJhcnkobG10ZXN0KQ0KICANCiAgIyBHZXQgSEMwLWFkanVzdGVkIHQtdmFsdWVzIGFuZCBwLXZhbHVlcw0KICByb2J1c3RfdGVzdCA8LSBjb2VmdGVzdChtb2RlbCwgdmNvdiA9IHZjb3ZIQyhtb2RlbCwgdHlwZSA9ICJIQzAiKSkNCiAgdF9zdGF0cyA8LSByb2J1c3RfdGVzdFssICJ0IHZhbHVlIl0NCiAgcF92YWx1ZXMgPC0gcm9idXN0X3Rlc3RbLCAiUHIoPnx0fCkiXQ0KICANCiAgIyBGdW5jdGlvbiB0byBhZGQgc2lnbmlmaWNhbmNlIHN0YXJzDQogIGdldF9zdGFycyA8LSBmdW5jdGlvbihwKSB7DQogICAgaWYgKHAgPD0gMC4wMSkgcmV0dXJuKCIqKioiKQ0KICAgIGlmIChwIDw9IDAuMDUpIHJldHVybigiKioiKQ0KICAgIGlmIChwIDw9IDAuMSkgcmV0dXJuKCIqIikNCiAgICBpZiAocCA8PSAwLjE1KSByZXR1cm4oIi4iKQ0KICAgIHJldHVybigiIikNCiAgfQ0KICANCiAgIyBNYXhpbXVtIHdpZHRoIGZvciB2YXJpYWJsZSBuYW1lcw0KICBuYW1lX3dpZHRoIDwtIDYwDQogIA0KICAjIFByaW50IG1vZGVsIG5hbWUgYW5kIGhlYWRlcg0KICBjYXQoIlxuXG4iLCBwYXN0ZShyZXAoIj0iLCA4MCksIGNvbGxhcHNlPSIiKSwgIlxuIikNCiAgY2F0KCJNT0RFTDoiLCBtb2RlbF9uYW1lLCAiXG4iKQ0KICBjYXQocGFzdGUocmVwKCI9IiwgODApLCBjb2xsYXBzZT0iIiksICJcblxuIikNCiAgDQogICMgUHJpbnQgaGVhZGVyIHdpdGggYWxpZ25tZW50DQogIGNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICJWYXJpYWJsZSIsICJ0LXZhbHVlIiwgInAtdmFsdWUiLCAic2lnIikpDQogIGNhdChzcHJpbnRmKCIlLSpzICAlMTBzICAlMTBzICAlNHNcbiIsIG5hbWVfd2lkdGgsICItLS0tLS0tLS0iLCAiLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0iKSkNCiAgDQogICMgTG9vcCB0aHJvdWdoIGFuZCBwcmludCB2YWx1ZXMNCiAgZm9yIChpIGluIDE6bGVuZ3RoKHRfc3RhdHMpKSB7DQogICAgdmFyX25hbWUgPC0gcm93bmFtZXMocm9idXN0X3Rlc3QpW2ldDQogICAgIyBUcnVuY2F0ZSBuYW1lIGlmIHRvbyBsb25nDQogICAgaWYgKG5jaGFyKHZhcl9uYW1lKSA+IG5hbWVfd2lkdGgpIHsNCiAgICAgIHZhcl9uYW1lIDwtIHBhc3RlMChzdWJzdHIodmFyX25hbWUsIDEsIG5hbWVfd2lkdGgtMyksICIuLi4iKQ0KICAgIH0NCiAgICBjYXQoc3ByaW50ZigiJS0qcyAgJTEwLjRmICAlMTAuNGYgICU0c1xuIiwgDQogICAgICAgICAgICAgICAgbmFtZV93aWR0aCwgdmFyX25hbWUsIA0KICAgICAgICAgICAgICAgIHRfc3RhdHNbaV0sIHBfdmFsdWVzW2ldLA0KICAgICAgICAgICAgICAgIGdldF9zdGFycyhwX3ZhbHVlc1tpXSkpKQ0KICB9DQogIA0KICBjYXQoIlxuU2lnbmlmaWNhbmNlIGNvZGVzOiAwICcqKionIDAuMDEgJyoqJyAwLjA1ICcqJyAwLjEgJy4nIDAuMTVcbiIpDQogIA0KICAjIFByaW50IFItc3F1YXJlZA0KICByX3NxdWFyZWQgPC0gc3VtbWFyeShtb2RlbCkkYWRqLnIuc3F1YXJlZA0KICBjYXQoIlxuQWRqdXN0ZWQgUi1zcXVhcmVkOiIsIHJfc3F1YXJlZCwgIlxuIikNCiAgDQogICMgQ2FsY3VsYXRlIFZJRnMNCiAgbGlicmFyeShjYXIpDQogIHZpZnMgPC0gdmlmKG1vZGVsKQ0KICANCiAgIyBGaWx0ZXIgdG8gc2hvdyBvbmx5IFZJRnMgb3ZlciA1DQogIGhpZ2hfdmlmcyA8LSB2aWZzW3ZpZnMgPiA1XQ0KICBpZihsZW5ndGgoaGlnaF92aWZzKSA+IDApIHsNCiAgICBjYXQoIlxuVmFyaWFibGVzIHdpdGggVklGID4gNTpcbiIpDQogICAgcHJpbnQoaGlnaF92aWZzKQ0KICB9IGVsc2Ugew0KICAgIGNhdCgiXG5ObyB2YXJpYWJsZXMgd2l0aCBWSUYgPiA1IGZvdW5kIGluIHRoaXMgbW9kZWxcbiIpDQogIH0NCiAgDQogIHJldHVybihyX3NxdWFyZWQpDQp9DQoNCiMgQW5hbHl6ZSBtb2RlbHMgd2l0aCBHSU1SIG9ubHkNCnIyX3BsYXllciA8LSBhbmFseXplX21vZGVsKG9sc19tb2RlbF9wbGF5ZXIsICJQbGF5ZXIgTW9kZWwgd2l0aCBHSU1SIikNCnIyX3N0YXJ0ZXIgPC0gYW5hbHl6ZV9tb2RlbChvbHNfbW9kZWxfc3RhcnRlciwgIlN0YXJ0ZXIgTW9kZWwgd2l0aCBHSU1SIikNCg0KIyBDb21wYXJlIFItc3F1YXJlZCB2YWx1ZXMNCmNhdCgiXG5cbiIsIHBhc3RlKHJlcCgiPSIsIDgwKSwgY29sbGFwc2U9IiIpLCAiXG4iKQ0KY2F0KCJNT0RFTCBDT01QQVJJU09OIC0gQWRqdXN0ZWQgUi1zcXVhcmVkIHZhbHVlc1xuIikNCmNhdChwYXN0ZShyZXAoIj0iLCA4MCksIGNvbGxhcHNlPSIiKSwgIlxuXG4iKQ0KY2F0KCJQbGF5ZXIgTW9kZWwgd2l0aCBHSU1SOiIsIHIyX3BsYXllciwgIlxuIikNCmNhdCgiU3RhcnRlciBNb2RlbCB3aXRoIEdJTVI6IiwgcjJfc3RhcnRlciwgIlxuIikNCg0KYGBgDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkhlY2ttYW4gU2VsZWN0aW9uIE1vZGVsIEFuYWx5c2lzIg0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igb3B0aW9ucywgaW5jbHVkZT1GQUxTRX0NCm9wdGlvbnMobWF4LnByaW50PTEwMDAwKQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0Kb3V0Y29tZV9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X291dGNvbWUuY3N2Lmd6IikNCnNlbGVjdF9kYXRhIDwtIGZyZWFkKCJwcmVkaWN0X3NlbGVjdC5jc3YuZ3oiKQ0KYGBgDQoNCmBgYHtyfQ0Kc2VsZWN0X2RhdGFbLCBzY29yZV9kaWZmIDo9IGFzLmludGVnZXIoc2NvcmVfZGlmZiA+IDApXQ0KYGBgDQoNCg0KYGBge3J9DQpzZWxlY3RfZGF0YVssIGF0dGVtcHQgOj0gYXMubnVtZXJpYyhhcy5jaGFyYWN0ZXIoYXR0ZW1wdCkpXQ0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShkYXRhLnRhYmxlKQ0KbGlicmFyeSh4Z2Jvb3N0KQ0KbGlicmFyeShST0NSKQ0KbGlicmFyeShwYXJhbGxlbCkNCg0KIyBQcmVwYXJlIHRoZSBYR0Jvb3N0IG1hdHJpY2VzDQp4cyA8LSBtb2RlbC5tYXRyaXgofiAuIC0gMSAtIGF0dGVtcHQgLSBteV9pZCwgZGF0YSA9IHNlbGVjdF9kYXRhKQ0KeSA8LSBhcy5udW1lcmljKGFzLmNoYXJhY3RlcihzZWxlY3RfZGF0YSRhdHRlbXB0KSkNCg0KDQojIENyZWF0ZSBwYXJhbWV0ZXIgZ3JpZA0KDQojIENyZWF0ZSBwYXJhbWV0ZXIgZ3JpZA0KZ3JpZCA8LSBleHBhbmQuZ3JpZCgNCiAgZXRhID0gc2VxKDAuMDAxLCAwLjAzLCBieSA9IDAuMDEpLA0KICBtYXhfZGVwdGggPSBzZXEoNSwgNSwgYnkgPSAyKSwNCiAgbWluX2NoaWxkX3dlaWdodCA9IHNlcSgxLCAxLCBieSA9IDEpLCAgICAgICAgDQogIHN1YnNhbXBsZSA9IHNlcSgxLCAxLCBieSA9IDAuMiksDQogIGNvbHNhbXBsZV9ieXRyZWUgPSBzZXEoMSwgMSwgYnkgPSAwLjIpLA0KICBsYW1iZGEgPSBzZXEoMSwgMSwgYnkgPSAxKSwgICAgICAgICAgICAgICAgDQogIGFscGhhID0gc2VxKDAsIDAsIGJ5ID0gMSksICAgICAgICAgICAgICAgICAgDQogIGdhbW1hID0gc2VxKDAsIDAsIGJ5ID0gMC4xKSwgICAgICAgICAgICAgICANCiAgbnJvdW5kcyA9IHNlcSgxMDAsIDI1MCwgYnkgPSA1MCkNCikNCg0KIyBTYW1wbGUgZ3JpZCBwb2ludHMNCmNvbmZfbGV2IDwtIC45NQ0KbnVtX21heCA8LSA1DQpuIDwtIGNlaWxpbmcobG9nKDEtY29uZl9sZXYpL2xvZygxLW51bV9tYXgvbnJvdyhncmlkKSkpDQppbmQgPC0gc2FtcGxlKG5yb3coZ3JpZCksIG4sIHJlcGxhY2UgPSBGQUxTRSkNCnJncmlkIDwtIGdyaWRbaW5kLCBdDQoNCiMgU2V0IHVwIHBhcmFsbGVsIHByb2Nlc3NpbmcNCm5jIDwtIGRldGVjdENvcmVzKCkgLSAxDQoNCiMgQ2FsY3VsYXRlIHNjYWxlX3Bvc193ZWlnaHQgZm9yIGltYmFsYW5jZWQgZGF0YXNldA0Kc2NhbGVfcG9zX3dlaWdodCA8LSBzdW0oeSA9PSAwKSAvIHN1bSh5ID09IDEpDQoNCiMgVmFsaWRhdGlvbiBwaGFzZQ0KI2NhdCgiXG5QaGFzZSAxOiBWYWxpZGF0aW9uIFBoYXNlXG4iKQ0Kbl92YWxpZGF0aW9ucyA8LSAzDQp2YWxpZGF0aW9uX3Jlc3VsdHMgPC0gbWF0cml4KG5yb3cgPSBucm93KHJncmlkKSwgbmNvbCA9IG5fdmFsaWRhdGlvbnMpDQoNCmZvciAoaiBpbiAxOm5yb3cocmdyaWQpKSB7DQogICNjYXQoIlxuVGVzdGluZyBwYXJhbWV0ZXIgc2V0IiwgaiwgIm9mIiwgbnJvdyhyZ3JpZCksICJcbiIpDQogIA0KICBmb3IgKGkgaW4gMTpuX3ZhbGlkYXRpb25zKSB7DQogICAgI2NhdCgiXG5WYWxpZGF0aW9uIGl0ZXJhdGlvbiIsIGksICJvZiIsIG5fdmFsaWRhdGlvbnMsICJcbiIpICAgICAgICAgICAgIA0KICAgICMgQ3JlYXRlIHZhbGlkYXRpb24gc3BsaXQNCiAgICBpZHggPC0gdW5pcXVlKHNhbXBsZShucm93KHhzKSwgbnJvdyh4cyksIFRSVUUpKQ0KICAgIHRyYWluX3ggPC0geHNbaWR4LCBdDQogICAgdHJhaW5feSA8LSB5W2lkeF0NCiAgICB2YWxfeCA8LSB4c1staWR4LCBdDQogICAgdmFsX3kgPC0geVstaWR4XQ0KICAgIA0KICAgIHBybSA8LSBsaXN0KA0KICAgICAgYm9vc3RlciA9ICJnYnRyZWUiLA0KICAgICAgb2JqZWN0aXZlID0gImJpbmFyeTpsb2dpc3RpYyIsDQogICAgICBtYXhfZGVwdGggPSByZ3JpZFtqLCAibWF4X2RlcHRoIl0sDQogICAgICBldGEgPSByZ3JpZFtqLCAiZXRhIl0sDQogICAgICBzdWJzYW1wbGUgPSByZ3JpZFtqLCAic3Vic2FtcGxlIl0sDQogICAgICBjb2xzYW1wbGVfYnl0cmVlID0gcmdyaWRbaiwgImNvbHNhbXBsZV9ieXRyZWUiXSwNCiAgICAgIGdhbW1hID0gcmdyaWRbaiwgImdhbW1hIl0sDQogICAgICBtaW5fY2hpbGRfd2VpZ2h0ID0gcmdyaWRbaiwgIm1pbl9jaGlsZF93ZWlnaHQiXSwNCiAgICAgIGFscGhhID0gcmdyaWRbaiwgImFscGhhIl0sDQogICAgICBsYW1iZGEgPSByZ3JpZFtqLCAibGFtYmRhIl0sDQogICAgICBzY2FsZV9wb3Nfd2VpZ2h0ID0gc2NhbGVfcG9zX3dlaWdodCwNCiAgICAgIG50aHJlYWQgPSBuYw0KICAgICkNCiAgICANCiAgICBkbV90cmFpbiA8LSB4Z2IuRE1hdHJpeChkYXRhID0gdHJhaW5feCwgbGFiZWwgPSB0cmFpbl95KQ0KICAgIG1kbCA8LSB4Z2IudHJhaW4oDQogICAgICBwYXJhbXMgPSBwcm0sDQogICAgICBkYXRhID0gZG1fdHJhaW4sDQogICAgICBucm91bmRzID0gcmdyaWRbaiwgIm5yb3VuZHMiXSwNCiAgICAgIHZlcmJvc2UgPSBGQUxTRQ0KICAgICkNCiAgICANCiAgICBwIDwtIHByZWRpY3QobWRsLCB4Z2IuRE1hdHJpeChkYXRhID0gdmFsX3gpKQ0KICAgIHByZWQgPC0gcHJlZGljdGlvbihwLCB2YWxfeSkNCiAgICB2YWxpZGF0aW9uX3Jlc3VsdHNbaiwgaV0gPC0gcGVyZm9ybWFuY2UocHJlZCwgImF1YyIpQHkudmFsdWVzW1sxXV0NCiAgfQ0KfQ0KDQojIFJ1biAxMDAgdGVzdHMgd2l0aCBiZXN0IHBhcmFtZXRlcnMNCmNhdCgiXG5SdW5uaW5nIFggdGVzdCBpdGVyYXRpb25zIHdpdGggYmVzdCBwYXJhbWV0ZXJzLi4uXG4iKQ0KdGVzdF9hdWNzIDwtIGMoKQ0KDQpiZXN0X3BhcmFtc19pZHggPC0gd2hpY2gubWF4KHJvd01lYW5zKHZhbGlkYXRpb25fcmVzdWx0cykpDQpiZXN0X3BhcmFtcyA8LSByZ3JpZFtiZXN0X3BhcmFtc19pZHgsXQ0KDQojIFRyYWluIGZpbmFsIG1vZGVsIHdpdGggYmVzdCBwYXJhbWV0ZXJzDQpiZXN0X3BhcmFtc19saXN0IDwtIGFzLmxpc3QoYmVzdF9wYXJhbXNbLXdoaWNoKG5hbWVzKGJlc3RfcGFyYW1zKSA9PSAibnJvdW5kcyIpXSkNCmJlc3RfcGFyYW1zX2xpc3QkYm9vc3RlciA8LSAiZ2J0cmVlIg0KYmVzdF9wYXJhbXNfbGlzdCRvYmplY3RpdmUgPC0gImJpbmFyeTpsb2dpc3RpYyINCmJlc3RfcGFyYW1zX2xpc3Qkc2NhbGVfcG9zX3dlaWdodCA8LSBzY2FsZV9wb3Nfd2VpZ2h0DQpiZXN0X3BhcmFtc19saXN0JG50aHJlYWQgPC0gbmMNCg0KZm9yKGkgaW4gMToxMDApIHsNCiAgIyBDcmVhdGUgdGVzdCBzcGxpdA0KICBpZHggPC0gdW5pcXVlKHNhbXBsZShucm93KHhzKSwgbnJvdyh4cyksIFQpKQ0KICB0cmFpbl94IDwtIHhzW2lkeCwgXQ0KICB0cmFpbl95IDwtIHlbaWR4XQ0KICB0ZXN0X3ggPC0geHNbLWlkeCwgXQ0KICB0ZXN0X3kgPC0geVstaWR4XQ0KICANCiAgIyBUcmFpbiBtb2RlbCBvbiBmdWxsIHVuYmFsYW5jZWQgZGF0YXNldA0KICBkbV90cmFpbiA8LSB4Z2IuRE1hdHJpeChkYXRhID0gdHJhaW5feCwgbGFiZWwgPSB0cmFpbl95KQ0KICBtZGwgPC0geGdiLnRyYWluKA0KICAgIHBhcmFtcyA9IGJlc3RfcGFyYW1zX2xpc3QsDQogICAgZGF0YSA9IGRtX3RyYWluLA0KICAgIG5yb3VuZHMgPSBiZXN0X3BhcmFtc1tbIm5yb3VuZHMiXV0sDQogICAgdmVyYm9zZSA9IEZBTFNFDQogICkNCiAgDQogICMgVGVzdCBvbiB1bmJhbGFuY2VkIHRlc3Qgc2V0DQogIHAgPC0gcHJlZGljdChtZGwsIHhnYi5ETWF0cml4KGRhdGEgPSB0ZXN0X3gpKQ0KICBwcmVkIDwtIHByZWRpY3Rpb24ocCwgdGVzdF95KQ0KICB0ZXN0X2F1Y3NbaV0gPC0gcGVyZm9ybWFuY2UocHJlZCwgImF1YyIpQHkudmFsdWVzW1sxXV0NCn0NCiMgUHJpbnQgcmVzdWx0cw0KY2F0KCJcblRlc3QgUmVzdWx0cyBvdmVyIDEwMCBpdGVyYXRpb25zOlxuIikNCmNhdCgiTWVhbiBBVUM6IiwgbWVhbih0ZXN0X2F1Y3MpLCAiXG4iKQ0KY2F0KCJTRCBBVUM6Iiwgc2QodGVzdF9hdWNzKSwgIlxuIikNCmNhdCgiOTUlIENJOiIsIG1lYW4odGVzdF9hdWNzKSAtIDEuOTYgKiBzZCh0ZXN0X2F1Y3MpLCANCiAgICAidG8iLCBtZWFuKHRlc3RfYXVjcykgKyAxLjk2ICogc2QodGVzdF9hdWNzKSwgIlxuIikNCg0KIyBQbG90dGluZyBBVUMgZGlzdHJpYnV0aW9uDQpwbG90KHRlc3RfYXVjcywgY29sPSJyZWQiLCBwY2g9MjAsDQogICAgIG1haW49IkFVQyBUZXN0IERpc3RyaWJ1dGlvbiIsDQogICAgIHhsYWI9Ikl0ZXJhdGlvbiIsIHlsYWI9IkFVQyIpDQphYmxpbmUoaD1tZWFuKHRlc3RfYXVjcyksIGNvbD0iYmx1ZSIsIGx3ZD0yLCBsdHk9MikgICMgQWRkIHRoaXMgbGluZSB0byBzaG93IG1lYW4NCmFibGluZShoPW1lYW4odGVzdF9hdWNzKSAtIDEuOTYgKiBzZCh0ZXN0X2F1Y3MpLCBjb2w9ImdyZWVuIiwgbHdkPTIsIGx0eT0zKQ0KYWJsaW5lKGg9bWVhbih0ZXN0X2F1Y3MpICsgMS45NiAqIHNkKHRlc3RfYXVjcyksIGNvbD0iZ3JlZW4iLCBsd2Q9MiwgbHR5PTMpDQpsZWdlbmQoImJvdHRvbXJpZ2h0IiwgDQogICAgICAgbGVnZW5kPWMoIkFVQyBWYWx1ZXMiLCAiTWVhbiIsICI5NSUgQ0kgQm91bmRzIiksDQogICAgICAgY29sPWMoInJlZCIsICJibHVlIiwgImdyZWVuIiksDQogICAgICAgbHR5PWMoTkEsIDIsIDMpLA0KICAgICAgIHBjaD1jKDIwLCBOQSwgTkEpKQ0KDQojIE5vdyB0cmFpbiBmaW5hbCBtb2RlbCBvbiBmdWxsIGRhdGEgZm9yIHogc2NvcmVzDQpkbV9mdWxsIDwtIHhnYi5ETWF0cml4KGRhdGEgPSB4cywgbGFiZWwgPSB5KQ0KZmluYWxfbW9kZWwgPC0geGdiLnRyYWluKA0KICBwYXJhbXMgPSBiZXN0X3BhcmFtc19saXN0LA0KICBkYXRhID0gZG1fZnVsbCwNCiAgbnJvdW5kcyA9IGJlc3RfcGFyYW1zW1sibnJvdW5kcyJdXSwNCiAgdmVyYm9zZSA9IEZBTFNFDQopDQoNCiMgR2V0IHByb2JhYmlsaXR5IHByZWRpY3Rpb25zICh6KSBmb3IgQUxMIGRhdGENCnogPC0gcHJlZGljdChmaW5hbF9tb2RlbCwgeGdiLkRNYXRyaXgoZGF0YSA9IHhzKSkNCmBgYA0KDQoNCmBgYHtyfQ0KIyBDYWxjdWxhdGUgcmVzaWR1YWxzIGZvciBYR0Jvb3N0IHByZWRpY3Rpb25zDQp5IDwtIGFzLm51bWVyaWMoYXMuY2hhcmFjdGVyKHNlbGVjdF9kYXRhJGF0dGVtcHQpKQ0KcmVzaWR1YWxzIDwtIHkgLSB6DQoNCiMgSGlzdG9ncmFtIG9mIHJlc2lkdWFscw0KaGlzdChyZXNpZHVhbHMsIG1haW49IkRpc3RyaWJ1dGlvbiBvZiBYR0Jvb3N0IE1vZGVsIFJlc2lkdWFscyIsIHhsYWI9IlJlc2lkdWFsIiwgYnJlYWtzPTEwMCkNCmBgYA0KDQpgYGB7cn0NCiMgcGxvdCBvdXQgdGhlIHogdmFsdWVzXA0KcGxvdChkZW5zaXR5KHopLCANCiAgICAgbWFpbiA9ICJEZW5zaXR5IG9mIFogUHJlZGljdGlvbnMiLA0KICAgICB4bGFiID0gIlByZWRpY3RlZCBQcm9iYWJpbGl0eSBvZiBBdHRlbXB0IiwNCiAgICAgeWxhYiA9ICJEZW5zaXR5IikNCmBgYA0KDQpgYGB7cn0NCiMgQ2FsY3VsYXRlIEdJTVIgKGxhbWJkYSkgVGhpcyBpcyBHZW5lcmFsaXplZCBpbnZlcnNlIG1pbGxzIHJhdGlvDQpHSU1SIDwtIGRub3JtKHFub3JtKHopKSAvICgxIC0gcG5vcm0ocW5vcm0oeikpKQ0KDQojIEFkZCBHSU1SIHRvIHRoZSBkYXRhDQpzZWxlY3RfZGF0YVssIEdJTVIgOj0gR0lNUl0NCg0KIyBQcmludCB2YXJpYWJsZSBpbXBvcnRhDQpgYGANCg0KYGBge3J9DQojIENyZWF0ZSBhIGRhdGEudGFibGUgd2l0aCBqdXN0IG15X2lkIGFuZCBHSU1SIGZyb20gc2VsZWN0X2RhdGENCkdJTVJfZHQgPC0gZGF0YS50YWJsZShteV9pZCA9IHNlbGVjdF9kYXRhJG15X2lkLCBHSU1SID0gR0lNUikNCg0KIyBBZGQgR0lNUiB0byBvdXRjb21lX2RhdGEgYnkgbWF0Y2hpbmcgb24gbXlfaWQNCm91dGNvbWVfZGF0YVtHSU1SX2R0LCBHSU1SIDo9IGkuR0lNUiwgb24gPSAibXlfaWQiXQ0KYGBgDQoNCmBgYHtyfQ0KIyAjIEV4aXN0aW5nIGNvZGUNCiMgb3V0Y29tZV9kYXRhIDwtIG91dGNvbWVfZGF0YVssIG15X2lkIDo9IE5VTExdDQojIG91dGNvbWVfZGF0YVssIHlhcmRsaW5lXzMxXzQwIDo9IE5VTExdDQojIG91dGNvbWVfZGF0YVssIHllYXIyMDIyX3RlYW1fQ0xFIDo9IE5VTExdICMgdGllZCBmb3IgbW9zdCBhdHRlbXB0cyB3aXRoIDMxDQoNCiMgUmVtb3ZlIGFsbCBjb2x1bW5zIHdpdGggIl9wcmVzZW50IiBpbiB0aGUgbmFtZQ0KcHJlc2VudF9jb2xzIDwtIGdyZXAoIl9wcmVzZW50IiwgbmFtZXMob3V0Y29tZV9kYXRhKSwgdmFsdWUgPSBUUlVFKQ0KZm9yIChjb2wgaW4gcHJlc2VudF9jb2xzKSB7DQogIG91dGNvbWVfZGF0YVssIChjb2wpIDo9IE5VTExdDQp9DQpgYGANCg0KDQpgYGB7cn0NCg0KIyBDcmVhdGUgY29waWVzIG9mIG91dGNvbWVfZGF0YSBmb3IgZGlmZmVyZW50IG1vZGVscw0Kb3V0Y29tZV9kYXRhX3BsYXllciA8LSBjb3B5KG91dGNvbWVfZGF0YSkNCm91dGNvbWVfZGF0YV9zdGFydGVyIDwtIGNvcHkob3V0Y29tZV9kYXRhKQ0KDQojIFJlbW92ZSBzcGVjaWZpYyBjb2x1bW5zIGFzIGluIG9yaWdpbmFsIGNvZGUNCmZvciAoZHQgaW4gbGlzdChvdXRjb21lX2RhdGFfcGxheWVyLCBvdXRjb21lX2RhdGFfc3RhcnRlcikpIHsNCiAgZHRbLCBteV9pZCA6PSBOVUxMXQ0KICBkdFssIHlhcmRsaW5lXzMxXzQwIDo9IE5VTExdDQogIGR0WywgeWVhcjIwMjJfdGVhbV9DTEUgOj0gTlVMTF0gIyB0aWVkIGZvciBtb3N0IGF0dGVtcHRzIHdpdGggMzENCiAgDQogICMgUmVtb3ZlIGF0dGVuZGFuY2UgdmFyaWFibGVzDQogIGR0WywgYXR0ZW5kYW5jZV9wY3QgOj0gTlVMTF0NCiAgZHRbLCBhdHRlbmRhbmNlX3JhdyA6PSBOVUxMXQ0KICBkdFssIHZlZ2FzX3dwX3Bvc3RlYW0gOj0gTlVMTF0NCn0NCg0KIyBGb3IgcGxheWVyIG1vZGVscywgcmVtb3ZlIHN0YXJ0ZXIgY29sdW1ucw0KcGxheWVyX2NvbHMgPC0gZ3JlcCgiXnN0YXJ0ZXJfIiwgbmFtZXMob3V0Y29tZV9kYXRhX3BsYXllciksIHZhbHVlID0gVFJVRSkNCmZvciAoY29sIGluIHBsYXllcl9jb2xzKSB7DQogIG91dGNvbWVfZGF0YV9wbGF5ZXJbLCAoY29sKSA6PSBOVUxMXQ0KfQ0KDQojIEZvciBzdGFydGVyIG1vZGVscywgcmVtb3ZlIHBsYXllciBjb2x1bW5zDQpzdGFydGVyX2NvbHMgPC0gZ3JlcCgiXihvZmZlbnNlfGRlZmVuc2UpX3BsYXllcl8iLCBuYW1lcyhvdXRjb21lX2RhdGFfc3RhcnRlciksIHZhbHVlID0gVFJVRSkNCmZvciAoY29sIGluIHN0YXJ0ZXJfY29scykgew0KICBvdXRjb21lX2RhdGFfc3RhcnRlclssIChjb2wpIDo9IE5VTExdDQp9DQoNCiMgRW5zdXJlIGNvbnZlcnNpb24gaXMgbnVtZXJpYw0KZm9yIChkdCBpbiBsaXN0KG91dGNvbWVfZGF0YV9wbGF5ZXIsIG91dGNvbWVfZGF0YV9zdGFydGVyKSkgew0KICBkdFssIGNvbnZlcnNpb24gOj0gYXMubnVtZXJpYyhhcy5jaGFyYWN0ZXIoY29udmVyc2lvbikpXQ0KfQ0KDQojIE1PREVMIDE6IFBsYXllciBtb2RlbCB3aXRoIEdJTVINCm9sc19tb2RlbF9wbGF5ZXIgPC0gbG0oY29udmVyc2lvbiB+IC4sIGRhdGEgPSBvdXRjb21lX2RhdGFfcGxheWVyKQ0KDQojIE1PREVMIDI6IFN0YXJ0ZXIgbW9kZWwgd2l0aCBHSU1SDQpvbHNfbW9kZWxfc3RhcnRlciA8LSBsbShjb252ZXJzaW9uIH4gLiwgZGF0YSA9IG91dGNvbWVfZGF0YV9zdGFydGVyKQ0KDQojIEZ1bmN0aW9uIHRvIGFuYWx5emUgYW5kIHByaW50IG1vZGVsIHJlc3VsdHMNCmFuYWx5emVfbW9kZWwgPC0gZnVuY3Rpb24obW9kZWwsIG1vZGVsX25hbWUpIHsNCiAgbGlicmFyeShzYW5kd2ljaCkNCiAgbGlicmFyeShsbXRlc3QpDQogIA0KICAjIEdldCBIQzAtYWRqdXN0ZWQgdC12YWx1ZXMgYW5kIHAtdmFsdWVzDQogIHJvYnVzdF90ZXN0IDwtIGNvZWZ0ZXN0KG1vZGVsLCB2Y292ID0gdmNvdkhDKG1vZGVsLCB0eXBlID0gIkhDMCIpKQ0KICB0X3N0YXRzIDwtIHJvYnVzdF90ZXN0WywgInQgdmFsdWUiXQ0KICBwX3ZhbHVlcyA8LSByb2J1c3RfdGVzdFssICJQcig+fHR8KSJdDQogIA0KICAjIEZ1bmN0aW9uIHRvIGFkZCBzaWduaWZpY2FuY2Ugc3RhcnMNCiAgZ2V0X3N0YXJzIDwtIGZ1bmN0aW9uKHApIHsNCiAgICBpZiAocCA8PSAwLjAxKSByZXR1cm4oIioqKiIpDQogICAgaWYgKHAgPD0gMC4wNSkgcmV0dXJuKCIqKiIpDQogICAgaWYgKHAgPD0gMC4xKSByZXR1cm4oIioiKQ0KICAgIGlmIChwIDw9IDAuMTUpIHJldHVybigiLiIpDQogICAgcmV0dXJuKCIiKQ0KICB9DQogIA0KICAjIE1heGltdW0gd2lkdGggZm9yIHZhcmlhYmxlIG5hbWVzDQogIG5hbWVfd2lkdGggPC0gNjANCiAgDQogICMgUHJpbnQgbW9kZWwgbmFtZSBhbmQgaGVhZGVyDQogIGNhdCgiXG5cbiIsIHBhc3RlKHJlcCgiPSIsIDgwKSwgY29sbGFwc2U9IiIpLCAiXG4iKQ0KICBjYXQoIk1PREVMOiIsIG1vZGVsX25hbWUsICJcbiIpDQogIGNhdChwYXN0ZShyZXAoIj0iLCA4MCksIGNvbGxhcHNlPSIiKSwgIlxuXG4iKQ0KICANCiAgIyBQcmludCBoZWFkZXIgd2l0aCBhbGlnbm1lbnQNCiAgY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIlZhcmlhYmxlIiwgInQtdmFsdWUiLCAicC12YWx1ZSIsICJzaWciKSkNCiAgY2F0KHNwcmludGYoIiUtKnMgICUxMHMgICUxMHMgICU0c1xuIiwgbmFtZV93aWR0aCwgIi0tLS0tLS0tLSIsICItLS0tLS0tIiwgIi0tLS0tLS0iLCAiLS0tLSIpKQ0KICANCiAgIyBMb29wIHRocm91Z2ggYW5kIHByaW50IHZhbHVlcw0KICBmb3IgKGkgaW4gMTpsZW5ndGgodF9zdGF0cykpIHsNCiAgICB2YXJfbmFtZSA8LSByb3duYW1lcyhyb2J1c3RfdGVzdClbaV0NCiAgICAjIFRydW5jYXRlIG5hbWUgaWYgdG9vIGxvbmcNCiAgICBpZiAobmNoYXIodmFyX25hbWUpID4gbmFtZV93aWR0aCkgew0KICAgICAgdmFyX25hbWUgPC0gcGFzdGUwKHN1YnN0cih2YXJfbmFtZSwgMSwgbmFtZV93aWR0aC0zKSwgIi4uLiIpDQogICAgfQ0KICAgIGNhdChzcHJpbnRmKCIlLSpzICAlMTAuNGYgICUxMC40ZiAgJTRzXG4iLCANCiAgICAgICAgICAgICAgICBuYW1lX3dpZHRoLCB2YXJfbmFtZSwgDQogICAgICAgICAgICAgICAgdF9zdGF0c1tpXSwgcF92YWx1ZXNbaV0sDQogICAgICAgICAgICAgICAgZ2V0X3N0YXJzKHBfdmFsdWVzW2ldKSkpDQogIH0NCiAgDQogIGNhdCgiXG5TaWduaWZpY2FuY2UgY29kZXM6IDAgJyoqKicgMC4wMSAnKionIDAuMDUgJyonIDAuMSAnLicgMC4xNVxuIikNCiAgDQogICMgUHJpbnQgUi1zcXVhcmVkDQogIHJfc3F1YXJlZCA8LSBzdW1tYXJ5KG1vZGVsKSRhZGouci5zcXVhcmVkDQogIGNhdCgiXG5BZGp1c3RlZCBSLXNxdWFyZWQ6Iiwgcl9zcXVhcmVkLCAiXG4iKQ0KICANCiAgIyBDYWxjdWxhdGUgVklGcw0KICBsaWJyYXJ5KGNhcikNCiAgdmlmcyA8LSB2aWYobW9kZWwpDQogIA0KICAjIEZpbHRlciB0byBzaG93IG9ubHkgVklGcyBvdmVyIDUNCiAgaGlnaF92aWZzIDwtIHZpZnNbdmlmcyA+IDVdDQogIGlmKGxlbmd0aChoaWdoX3ZpZnMpID4gMCkgew0KICAgIGNhdCgiXG5WYXJpYWJsZXMgd2l0aCBWSUYgPiA1OlxuIikNCiAgICBwcmludChoaWdoX3ZpZnMpDQogIH0gZWxzZSB7DQogICAgY2F0KCJcbk5vIHZhcmlhYmxlcyB3aXRoIFZJRiA+IDUgZm91bmQgaW4gdGhpcyBtb2RlbFxuIikNCiAgfQ0KICANCiAgcmV0dXJuKHJfc3F1YXJlZCkNCn0NCg0KIyBBbmFseXplIG1vZGVscyB3aXRoIEdJTVIgb25seQ0KcjJfcGxheWVyIDwtIGFuYWx5emVfbW9kZWwob2xzX21vZGVsX3BsYXllciwgIlBsYXllciBNb2RlbCB3aXRoIEdJTVIiKQ0KcjJfc3RhcnRlciA8LSBhbmFseXplX21vZGVsKG9sc19tb2RlbF9zdGFydGVyLCAiU3RhcnRlciBNb2RlbCB3aXRoIEdJTVIiKQ0KDQojIENvbXBhcmUgUi1zcXVhcmVkIHZhbHVlcw0KY2F0KCJcblxuIiwgcGFzdGUocmVwKCI9IiwgODApLCBjb2xsYXBzZT0iIiksICJcbiIpDQpjYXQoIk1PREVMIENPTVBBUklTT04gLSBBZGp1c3RlZCBSLXNxdWFyZWQgdmFsdWVzXG4iKQ0KY2F0KHBhc3RlKHJlcCgiPSIsIDgwKSwgY29sbGFwc2U9IiIpLCAiXG5cbiIpDQpjYXQoIlBsYXllciBNb2RlbCB3aXRoIEdJTVI6IiwgcjJfcGxheWVyLCAiXG4iKQ0KY2F0KCJTdGFydGVyIE1vZGVsIHdpdGggR0lNUjoiLCByMl9zdGFydGVyLCAiXG4iKQ0KDQpgYGANCg0K</div>
 
 
 </div>
