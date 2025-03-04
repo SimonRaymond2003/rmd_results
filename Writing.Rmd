@@ -50,7 +50,7 @@ The gap in the current research revolves around the lack in quality data. Curren
 
 # roadmap 
 
-data 
+# data 
 
 # sources
 
@@ -58,53 +58,23 @@ data
 
 # current look
 
-
-
-
-
-
-
-
 # how are we trying to approach this
 
 # explain different tools and models
 
 # exogenous variables
 
-try the third down when you cant kick it
+In our sample selection correction model a validation of the exogeniety of our variables that are used to predict whether or not a fourth down is attempted. While we can use theory to prove that these variables are exogenous to 4th down conversions, it is also possible to empirically prove this. Our situation is unique as 3rd downs can be used as a proxy of 4th downs with little to no self selection bias. This is due to how certain conditions cause a 3rd down to be treated similarly to a 4th down by the coaches. A fourth down is a teams last attempt for that offensive drive. While not in all, there are many cases of third down provide the similar conditions in terms of the coaches decision making. 
 
+In the proof of this we can first note that the grades of a teams kicker is positivly significant in it's effect on fourth downs. This lets us proceed to prove the exogeniety of kicker grades on the conversion of a fourth down. From a theoretical side we can reason that the kicker is not on the field during a fourth down and also is unable to effect the decision making of the coaches, as there are no further decisions to be made. In a third down we actually find that kicker grades do have positive significance on the conversion of a third down. While this sets off alarm bells it is quickly visible that this significance is only found in the middle of the field, where the kicker is more likely to be used if the third down is not converted. This highlights that when the kicker is not apart of the decision making process on third down, similarly to fourth down, it does not have a effect on 3rd down conversion. This allows us the luxury of having empirical proof of the exogeniety of our kicker grades on the conversion of fourth downs. 
 
-In the dealings with a form of sample selection correction there is always the fear of our exogenous variables not being truly exogenous. While the variables of score_diff and kicker_grades_12w are to be defended by theory, in this case there is the luxury of partially using empirical proof. This means that exogenous variables can be run on third down conversions as well as fourth down conversions. This is due to how third downs have similar features to fourth downs in the sense that they are often treated as a "last chance"
+Our second key exogenous variable stems from the score differential of the team with possession of the football. This variable ranges from -30 to +30 where -30 means a team is losing by 30 points and vice versa. The interpretion of its effect or lack of effect on the attempt and conversion of fourth downs is tricky due to non linearity. To start it is broken down into differnt variables and interactions with a tie game being the base case (score differential = 0).
 
-However key distinction between
+- is_winning - Binary
+- is_losing - Binary
+- winning_score_diff - Continuous with a range of 1 to 30.
+- losing_score_diff - Continuous with a range of -30 to 1.
 
 
 # results 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
