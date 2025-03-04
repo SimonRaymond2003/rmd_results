@@ -117,16 +117,42 @@ process_and_analyze <- function(file_path, range_name) {
     # Get robust standard errors
     robust_test <- coeftest(ols_model, vcov = vcovHC(ols_model, type = "HC0"))
     
-    # Print summary of the model
-    cat("\nModel Summary (with Robust Standard Errors):\n")
-    print(robust_test)
-    
-    # Model statistics
-    cat("\nModel Statistics:\n")
-    cat("R-squared:", round(summary(ols_model)$r.squared, 4), "\n")
-    cat("Adjusted R-squared:", round(summary(ols_model)$adj.r.squared, 4), "\n")
-    cat("F-statistic:", round(summary(ols_model)$fstatistic[1], 2), "on", 
-        summary(ols_model)$fstatistic[2], "and", summary(ols_model)$fstatistic[3], "DF\n")
+    # Function to format results consistently
+    format_results <- function(model_results, model_name) {
+        cat(sprintf("\n%s Model Results (Robust Statistics)\n", model_name))
+        cat(sprintf("%-30s %12s %12s %6s\n", "Variable", "Coefficient", "t-value", "Sig"))
+        cat(paste(rep("-", 65), collapse = ""), "\n")
+        
+        for(i in 1:nrow(model_results)) {
+            p_val <- model_results[i, "Pr(>|t|)"]
+            stars <- ifelse(p_val < 0.01, "***",
+                    ifelse(p_val < 0.05, "**",
+                    ifelse(p_val < 0.1, "*",
+                    ifelse(p_val < 0.15, ".", ""))))
+            
+            var_name <- rownames(model_results)[i]
+            if (nchar(var_name) > 60) {
+                var_name <- paste0(substr(var_name, 1, 57), "...")
+            }
+            
+            cat(sprintf("%-30s %12.4f %12.4f %6s\n",
+                var_name,
+                model_results[i, "Estimate"],
+                model_results[i, "t value"],
+                stars))
+        }
+        cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
+
+        # Model statistics
+        cat("\nModel Statistics:\n")
+        cat("R-squared:", round(summary(ols_model)$r.squared, 4), "\n")
+        cat("Adjusted R-squared:", round(summary(ols_model)$adj.r.squared, 4), "\n")
+        cat("F-statistic:", round(summary(ols_model)$fstatistic[1], 2), "on", 
+            summary(ols_model)$fstatistic[2], "and", summary(ols_model)$fstatistic[3], "DF\n")
+    }
+
+    # Print results using consistent format
+    format_results(robust_test, paste("OLS Results for", range_name))
     
     # Extract tracked variables and add to the tracker
     for(var in tracked_vars) {
@@ -293,9 +319,3 @@ for(i in 1:length(yardline_files)) {
 
 cat("\nAnalysis complete!\n")
 ```
-
-
-
-
-
-

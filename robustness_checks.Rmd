@@ -70,61 +70,61 @@ ols_model_player_no_gimr <- lm(conversion ~ ., data = outcome_data_player_no_gim
 # MODEL 2: Starter model without GIMR
 ols_model_starter_no_gimr <- lm(conversion ~ ., data = outcome_data_starter_no_gimr)
 
-# Function to analyze and print model results
+# Function to format and analyze model results
 analyze_model <- function(model, model_name) {
-  # Get HC0-adjusted t-values and p-values
-  robust_test <- coeftest(model, vcov = vcovHC(model, type = "HC0"))
-  t_stats <- robust_test[, "t value"]
-  p_values <- robust_test[, "Pr(>|t|)"]
+  library(sandwich)
+  library(lmtest)
   
-  # Function to add significance stars
-  get_stars <- function(p) {
-    if (p <= 0.01) return("***")
-    if (p <= 0.05) return("**")
-    if (p <= 0.1) return("*")
-    if (p <= 0.15) return(".")
-    return("")
+  # Get robust statistics
+  robust_test <- coeftest(model, vcov = vcovHC(model, type = "HC0"))
+
+  # Format results consistently
+  format_results <- function(model_results, model_name) {
+    cat(sprintf("\n%s Model Results (Robust Statistics)\n", model_name))
+    cat(sprintf("%-30s %12s %12s %6s\n", "Variable", "Coefficient", "t-value", "Sig"))
+    cat(paste(rep("-", 65), collapse = ""), "\n")
+    
+    for(i in 1:nrow(model_results)) {
+        p_val <- model_results[i, "Pr(>|t|)"]
+        stars <- ifelse(p_val < 0.01, "***",
+                ifelse(p_val < 0.05, "**",
+                ifelse(p_val < 0.1, "*",
+                ifelse(p_val < 0.15, ".", ""))))
+        
+        var_name <- rownames(model_results)[i]
+        if (nchar(var_name) > 60) {
+            var_name <- paste0(substr(var_name, 1, 57), "...")
+        }
+        
+        cat(sprintf("%-30s %12.4f %12.4f %6s\n",
+            var_name,
+            model_results[i, "Estimate"],
+            model_results[i, "t value"],
+            stars))
+    }
+    cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
   }
   
-  # Maximum width for variable names
-  name_width <- 60
-  
-  # Print model name and header
+  # Print model results
   cat("\n\n", paste(rep("=", 80), collapse=""), "\n")
   cat("MODEL:", model_name, "\n")
   cat(paste(rep("=", 80), collapse=""), "\n\n")
   
-  # Print header with alignment
-  cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
-  cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
-  
-  # Loop through and print values
-  for (i in 1:length(t_stats)) {
-    var_name <- rownames(robust_test)[i]
-    # Truncate name if too long
-    if (nchar(var_name) > name_width) {
-      var_name <- paste0(substr(var_name, 1, name_width-3), "...")
-    }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name, 
-                t_stats[i], p_values[i],
-                get_stars(p_values[i])))
-  }
-  
-  cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
+  format_results(robust_test, model_name)
   
   # Print R-squared
   r_squared <- summary(model)$adj.r.squared
   cat("\nAdjusted R-squared:", r_squared, "\n")
   
-  # Calculate VIFs
+  # Calculate and display VIFs
+  library(car)
   vifs <- vif(model)
-  
-  # Filter to show only VIFs over 5
   high_vifs <- vifs[vifs > 5]
   if(length(high_vifs) > 0) {
     cat("\nVariables with VIF > 5:\n")
-    print(high_vifs)
+    for(var_name in names(high_vifs)) {
+      cat(sprintf("%-50s  %7.2f\n", var_name, high_vifs[var_name]))
+    }
   } else {
     cat("\nNo variables with VIF > 5 found in this model\n")
   }
@@ -143,4 +143,3 @@ cat(paste(rep("=", 80), collapse=""), "\n\n")
 cat("Player Model without GIMR:", r2_player_no_gimr, "\n")
 cat("Starter Model without GIMR:", r2_starter_no_gimr, "\n")
 ```
-

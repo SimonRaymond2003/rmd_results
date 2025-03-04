@@ -65,36 +65,36 @@ ols_regular <- lm(conversion ~ ., data = regular_data)
 ```{r}
 library(sandwich)
 library(lmtest)
-# Get HC0-adjusted t-values and p-values
-robust_regular_test <- coeftest(ols_regular, vcov = vcovHC(ols_regular, type = "HC0"))
-t_stats_regular <- robust_regular_test[, "t value"]
-p_values_regular <- robust_regular_test[, "Pr(>|t|)"]
-# Function to add significance stars
-get_stars <- function(p) {
-    if (p <= 0.01) return("***")
-    if (p <= 0.05) return("**")
-    if (p <= 0.1) return("*")
-    if (p <= 0.15) return(".")
-    return("")
-}
-# Maximum width for variable names
-name_width <- 60
-# Print header with alignment
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Regular Players OLS Variable", "t-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
-# Loop through and print values
-for (i in 1:length(t_stats_regular)) {
-    var_name <- rownames(robust_regular_test)[i]
-    # Truncate name if too long
-    if (nchar(var_name) > name_width) {
-        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+# Format results using consistent formatting function
+format_results <- function(model_results, model_name) {
+    cat(sprintf("\n%s Model Results (Robust Statistics)\n", model_name))
+    cat(sprintf("%-30s %12s %12s %6s\n", "Variable", "Coefficient", "t-value", "Sig"))
+    cat(paste(rep("-", 65), collapse = ""), "\n")
+    
+    for(i in 1:nrow(model_results)) {
+        p_val <- model_results[i, "Pr(>|t|)"]
+        stars <- ifelse(p_val < 0.01, "***",
+                ifelse(p_val < 0.05, "**",
+                ifelse(p_val < 0.1, "*",
+                ifelse(p_val < 0.15, ".", ""))))
+        
+        var_name <- rownames(model_results)[i]
+        if (nchar(var_name) > 60) {
+            var_name <- paste0(substr(var_name, 1, 57), "...")
+        }
+        
+        cat(sprintf("%-30s %12.4f %12.4f %6s\n",
+            var_name,
+            model_results[i, "Estimate"],
+            model_results[i, "t value"],
+            stars))
     }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name, 
-                t_stats_regular[i], p_values_regular[i],
-                get_stars(p_values_regular[i])))
+    cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
 }
-cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+
+# Get robust statistics and print results
+robust_regular_test <- coeftest(ols_regular, vcov = vcovHC(ols_regular, type = "HC0"))
+format_results(robust_regular_test, "Regular Players OLS")
 ```
 
 ```{r}
@@ -133,27 +133,9 @@ ols_starter <- lm(conversion ~ ., data = starter_data)
 ```
 
 ```{r}
-# Get HC0-adjusted t-values and p-values
+# Get robust statistics and print results for starter players
 robust_starter_test <- coeftest(ols_starter, vcov = vcovHC(ols_starter, type = "HC0"))
-t_stats_starter <- robust_starter_test[, "t value"]
-p_values_starter <- robust_starter_test[, "Pr(>|t|)"]
-
-# Print header with alignment
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Starter Players OLS Variable", "t-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
-# Loop through and print values
-for (i in 1:length(t_stats_starter)) {
-    var_name <- rownames(robust_starter_test)[i]
-    # Truncate name if too long
-    if (nchar(var_name) > name_width) {
-        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
-    }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name, 
-                t_stats_starter[i], p_values_starter[i],
-                get_stars(p_values_starter[i])))
-}
-cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+format_results(robust_starter_test, "Starter Players OLS")
 ```
 
 ```{r}
@@ -189,25 +171,36 @@ probit_regular <- glm(conversion ~ ., data = regular_data, family = binomial(lin
 ```
 
 ```{r}
-# Get HC0-adjusted z-values and p-values for regular probit
-robust_probit_regular <- coeftest(probit_regular, vcov = vcovHC(probit_regular, type = "HC0"))
-z_stats_regular <- robust_probit_regular[, "z value"]
-p_values_regular <- robust_probit_regular[, "Pr(>|z|)"]
-
-# Print header (note "z-value" instead of "t-value")
-cat(sprintf("\n\n%-*s  %10s  %10s  %4s\n", name_width, "Regular Players Probit Variable", "z-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------------", "-------", "-------", "----"))
-for (i in 1:length(z_stats_regular)) {
-    var_name <- rownames(robust_probit_regular)[i]
-    if (nchar(var_name) > name_width) {
-        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+# Format probit results using consistent formatting
+format_probit_results <- function(model_results, model_name) {
+    cat(sprintf("\n%s Model Results (Robust Statistics)\n", model_name))
+    cat(sprintf("%-30s %12s %12s %6s\n", "Variable", "Coefficient", "z-value", "Sig"))
+    cat(paste(rep("-", 65), collapse = ""), "\n")
+    
+    for(i in 1:nrow(model_results)) {
+        p_val <- model_results[i, "Pr(>|z|)"]
+        stars <- ifelse(p_val < 0.01, "***",
+                ifelse(p_val < 0.05, "**",
+                ifelse(p_val < 0.1, "*",
+                ifelse(p_val < 0.15, ".", ""))))
+        
+        var_name <- rownames(model_results)[i]
+        if (nchar(var_name) > 60) {
+            var_name <- paste0(substr(var_name, 1, 57), "...")
+        }
+        
+        cat(sprintf("%-30s %12.4f %12.4f %6s\n",
+            var_name,
+            model_results[i, "Estimate"],
+            model_results[i, "z value"],
+            stars))
     }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name, 
-                z_stats_regular[i], p_values_regular[i],
-                get_stars(p_values_regular[i])))
+    cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
 }
-cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+
+# Get robust statistics and print results for regular probit
+robust_probit_regular <- coeftest(probit_regular, vcov = vcovHC(probit_regular, type = "HC0"))
+format_probit_results(robust_probit_regular, "Regular Players Probit")
 ```
 
 
@@ -217,25 +210,9 @@ probit_starter <- glm(conversion ~ ., data = starter_data, family = binomial(lin
 ```
 
 ```{r}
-# Get HC0-adjusted z-values and p-values for starter probit
+# Get robust statistics and print results for starter probit
 robust_probit_starter <- coeftest(probit_starter, vcov = vcovHC(probit_starter, type = "HC0"))
-z_stats_starter <- robust_probit_starter[, "z value"]
-p_values_starter <- robust_probit_starter[, "Pr(>|z|)"]
-
-# Print header (note "z-value" instead of "t-value")
-cat(sprintf("\n\n%-*s  %10s  %10s  %4s\n", name_width, "Starter Players Probit Variable", "z-value", "p-value", "sig"))
-cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------------", "-------", "-------", "----"))
-for (i in 1:length(z_stats_starter)) {
-    var_name <- rownames(robust_probit_starter)[i]
-    if (nchar(var_name) > name_width) {
-        var_name <- paste0(substr(var_name, 1, name_width-3), "...")
-    }
-    cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                name_width, var_name, 
-                z_stats_starter[i], p_values_starter[i],
-                get_stars(p_values_starter[i])))
-}
-cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15")
+format_probit_results(robust_probit_starter, "Starter Players Probit")
 ```
 
 

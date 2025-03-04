@@ -59,31 +59,35 @@ run_attendance_analysis_v1 <- function(file_path, year) {
     t_stats <- robust_test[, "t value"]
     p_values <- robust_test[, "Pr(>|t|)"]
     
-    # Function to add significance stars
-    get_stars <- function(p) {
-        if (p <= 0.01) return("***")
-        if (p <= 0.05) return("**")
-        if (p <= 0.1) return("*")
-        if (p <= 0.15) return(".")
-        return("")
-    }
-    
-    # Print results
-    name_width <- 60
-    cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "Variable", "t-value", "p-value", "sig"))
-    cat(sprintf("%-*s  %10s  %10s  %4s\n", name_width, "---------", "-------", "-------", "----"))
-    
-    for (i in 1:length(t_stats)) {
-        var_name <- rownames(robust_test)[i]
-        if (nchar(var_name) > name_width) {
-            var_name <- paste0(substr(var_name, 1, name_width-3), "...")
+    # Format results using consistent formatting function
+    format_results <- function(model_results, model_name) {
+        cat(sprintf("\n%s Model Results (Robust Statistics)\n", model_name))
+        cat(sprintf("%-30s %12s %12s %6s\n", "Variable", "Coefficient", "t-value", "Sig"))
+        cat(paste(rep("-", 65), collapse = ""), "\n")
+        
+        for(i in 1:nrow(model_results)) {
+            p_val <- model_results[i, "Pr(>|t|)"]
+            stars <- ifelse(p_val < 0.01, "***",
+                    ifelse(p_val < 0.05, "**",
+                    ifelse(p_val < 0.1, "*",
+                    ifelse(p_val < 0.15, ".", ""))))
+            
+            var_name <- rownames(model_results)[i]
+            if (nchar(var_name) > 60) {
+                var_name <- paste0(substr(var_name, 1, 57), "...")
+            }
+            
+            cat(sprintf("%-30s %12.4f %12.4f %6s\n",
+                var_name,
+                model_results[i, "Estimate"],
+                model_results[i, "t value"],
+                stars))
         }
-        cat(sprintf("%-*s  %10.4f  %10.4f  %4s\n", 
-                    name_width, var_name, 
-                    t_stats[i], p_values[i],
-                    get_stars(p_values[i])))
+        cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
     }
-    cat("\nSignificance codes: 0 '***' 0.01 '**' 0.05 '*' 0.1 '.' 0.15\n")
+    
+    # Print results using consistent format
+    format_results(robust_test, sprintf("OLS Results for %s vs 2020", year))
     
     # Return key statistics for potential further analysis
     return(list(
@@ -109,5 +113,3 @@ for (year in years) {
     }
 }
 ```
-
-

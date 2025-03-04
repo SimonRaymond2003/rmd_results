@@ -31,9 +31,9 @@ body {
 }
 
 .main-container {
-    max-width: 1800px;
+    max-width: 2400px; /* Wider container */
     margin: 0 auto;
-    padding: 0 max(20px, 5vw);
+    padding: 0 max(20px, 3vw);
 }
 
 /* Enhanced Navigation */
@@ -102,27 +102,38 @@ body {
 /* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
     color: var(--primary-dark);
-    font-weight: 700;
-    line-height: 1.3;
-    margin: 2rem 0 1rem;
+    font-weight: 800;  /* Bolder headers */
+    line-height: 1.2;  /* Tighter line height */
+    margin: 3rem 0 1.5rem; /* More spacing */
+    text-transform: capitalize; /* Capitalize first letter */
 }
 
 h1 { 
-    font-size: 2.5rem;
-    letter-spacing: -0.025em;
+    font-size: 3rem;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--accent);
 }
 
 h2 { 
-    font-size: 2rem;
-    letter-spacing: -0.025em;
+    font-size: 2.25rem;
+    letter-spacing: -0.02em;
+    color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.3rem;
 }
 
 h3 { 
-    font-size: 1.75rem;
+    font-size: 1.85rem;
+    color: var(--primary);
 }
 
 h4 { 
     font-size: 1.5rem;
+    color: var(--primary-dark);
 }
 
 /* Enhanced Table of Contents */
